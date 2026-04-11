@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi | InfoStudio-54</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="../index.html" style="text-decoration: none; color: inherit;">InfoStudio-54</a></div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Bentornato</h2>
+            <p>Accedi al tuo account VIP</p>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required placeholder="tu@esempio.com">
+                </div>
+                
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="La tua password">
+                </div>
+
+                <button type="submit" class="btn-prenota auth-btn">Entra</button>
+            </form>
+            <p class="auth-switch">Nuovo cliente? <a href="registrazione.html">Registrati qui</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
+</body>
+</html>
