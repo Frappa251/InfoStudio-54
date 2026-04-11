@@ -1,0 +1,113 @@
+/* assets/css/style.css */
+
+/* --- VARIABILI GLOBALI (Colori e Stili) --- */
+:root {
+    --bg-color: #0b0b0f; /* Sfondo scuro profondo */
+    --text-main: #f0f0f0;
+    --accent-color: #d100ff; /* Viola neon discoteca */
+    --accent-hover: #ff00ea; /* Fucsia al passaggio del mouse */
+    --nav-bg: rgba(11, 11, 15, 0.95); /* Sfondo navbar semitrasparente */
+}
+
+/* --- RESET BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    background-color: var(--nav-bg);
+    position: fixed; /* Barra fissa in alto quando si scorre */
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Bottone Speciale Prenota */
+.btn-prenota {
+    background-color: var(--accent-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-weight: bold !important;
+    color: #fff !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-prenota:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05); /* Piccolo effetto ingrandimento */
+}
+
+/* --- HERO SECTION (La copertina della Home) --- */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* Se aggiungete una foto in assets/images, decommentate la riga sotto e cambiate il nome */
+    /* background: linear-gradient(rgba(11, 11, 15, 0.8), rgba(11, 11, 15, 0.9)), url('../images/sfondo-discoteca.jpg') center/cover; */
+    padding-top: 80px; /* Spazio per non far coprire il testo dalla navbar */
+}
+
+.hero-content h1 {
+    font-size: 4.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: #aaaaaa;
+}
+
+/* --- FOOTER --- */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 4rem;
+    font-size: 0.9rem;
+    color: #666;
+}
