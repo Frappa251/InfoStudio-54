@@ -1,0 +1,7 @@
+# Chiavi API e configurazioni segrete
+config.js
+.env
+
+# Cartelle di sistema (Mac/Windows)
+.DS_Store
+Thumbs.db
