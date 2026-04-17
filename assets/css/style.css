@@ -45,6 +45,67 @@ body {
     text-transform: uppercase;
 }
 
+.logo-neon-wrapper {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+}
+
+.logo-neon {
+    font-family: 'Monoton', cursive, sans-serif; /* Un font in stile disco anni '70 */
+    font-size: 3.5rem;
+    color: #fff;
+    text-transform: uppercase;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+.logo-neon span {
+    display: inline-block;
+}
+
+.word-info {
+    color: #fff;
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color), 0 0 40px var(--accent-color);
+}
+
+
+.word-studio {
+    color: #fff;
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-hover), 0 0 40px var(--accent-hover);
+    margin-left: 5px;
+}
+
+/* Stile aggiunto per il trattino */
+.hyphen {
+    color: #fff;
+    margin-left: 8px;
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color);
+}
+
+.number-54 {
+    color: #fff;
+    margin-left: 8px;
+    text-shadow: 0 0 5px #fff, 0 0 20px #ff00ea, 0 0 60px #ff00ea;
+}
+
+/* Velocità dell'animazione aumentata (da 0.15s a 0.08s) */
+.flicker {
+    animation: neon-flicker 0.08s infinite alternate;
+}
+
+@keyframes neon-flicker {
+    0% { opacity: 1; }
+    100% { opacity: 0.8; text-shadow: none; }
+}
+@media (max-width: 768px) {
+    .logo-neon { font-size: 2rem; }
+    .number-54 { font-size: 2.5rem; }
+}
+
 .nav-links {
     list-style: none;
     display: flex;
