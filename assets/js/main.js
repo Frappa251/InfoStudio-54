@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 part.classList.remove('flicker');
             }, Math.random() * 130 + 20); 
             
-            setTimeout(randomFlicker, Math.random() * 500 + 100); 
+            setTimeout(randomFlicker, Math.random() * 200 + 100); 
         };
 
         randomFlicker();

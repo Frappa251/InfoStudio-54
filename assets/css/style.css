@@ -46,49 +46,40 @@ body {
 }
 
 .logo-neon-wrapper {
-    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
+    /* Rimosso il padding eccessivo per snellire la navbar */
 }
 
 .logo-neon {
-    font-family: 'Monoton', cursive, sans-serif; /* Un font in stile disco anni '70 */
-    font-size: 3.5rem;
+    font-family: 'Monoton', cursive, sans-serif; 
+    font-size: 1.4rem; /* Ridotto da 2.5rem per renderlo proporzionato */
     color: #fff;
     text-transform: uppercase;
-    cursor: default;
-    user-select: none;
-    transition: transform 0.3s ease;
-}
-
-.logo-neon span {
-    display: inline-block;
 }
 
 .word-info {
     color: #fff;
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color), 0 0 40px var(--accent-color);
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color);
 }
-
 
 .word-studio {
     color: #fff;
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-hover), 0 0 40px var(--accent-hover);
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-hover);
     margin-left: 5px;
 }
 
-/* Stile aggiunto per il trattino */
 .hyphen {
     color: #fff;
-    margin-left: 8px;
+    margin-left: 6px; /* Leggermente ridotto */
     text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color);
 }
 
 .number-54 {
     color: #fff;
-    margin-left: 8px;
+    font-size: 1.6rem; /* Ridotto drasticamente da 4rem */
+    margin-left: 6px;
     text-shadow: 0 0 5px #fff, 0 0 20px #ff00ea, 0 0 60px #ff00ea;
 }
 
@@ -171,4 +162,22 @@ body {
     margin-top: 4rem;
     font-size: 0.9rem;
     color: #666;
+}
+
+
+.drink-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.drink-card:hover .drink-image {
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(209, 0, 255, 0.25);
+    border-color: rgba(209, 0, 255, 0.3);
 }
