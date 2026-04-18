@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">InfoStudio-54</div>
@@ -26,12 +28,12 @@
         <section class="booking-container">
             <div class="booking-header">
                 <h1>Prenota il tuo tavolo</h1>
-                <p>Scegli la data, il tavolo e il numero di persone per la tua serata.</p>
+                <p>Scegli la data, il tavolo e il numero di persone per vivere la tua notte al massimo.</p>
 
                 <div class="booking-badges">
-                    <span class="booking-badge">Prenotazione rapida</span>
+                    <span class="booking-badge">Accesso rapido</span>
                     <span class="booking-badge">Esperienza premium</span>
-                    <span class="booking-badge">Club night vibes</span>
+                    <span class="booking-badge">Pagamento sicuro</span>
                 </div>
             </div>
 
@@ -39,29 +41,16 @@
                 <div class="booking-page__grid">
                     <div class="booking-page__group">
                         <label for="nome">Nome e cognome</label>
-                        <input
-                            type="text"
-                            id="nome"
-                            name="nome"
-                            placeholder="Mario Rossi"
-                            required
-                        >
+                        <input type="text" id="nome" name="nome" placeholder="Mario Rossi" required>
                     </div>
 
                     <div class="booking-page__group">
                         <label for="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="mario@email.com"
-                            required
-                        >
+                        <input type="email" id="email" name="email" placeholder="mario@email.com" required>
                     </div>
 
                     <div class="booking-page__group">
                         <label for="telefono_numero">Telefono</label>
-
                         <div class="phone-field">
                             <select id="telefono_prefisso" name="telefono_prefisso" required>
                                 <option value="+39" selected>🇮🇹 +39</option>
@@ -72,60 +61,37 @@
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
 
-                            <input
-                                type="tel"
-                                id="telefono_numero"
-                                name="telefono_numero"
-                                placeholder="3331234567"
-                                inputmode="numeric"
-                                maxlength="10"
-                                required
-                            >
+                            <input type="tel" id="telefono_numero" name="telefono_numero" placeholder="3331234567"
+                                inputmode="numeric" maxlength="10" required>
                         </div>
                     </div>
 
                     <div class="booking-page__group">
                         <label for="data_prenotazione">Data prenotazione</label>
-                        <input
-                            type="date"
-                            id="data_prenotazione"
-                            name="data_prenotazione"
-                            required
-                        >
+                        <input type="date" id="data_prenotazione" name="data_prenotazione" required>
                     </div>
 
                     <div class="booking-page__group">
                         <label for="numero_persone">Numero persone</label>
-                        <input
-                            type="number"
-                            id="numero_persone"
-                            name="numero_persone"
-                            min="1"
-                            max="20"
-                            placeholder="Numero persone"
-                            required
-                        >
+                        <input type="number" id="numero_persone" name="numero_persone" min="1" max="20"
+                            placeholder="Numero persone" required>
                     </div>
 
                     <div class="booking-page__group">
                         <label for="tipo_tavolo">Tipo tavolo</label>
                         <select id="tipo_tavolo" name="tipo_tavolo" required>
                             <option value="">Seleziona un tavolo</option>
-                            <option value="standard" data-prezzo="100" data-max="4">Standard - €100 - max 4 persone</option>
-                            <option value="premium" data-prezzo="200" data-max="8">Premium - €200 - max 8 persone</option>
-                            <option value="vip" data-prezzo="350" data-max="12">VIP - €350 - max 12 persone</option>
+                            <option value="1" data-prezzo="100" data-max="4">Standard - €100 - max 4 persone</option>
+                            <option value="2" data-prezzo="200" data-max="8">Premium - €200 - max 8 persone</option>
+                            <option value="3" data-prezzo="350" data-max="12">VIP - €350 - max 12 persone</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="booking-page__group">
                     <label for="note">Note aggiuntive</label>
-                    <textarea
-                        id="note"
-                        name="note"
-                        rows="5"
-                        placeholder="Richieste particolari, compleanni, preferenze..."
-                    ></textarea>
+                    <textarea id="note" name="note" rows="5"
+                        placeholder="Richieste particolari, compleanni, preferenze..."></textarea>
                 </div>
 
                 <div class="booking-summary" id="bookingSummary">
@@ -158,8 +124,8 @@
 
                 <p id="formMessage" class="booking-page__message" aria-live="polite"></p>
 
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    Conferma Prenotazione
+                <button type="button" class="submit-btn" id="submitBtn">
+                    Vai al pagamento
                 </button>
             </form>
         </section>
@@ -172,4 +138,5 @@
     <script src="../assets/js/config.js"></script>
     <script src="../assets/js/booking.js"></script>
 </body>
+
 </html>

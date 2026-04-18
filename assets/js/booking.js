@@ -21,6 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const telefonoRegex = /^\d{10}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // METTI QUI I TUOI LINK STRIPE VERI
+    const STRIPE_LINKS = {
+        1: "https://buy.stripe.com/test_00w7sM82q5BadxP3vl2Nq01",
+        2: "https://buy.stripe.com/test_bJebJ2fuSfbK51j2rh2Nq02",
+        3: "https://buy.stripe.com/test_4gMaEYfuS9Rq65n2rh2Nq03"
+    };
+
     function setMessage(message, type = "") {
         formMessage.textContent = message;
         formMessage.className = "booking-page__message";
@@ -45,10 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function sanitizePhoneInput() {
         telefonoNumero.value = telefonoNumero.value.replace(/\D/g, "").slice(0, 10);
-    }
-
-    function getFullPhoneNumber() {
-        return `${telefonoPrefisso.value} ${telefonoNumero.value}`;
     }
 
     function getSelectedBookingData() {
@@ -227,19 +230,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     downloadPdfBtn.addEventListener("click", downloadPDF);
 
-    bookingForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
+    submitBtn.addEventListener("click", async () => {
         setMessage("");
 
         const nome = document.getElementById("nome").value.trim();
         const email = document.getElementById("email").value.trim();
         const prefisso = telefonoPrefisso.value;
         const telefono = telefonoNumero.value.trim();
-        const telefonoCompleto = getFullPhoneNumber();
         const data = dataPrenotazione.value;
         const persone = parseInt(numeroPersone.value, 10);
         const tavoloOption = tipoTavolo.options[tipoTavolo.selectedIndex];
-        const note = document.getElementById("note").value.trim();
 
         const isValid = validateFormFields({
             nome,
@@ -252,42 +252,42 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!isValid) {
-            setMessage("Inserisci un numero valido: prefisso + 10 cifre.", "error");
+            setMessage("Compila correttamente tutti i campi prima di procedere.", "error");
             return;
         }
 
         const maxPersone = parseInt(tavoloOption.dataset.max, 10);
-        const prezzo = parseFloat(tavoloOption.dataset.prezzo);
-        const tipo = tavoloOption.value;
 
         if (persone > maxPersone) {
             setFieldError(numeroPersone);
-            setMessage(`Il tavolo ${tipo.toUpperCase()} accetta al massimo ${maxPersone} persone.`, "error");
+            setMessage(`Questo tavolo accetta al massimo ${maxPersone} persone.`, "error");
             return;
         }
 
-        const bookingData = {
-            nome,
-            email,
-            telefono: telefonoCompleto,
-            data_prenotazione: data,
-            numero_persone: persone,
-            tipo_tavolo: tipo,
-            prezzo,
-            note,
-            stato: "in_attesa"
-        };
+        if (!window.supabaseClient || !window.supabaseClient.auth) {
+            setMessage("Client Supabase non inizializzato correttamente.", "error");
+            return;
+        }
 
-        console.log("Prenotazione pronta da inviare:", bookingData);
-        setMessage("Prenotazione registrata con successo!", "success");
+        const {
+            data: { user },
+            error: userError
+        } = await window.supabaseClient.auth.getUser();
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Prenotazione confermata";
+        if (userError || !user) {
+            setMessage("Devi effettuare il login prima di andare al pagamento.", "error");
+            return;
+        }
 
-        setTimeout(() => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Conferma Prenotazione";
-        }, 2000);
+        const tavoloId = parseInt(tavoloOption.value, 10);
+        const stripeUrl = STRIPE_LINKS[tavoloId];
+
+        if (!stripeUrl) {
+            setMessage("Link di pagamento non configurato per questo tavolo.", "error");
+            return;
+        }
+
+        window.location.href = stripeUrl;
     });
 
     updateSummary();
