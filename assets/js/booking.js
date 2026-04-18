@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const telefonoRegex = /^\d{10}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // METTI QUI I TUOI LINK STRIPE VERI
     const STRIPE_LINKS = {
         1: "https://buy.stripe.com/test_00w7sM82q5BadxP3vl2Nq01",
         2: "https://buy.stripe.com/test_bJebJ2fuSfbK51j2rh2Nq02",
