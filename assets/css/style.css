@@ -18,9 +18,28 @@
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    line-height: 1.6;
+    background-color: #0b0b0f; 
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Rendiamo le card semi-trasparenti per far vedere lo sfondo */
+.drink-card {
+    background: rgba(20, 20, 25, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.drink-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    background: rgba(20, 20, 25, 0.75);
 }
 
 /* --- NAVBAR --- */
@@ -28,12 +47,16 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 5%;
-    background-color: var(--nav-bg);
-    position: fixed; /* Barra fissa in alto quando si scorre */
-    width: 100%;
+    padding: 15px 5%;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
     z-index: 1000;
+    background: rgba(11, 11, 15, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -130,38 +153,221 @@ body {
     transform: scale(1.05); /* Piccolo effetto ingrandimento */
 }
 
-/* --- HERO SECTION (La copertina della Home) --- */
+
 .hero {
     height: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    /* Se aggiungete una foto in assets/images, decommentate la riga sotto e cambiate il nome */
-    /* background: linear-gradient(rgba(11, 11, 15, 0.8), rgba(11, 11, 15, 0.9)), url('../images/sfondo-discoteca.jpg') center/cover; */
-    padding-top: 80px; /* Spazio per non far coprire il testo dalla navbar */
+    position: relative;
+    overflow: hidden;
+    margin: 0;      /* Assicura che non ci sia spazio vuoto sopra il video */
+    padding: 0;     /* Rimuove qualsiasi "spinta" verso il basso */
+}
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -2;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(11, 11, 15, 0.6); /* Effetto scurito per risaltare il testo */
+    z-index: -1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-content h1 {
-    font-size: 4.5rem;
+    font-size: 5rem;
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 4px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
 }
 
 .hero-content p {
     font-size: 1.2rem;
-    color: #aaaaaa;
+    color: #f0f0f0;
+    margin-bottom: 2rem;
 }
 
-/* --- FOOTER --- */
+/* Bottone stile moderno */
+.btn-prenota-hero {
+    display: inline-block;
+    background-color: var(--accent-color);
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(209, 0, 255, 0.4);
+}
+
+.btn-prenota-hero:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px var(--accent-hover);
+}
+
+/* --- FOOTER AVANZATO --- */
 .footer {
-    text-align: center;
-    padding: 2rem;
+    background-color: var(--bg-color);
+    padding: 4rem 5% 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin-top: 4rem;
-    font-size: 0.9rem;
+}
+
+/* --- LAYOUT SLOGAN CON LINEE --- */
+.footer-slogan-container {
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; /* Distanza tra le due righe dello slogan */
+}
+
+.slogan-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.slogan-row h2 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    text-shadow: 0 0 15px var(--accent-color);
+    margin: 0;
+    white-space: nowrap;
+}
+
+.slogan-line {
+    flex-grow: 1; /* Fa espandere la linea per riempire tutto lo spazio vuoto */
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.left-align h2 {
+    margin-right: 30px; /* Spazio tra testo e linea a destra */
+}
+
+.right-align h2 {
+    margin-left: 30px; /* Spazio tra testo e linea a sinistra */
+}
+
+/* --- LAYOUT DELLE 3 COLONNE IN BASSO --- */
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centra gli elementi verticalmente */
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap; /* Per l'adattamento sui telefoni */
+}
+
+/* 1. Stile Colonna Logo */
+.footer-logo-col {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Ingrandiamo il logo per il footer usando la classe aggiuntiva */
+.large-footer-logo .logo-neon {
+    font-size: 2.2rem;
+}
+.large-footer-logo .number-54 {
+    font-size: 3rem;
+}
+
+/* 2. Stile Colonna Testi Centrali */
+.footer-info {
+    flex: 1.5; /* Prende leggermente più spazio */
+    display: flex;
+    gap: 2rem;
+    min-width: 300px;
+}
+
+/* 3. Stile Colonna Mappa */
+.footer-map {
+    flex: 1;
+    min-width: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(209, 0, 255, 0.3);
+    box-shadow: 0 0 15px rgba(209, 0, 255, 0.1);
+}
+
+/* Adattamento per Tablet e Smartphone */
+@media (max-width: 900px) {
+    .slogan-row h2 {
+        font-size: 2rem;
+    }
+    .footer-logo-col {
+        justify-content: center; /* Centra il logo su mobile */
+        margin-bottom: 2rem;
+    }
+    .footer-info {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.footer-col { flex: 1; }
+
+.footer-col h4 {
+    color: #fff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.footer-col p { color: #aaa; line-height: 1.6; margin-bottom: 0.5rem; }
+
+.footer-link { color: var(--accent-color); text-decoration: none; transition: 0.3s; }
+.footer-link:hover { color: #fff; text-shadow: 0 0 10px var(--accent-hover); }
+
+/* Stile Mappa */
+.footer-map {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(209, 0, 255, 0.3);
+    box-shadow: 0 0 15px rgba(209, 0, 255, 0.1);
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
     color: #666;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 900px) {
+    .footer-main { flex-direction: column; }
+    .slogan-left, .slogan-right { font-size: 2rem; }
 }
 
 
@@ -180,4 +386,51 @@ body {
     transform: scale(1.03);
     box-shadow: 0 10px 25px rgba(209, 0, 255, 0.25);
     border-color: rgba(209, 0, 255, 0.3);
+}
+/* --- ADATTAMENTO MOBILE BARRA DI NAVIGAZIONE --- */
+@media (max-width: 768px) {
+    
+    
+    .logo-neon {
+        font-size: 0.9rem !important;
+    }
+    
+    .number-54 {
+        font-size: 1.1rem !important;
+        margin-left: 3px !important;
+    }
+    
+    .word-studio {
+        margin-left: 3px !important;
+    }
+    nav, .navbar { 
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        padding: 15px 10px;
+        gap: 15px;
+        height: auto; 
+    }
+
+    .nav-links, .navbar ul { 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap; 
+        gap: 15px;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    /* Rimpiccioliamo leggermente i testi dei link */
+    .nav-links a, .navbar ul a {
+        font-size: 0.85rem;
+    }
+
+    /* Rimpiccioliamo il bottone "Prenota Ora" nella navbar */
+    .navbar .btn-prenota, .navbar button, .nav-links .btn-prenota {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+    }
 }

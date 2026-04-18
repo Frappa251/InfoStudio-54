@@ -26,16 +26,76 @@
     </nav>
 
     <header class="hero">
-        <div class="hero-content">
-            <h1>Vivi la Notte.</h1>
-            <p>Il club più esclusivo della città. Preparati a ballare fino all'alba.</p>
-        </div>
-    </header>
+    <video autoplay loop muted playsinline class="hero-video">
+        <source src="assets/images/gallery/aftermovie.mp4" type="video/mp4">
+    </video>
+    
+    <div class="hero-overlay"></div>
 
-    <footer class="footer">
-        <p>&copy; 2026 InfoStudio-54. Tutti i diritti riservati.</p>
+    <div class="hero-content">
+        <h1>Vivi la Notte.</h1>
+        <p>Il club più esclusivo della città. Preparati a ballare fino all'alba.</p>
+        <a href="pages/prenotazioni.html" class="btn-prenota-hero">Prenota Ora</a>
+    </div>
+</header>
+
+   <footer class="footer">
+        <div class="footer-slogan-container">
+            <div class="slogan-row left-align">
+                <h2>THE POWER</h2>
+                <div class="slogan-line"></div>
+            </div>
+            <div class="slogan-row right-align">
+                <div class="slogan-line"></div>
+                <h2>TO CONNECT</h2>
+            </div>
+        </div>
+
+        <div class="footer-main">
+            
+            <div class="footer-logo-col">
+                <div class="logo-neon-wrapper large-footer-logo">
+                    <div class="logo-neon">
+                        <span class="word-info">Info</span><span class="word-studio">Studio</span><span class="hyphen">-</span><span class="number-54">54</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-info">
+                <div class="footer-col">
+                    <h4>Info e Prenotazioni</h4>
+                    <p>Viale dello Scalo S. Lorenzo, 82,<br>00159 Roma RM</p>
+                    <p>Tel: <a href="tel:+390612345678" class="footer-link">+39 06 962 0042</a></p>
+                    <p>Cell: <a href="tel:+393339876543" class="footer-link">+39 347 3779 163</a></p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Orari Apertura</h4>
+                    <p>Lunedì – Mercoledì: chiuso</p>
+                    <p>Giovedì – Sabato: 20:00 – 04:00</p>
+                    <p>Domenica: chiuso</p>
+                </div>
+            </div>
+
+            <div class="footer-map">
+                <iframe 
+                    src="https://maps.google.com/maps?q=Viale+dello+Scalo+S.+Lorenzo,+82,+00159+Roma+RM&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="200" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
+        </div>
     </footer>
 
     <script src="assets/js/config.js"></script>
-    <script src="assets/js/main.js"></script> </body>
+    <script src="assets/js/main.js"></script> 
+</body>
 </html>

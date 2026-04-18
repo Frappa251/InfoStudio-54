@@ -1,5 +1,14 @@
+body.page-menu {
+    background-image: linear-gradient(rgba(11, 11, 15, 0.8), rgba(11, 11, 15, 0.8)), url('../images/menu-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    padding-top: 100px;
+}
+
 .menu-container {
-    padding: 120px 5% 150px;
+    padding: 40px 5% 40px;
     max-width: 1300px;
     margin: 0 auto;
 }
@@ -496,7 +505,7 @@
 
 @media (max-width: 768px) {
     .menu-container {
-        padding: 170px 5% 100px;
+        padding: 40px 5% 40px;
     }
     
     .menu-title {
