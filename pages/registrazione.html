@@ -18,14 +18,16 @@
             <p>Crea il tuo account VIP</p>
 
             <form id="register-form">
-                <div class="input-group">
-                    <label for="nome">Nome</label>
-                    <input type="text" id="nome" required placeholder="Il tuo nome">
-                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" required placeholder="Il tuo nome">
+                    </div>
 
-                <div class="input-group">
-                    <label for="cognome">Cognome</label>
-                    <input type="text" id="cognome" required placeholder="Il tuo cognome">
+                    <div class="input-group">
+                        <label for="cognome">Cognome</label>
+                        <input type="text" id="cognome" required placeholder="Il tuo cognome">
+                    </div>
                 </div>
 
                 <div class="input-group">
@@ -49,6 +51,8 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/config.js"></script>
     <script src="../assets/js/auth.js"></script>
 </body>
 </html>

@@ -59,11 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (profileError) {
                     console.error("Errore salvataggio profilo:", profileError);
-                    alert("Account creato, ma c'è stato un problema col salvataggio del nome.");
+                    mostraMessaggio(registerForm, "Account creato, ma c'è stato un problema col salvataggio del nome.", "error-msg");
                 } else {
-                    alert("🎉 Benvenuto nel club " + nome + "! Registrazione completata.");
-                    registerForm.reset(); 
-                    window.location.href = "../index.html"; 
+                    mostraMessaggio(registerForm, "🎉 Benvenuto nel club " + nome + "! Preparati a ballare.", "success-msg");
+                    
+                    // Aspetta 2 secondi per far leggere il messaggio e poi reindirizza
+                    setTimeout(() => {
+                        registerForm.reset(); 
+                        window.location.href = "../index.html"; 
+                    }, 2000);
                 }
             }
         });
@@ -84,13 +88,29 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (error) {
-                // Errore classico: password sbagliata o utente non esiste
-                alert("🚫 Accesso negato: Credenziali non valide.");
+            mostraMessaggio(loginForm, "🚫 Accesso negato: Credenziali non valide.", "error-msg");
             } else {
-                alert("🥂 Accesso autorizzato. Bentornato!");
+            mostraMessaggio(loginForm, "🥂 Accesso autorizzato. Bentornato!", "success-msg");
+            
+            // Unico redirect dentro il timer!
+            setTimeout(() => {
                 loginForm.reset();
-                window.location.href = "prenotazioni.html"; // Mandiamolo dritto a prenotare!
-            }
+                window.location.href = "../index.html"; 
+            }, 2000);
+        }
         });
     }
 });
+
+// Funzione per creare i messaggi a schermo
+function mostraMessaggio(formElement, testo, classeCSS) {
+    // Rimuove eventuali messaggi vecchi
+    const vecchiMessaggi = formElement.querySelectorAll('.success-msg, .error-msg');
+    vecchiMessaggi.forEach(msg => msg.remove());
+
+    // Crea il nuovo messaggio
+    const div = document.createElement('div');
+    div.className = classeCSS;
+    div.textContent = testo;
+    formElement.appendChild(div);
+}
