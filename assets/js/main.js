@@ -22,11 +22,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const navLinks = document.querySelectorAll('.nav-links a');
         
         navLinks.forEach(link => {
-            // Se troviamo il link "Accedi", lo trasformiamo nel nome dell'utente
             if (link.textContent.includes('Accedi')) {
                 link.textContent = `Ciao, ${nomeUtente}`;
-                link.href = "#"; // Disattiviamo il link per ora
-                link.style.color = "var(--accent-color)"; // Lo facciamo brillare di viola!
+                
+                // Capisce se siamo nella root (index.html) o dentro la cartella /pages/
+                const inPagesFolder = window.location.pathname.includes('/pages/');
+                link.href = inPagesFolder ? "profilo.html" : "pages/profilo.html"; 
+                
+                link.style.color = "var(--accent-color)";
             }
         });
 

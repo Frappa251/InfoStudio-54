@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area VIP | InfoStudio-54</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="stylesheet" href="../assets/css/profilo.css"> <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="../index.html">InfoStudio-54</a></div>
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="prenotazioni.html" class="btn-prenota">Prenota</a></li>
+        </ul>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box vip-dashboard">
+            <h2 class="vip-title">Area VIP</h2>
+            <p class="vip-subtitle">Gestione Account</p>
+
+            <div class="profile-summary" id="profilo-info">
+                </div>
+
+            <div class="profile-actions">
+                <button class="btn-action" id="btn-mostra-tessera">Mostra Tessera Digitale</button>
+                <button class="btn-action btn-outline" disabled>Modifica Dati</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tessera-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="digital-card">
+                <div class="card-header">
+                    <span class="card-logo">InfoStudio-54</span>
+                    <span class="card-type">VIP PASS</span>
+                </div>
+                <div class="card-body">
+                    <div class="user-info">
+                        <h3 id="card-name">Caricamento...</h3>
+                        <p id="card-id">ID: #000000</p>
+                    </div>
+                    <div class="qr-code-zone">
+                        <div class="qr-placeholder">
+                            <div class="qr-square"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    Valid for Season 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/profilo.js"></script>
+</body>
+</html>

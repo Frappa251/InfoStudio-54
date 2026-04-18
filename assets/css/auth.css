@@ -9,7 +9,7 @@
     /* Un leggero sfondo a raggiera per far risaltare il form al centro */
     /* NUOVO SFONDO: Un'immagine di un club scura con un velo nero sopra per far leggere il testo */
     background: linear-gradient(rgba(11, 11, 15, 0.85), rgba(11, 11, 15, 0.95)), 
-                url('https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+                url('../images/background_auth.jpg') center/cover no-repeat;
 }
 
 .auth-box {
