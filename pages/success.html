@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazione Confermata | InfoStudio-54</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <style>
+        /* Un tocco extra per festeggiare */
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-box {
+            border-top: 2px solid #00ff64; /* Linea verde neon invece che viola/oro */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 100, 0.1);
+        }
+        .success-text { color: #00ff64; font-size: 1.2rem; margin-bottom: 2rem; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><a href="../index.html" style="text-decoration: none; color: inherit;">InfoStudio-54</a></div>
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="storia.html">Storia</a></li>
+            <li><a href="menu.html">Menu Tavoli</a></li>
+            <li><a href="login.html">Accedi</a></li>
+        </ul>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box success-box">
+            <div class="success-icon">🍾</div>
+            <h2 style="color: white;">Tavolo Riservato!</h2>
+            <p class="success-text">Pagamento completato con successo.</p>
+            <p>La tua prenotazione è stata registrata nel nostro sistema. Prepara l'outfit migliore, la notte è tua.</p>
+            
+            <a href="../index.html">
+                <button class="btn-prenota auth-btn" style="margin-top: 2rem; background-color: white; color: black;">Torna alla Home</button>
+            </a>
+            <br><br>
+            <a href="profilo.html" style="color: #888; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #888;">Vai alla tua Area VIP</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -16,6 +16,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const formMessage = document.getElementById("formMessage");
 
     const today = new Date().toISOString().split("T")[0];
+    // --- AUTOCOMPILAZIONE DATI UTENTE ---
+    async function precompilaDati() {
+        if (!window.supabaseClient) return;
+        const { data: auth } = await window.supabaseClient.auth.getUser();
+        
+        if (auth && auth.user) {
+            // Inserisce l'email in automatico nel campo (e lo blocca per non farlo cambiare)
+            const emailInput = document.getElementById('email');
+            emailInput.value = auth.user.email;
+            emailInput.readOnly = true; 
+            emailInput.style.opacity = "0.7"; // Lo rende visivamente "bloccato"
+
+            // Pesca il profilo e inserisce Nome, Cognome e Telefono
+            const { data: profilo } = await window.supabaseClient
+                .from('profili').select('*').eq('id', auth.user.id).single();
+            
+            if (profilo) {
+                document.getElementById('nome').value = `${profilo.nome} ${profilo.cognome}`;
+                if (profilo.telefono) {
+                    document.getElementById('telefono_numero').value = profilo.telefono;
+                }
+            }
+        }
+    }
+    precompilaDati(); // Esegue la funzione appena si apre la pagina
+
     dataPrenotazione.min = today;
 
     const telefonoRegex = /^\d{10}$/;
@@ -268,6 +294,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // 1. Verifichiamo che l'utente sia loggato
+        if (!window.supabaseClient || !window.supabaseClient.auth) {
+            setMessage("Client Supabase non inizializzato correttamente.", "error");
+            return;
+        }
+
         const {
             data: { user },
             error: userError
@@ -279,6 +311,51 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const tavoloId = parseInt(tavoloOption.value, 10);
+        
+        setMessage("Verifico la disponibilità del tavolo...", ""); // Messaggio di attesa
+
+        // 2. ANTI-DOPPIA PRENOTAZIONE: Controlliamo se il tavolo è già occupato per quella data
+        const { data: prenotazioniEsistenti, error: checkError } = await window.supabaseClient
+            .from('prenotazioni')
+            .select('id')
+            .eq('tavolo_id', tavoloId)
+            .eq('data_evento', data);
+
+        if (checkError) {
+            setMessage("Errore di connessione. Riprova.", "error");
+            console.error(checkError);
+            return;
+        }
+
+        if (prenotazioniEsistenti && prenotazioniEsistenti.length > 0) {
+            setMessage("Spiacenti, questo tavolo è già stato prenotato per questa data. Seleziona un'altra data o un altro tavolo.", "error");
+            return;
+        }
+
+        // 3. SALVATAGGIO SUL DATABASE
+        // Ora che sappiamo che è libero, salviamo la prenotazione su Supabase
+        const noteText = document.getElementById("note").value.trim();
+
+        const { error: insertError } = await window.supabaseClient
+            .from('prenotazioni')
+            .insert([
+                {
+                    user_id: user.id,          // L'ID segreto dell'utente loggato
+                    tavolo_id: tavoloId,       // 1, 2 o 3
+                    data_evento: data,         // Es. 2026-05-15
+                    numero_persone: persone,   // Quante persone
+                    note: noteText || null     // Eventuali note
+                }
+            ]);
+
+        if (insertError) {
+            setMessage("Impossibile salvare la prenotazione. Contatta l'assistenza.", "error");
+            console.error(insertError);
+            return;
+        }
+
+        // 4. REINDIRIZZAMENTO AL PAGAMENTO
+        // Se tutto è andato bene sul database, mandiamo a Stripe!
         const stripeUrl = STRIPE_LINKS[tavoloId];
 
         if (!stripeUrl) {
@@ -286,7 +363,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        window.location.href = stripeUrl;
+        setMessage("Prenotazione confermata! Reindirizzamento al pagamento...", "success-msg");
+        
+        // Aspettiamo un secondo per far leggere il messaggio e poi andiamo su Stripe
+        setTimeout(() => {
+            window.location.href = stripeUrl;
+        }, 1500);
     });
 
     updateSummary();
