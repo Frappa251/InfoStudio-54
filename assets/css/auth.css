@@ -178,3 +178,57 @@
         margin-bottom: 1.5rem;
     }
 }
+
+/* =========================================
+   PAGINA DI SUCCESSO PRENOTAZIONE
+   ========================================= */
+.success-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.success-box {
+    border-top: 2px solid #00ff64; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 100, 0.1);
+}
+
+.success-title {
+    color: white;
+}
+
+.success-text { 
+    color: #00ff64; 
+    font-size: 1.2rem; 
+    margin-bottom: 2rem; 
+    font-weight: bold;
+}
+
+.btn-white {
+    margin-top: 2rem; 
+    background-color: white; 
+    color: black; 
+    font-weight: 900;
+}
+
+.btn-white:hover {
+    background-color: #e0e0e0; /* Leggero effetto hover aggiunto per stile! */
+}
+
+.link-vip {
+    color: #888; 
+    text-decoration: none; 
+    font-size: 0.9rem; 
+    border-bottom: 1px solid #888;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.link-vip:hover {
+    color: #fff;
+    border-bottom-color: #fff;
+}
