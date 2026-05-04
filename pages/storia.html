@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Nostra Storia | InfoStudio-54</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo-neon-wrapper">
+            <div class="logo-neon" id="mainLogo">
+                <a href="../index.html" style="text-decoration: none; color: inherit;">
+                    <span class="word-info">Info</span><span class="word-studio">Studio</span><span class="hyphen">-</span><span class="number-54">54</span>
+                </a>
+            </div>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="storia.html">Storia</a></li>
+            <li><a href="menu.html">Menu Tavoli</a></li>
+            <li><a href="login.html">Accedi</a></li>
+            <li><a href="prenotazioni.html" class="btn-prenota">Prenota Ora</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenitore Testuale (Stretto e leggibile) -->
+    <main class="story-page">
+        <h1>La Nostra Storia</h1>
+
+        <section class="story-section">
+            <h2>Dove tutto è iniziato</h2>
+            <p>InfoStudio-54 nasce dall'idea di creare uno spazio notturno capace di unire eleganza, spettacolo e cultura del clubbing. Fin dall'inizio, il nostro obiettivo è stato offrire un ambiente unico, in cui musica e atmosfera potessero fondersi in qualcosa di più di una semplice serata.</p>
+            <p>Ispirato ai grandi club internazionali, il locale è stato pensato per accogliere persone diverse, accomunate dalla voglia di vivere la notte con intensità, stile e leggerezza.</p>
+        </section>
+
+        <section class="story-section">
+            <h2>Un'esperienza in continua evoluzione</h2>
+            <p>Con il passare del tempo, InfoStudio-54 è diventato un punto di riferimento per chi cerca eventi esclusivi, DJ set coinvolgenti e una selezione curata di tavoli e servizi premium.</p>
+            <p>Ogni dettaglio, dalle luci alla scenografia, è pensato per amplificare le emozioni della serata e rendere ogni evento diverso dal precedente.</p>
+        </section>
+
+        <section class="story-section">
+            <h2>Le tappe principali</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2023 - Nascita del concept</div>
+                    <p>Prende forma l'idea di un club ispirato all'estetica della nightlife internazionale.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024 - Prime serate evento</div>
+                    <p>Le prime collaborazioni artistiche e musicali iniziano a definire il carattere del locale.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2025 - Esperienza premium</div>
+                    <p>Vengono introdotti nuovi tavoli, servizi dedicati e una proposta più esclusiva.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">Oggi - Una notte da vivere</div>
+                    <p>InfoStudio-54 continua a evolversi, con l'obiettivo di offrire serate sempre più memorabili.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- GALLERIA A TUTTO SCHERMO (Fuori dal contenitore ristretto) -->
+    <section class="full-width-gallery">
+        <img id="story-slider-img" src="../assets/images/serata_disco.jpg" alt="Serata discoteca">
+        <div class="gallery-overlay"></div>
+    </section>
+
+    <!-- Call to action finale rimessa al centro -->
+    <div class="story-page" style="padding-top: 2rem;">
+        <div class="story-cta">
+            <h2>Entra nella nostra storia</h2>
+            <p>Siamo pronti a farti vivere una notte fuori dall'ordinario.</p>
+            <br>
+            <a href="prenotazioni.html" class="btn-prenota" style="padding: 1rem 2rem; font-size: 1.2rem;">Prenota Ora</a>
+        </div>
+    </div>
+
+    <footer class="footer" style="text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 4rem;">
+        <p>&copy; 2026 InfoStudio-54. Tutti i diritti riservati.</p>
+    </footer>
+
+    <!-- Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Logica Slider Automatico con Pre-caricamento
+        const slides = [
+            { src: "../assets/images/serata_disco.jpg", alt: "Serata discoteca" },
+            { src: "../assets/images/dj_set.jpg", alt: "DJ set" },
+            { src: "../assets/images/dancefloor.jpg", alt: "Club nightlife" },
+            { src: "../assets/images/eventi.jpg", alt: "Eventi InfoStudio-54" },
+            { src: "../assets/images/crowd.jpg", alt: "Crowd discoteca luci" }
+        ];
+
+        // PRE-CARICAMENTO IMMAGINI (Evita bug di caricamento lenti)
+        slides.forEach(slide => {
+            const img = new Image();
+            img.src = slide.src;
+        });
+
+        let currentSlide = 0;
+        const imgElement = document.getElementById('story-slider-img');
+
+        if(imgElement) {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                imgElement.style.opacity = 0; // Inizia la sfumatura
+                
+                setTimeout(() => {
+                    imgElement.src = slides[currentSlide].src;
+                    imgElement.alt = slides[currentSlide].alt;
+                    imgElement.style.opacity = 1; // Riappare l'immagine nuova
+                }, 800); // 0.8 secondi di transizione, abbinati al CSS
+            }, 4000); // Cambia immagine ogni 4 secondi
+        }
+    </script>
+</body>
+</html>
