@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="../assets/css/form.css">
 </head>
 
-<body>
-    
-    <!-- Navbar aggiornata con Logo Neon e "Accedi" -->
+<body class="page-storia">
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -179,36 +177,29 @@
     <script src="../assets/js/main.js"></script>
 
     <script>
-        // Array aggiornato con i percorsi dei tuoi file locali in assets/images/
+        // L'array con i tuoi percorsi locali
         const slides = [
-            {
-                src: "../assets/images/serata_disco.jpg",
-                alt: "Serata discoteca"
-            },
-            {
-                src: "../assets/images/dj_set.jpg",
-                alt: "DJ set"
-            },
-            {
-                src: "../assets/images/dancefloor.jpg",
-                alt: "Club nightlife"
-            },
-            {
-                src: "../assets/images/eventi.jpg",
-                alt: "Eventi"
-            },
-            {
-                src: "../assets/images/crowd.jpg",
-                alt: "Crowd discoteca luci"
-            }
+            { src: "../assets/images/serata_disco.jpg", alt: "Serata discoteca" },
+            { src: "../assets/images/dj_set.jpg", alt: "DJ set" },
+            { src: "../assets/images/dancefloor.jpg", alt: "Club nightlife" },
+            { src: "../assets/images/eventi.jpg", alt: "Eventi" },
+            { src: "../assets/images/crowd.jpg", alt: "Crowd discoteca luci" }
         ];
 
         let currentSlide = 0;
+        let slideTimer;
 
         const slideImage = document.getElementById("slide-image");
         const previousButton = document.querySelector(".slide-btn--left");
         const nextButton = document.querySelector(".slide-btn--right");
 
+        // 1. Pre-caricamento per evitare scatti o ritardi
+        slides.forEach(slide => {
+            const img = new Image();
+            img.src = slide.src;
+        });
+
+        // 2. Funzione principale per mostrare la slide
         function showSlide(index) {
             if (index < 0) {
                 currentSlide = slides.length - 1;
@@ -218,17 +209,45 @@
                 currentSlide = index;
             }
 
-            slideImage.src = slides[currentSlide].src;
-            slideImage.alt = slides[currentSlide].alt;
+            // Effetto fade-out invisibile (nasconde l'immagine)
+            slideImage.style.opacity = 0;
+            
+            // Aspetta 200 millisecondi, cambia la foto e fa il fade-in
+            setTimeout(() => {
+                slideImage.src = slides[currentSlide].src;
+                slideImage.alt = slides[currentSlide].alt;
+                slideImage.style.opacity = 1;
+            }, 200);
         }
 
+        // 3. Funzione per passare alla successiva
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        // 4. Gestione bottoni manuali
         previousButton.addEventListener("click", function () {
             showSlide(currentSlide - 1);
+            resetTimer(); // Se l'utente clicca, azzeriamo il timer automatico
         });
 
         nextButton.addEventListener("click", function () {
-            showSlide(currentSlide + 1);
+            nextSlide();
+            resetTimer();
         });
+
+        // 5. Autoplay (Cambia foto ogni 3.5 secondi)
+        function startTimer() {
+            slideTimer = setInterval(nextSlide, 3500);
+        }
+
+        function resetTimer() {
+            clearInterval(slideTimer);
+            startTimer();
+        }
+
+        // Avvia il timer appena si carica la pagina
+        startTimer();
     </script>
 </body>
 

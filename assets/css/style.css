@@ -533,3 +533,315 @@ html {
     opacity: 0.6;
     text-shadow: none;
 }
+
+/* =========================================
+   PAGINA STORIA (Design Originale)
+   ========================================= */
+.story-page {
+    padding: 140px 5% 60px; /* Spazio per la navbar */
+    max-width: 1100px;
+    margin: 0 auto; /* Centra la pagina */
+}
+
+/* Header della Storia */
+.story-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.story-eyebrow {
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.story-hero h1 {
+    font-size: 3.5rem;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 15px var(--accent-color);
+}
+
+.story-subtitle {
+    color: #aaa;
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Le "Card" scure per contenere il testo */
+.story-section {
+    margin-bottom: 3rem;
+}
+
+.story-card {
+    background: rgba(15, 15, 20, 0.6); /* Sfondo scuro semitrasparente */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.story-card h2 {
+    color: var(--accent-color);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.story-card p {
+    color: #d8d8e6;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* Griglia per affiancare due card */
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* =========================================
+   LA TIMELINE (Linea del Tempo)
+   ========================================= */
+.timeline {
+    border-left: 2px solid var(--accent-color);
+    padding-left: 2rem;
+    margin-left: 1rem;
+    margin-top: 2rem;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+/* Il pallino viola */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.65rem;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.timeline-year {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+/* =========================================
+   LO SLIDESHOW FOTOGRAFICO
+   ========================================= */
+.slideshow {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(209, 0, 255, 0.3);
+    box-shadow: 0 0 20px rgba(209, 0, 255, 0.2);
+}
+
+.slideshow img { 
+    width: 100%; 
+    height: 450px; 
+    object-fit: cover; 
+    display: block; 
+    transition: opacity 0.2s ease-in-out; /* <- AGGIUNGI QUESTA RIGA */
+}
+
+/* Bottoni per cambiare foto */
+.slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: background 0.3s;
+}
+
+.slide-btn:hover {
+    background: var(--accent-color);
+}
+
+.slide-btn--left { left: 0; border-radius: 0 8px 8px 0; }
+.slide-btn--right { right: 0; border-radius: 8px 0 0 8px; }
+
+/* =========================================
+   RESPONSIVE (Per i cellulari)
+   ========================================= */
+@media (max-width: 768px) {
+    .story-page { padding: 120px 1.5rem 60px; }
+    .story-hero h1 { font-size: 2.5rem; }
+    .story-grid { grid-template-columns: 1fr; } /* Mette le card una sotto l'altra */
+    .story-card { padding: 1.5rem; }
+    .slideshow img { height: 300px; }
+}
+
+/* =========================================
+   PAGINA STORIA (Stile Glassmorphism Premium)
+   ========================================= */
+
+/* 1. Sfondo a tutto schermo fisso */
+body.page-storia {
+    /* Cambia il nome dell'immagine qui sotto se vuoi uno sfondo diverso */
+    background: linear-gradient(rgba(11, 11, 15, 0.85), rgba(11, 11, 15, 0.95)), 
+                url('../images/serata_disco.jpg') center/cover fixed no-repeat;
+    color: var(--text-main);
+}
+
+.story-page {
+    padding: 140px 5% 60px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* 2. Titoli Principali */
+.story-hero { text-align: center; margin-bottom: 4rem; }
+.story-eyebrow { 
+    color: var(--accent-color); 
+    text-transform: uppercase; 
+    letter-spacing: 3px; 
+    font-weight: 900; 
+    margin-bottom: 0.5rem; 
+    font-size: 0.9rem;
+}
+.story-hero h1 { 
+    font-size: 3.5rem; 
+    color: #fff; 
+    text-transform: uppercase; 
+    margin-bottom: 1rem; 
+    text-shadow: 0 0 15px var(--accent-color); 
+}
+.story-subtitle { 
+    color: #aaa; 
+    font-size: 1.1rem; 
+    max-width: 700px; 
+    margin: 0 auto; 
+    line-height: 1.6;
+}
+
+/* 3. Le "Carte di Vetro" (Glassmorphism) */
+.story-section { margin-bottom: 2rem; }
+
+.story-card {
+    background: rgba(15, 15, 20, 0.4); /* Più trasparente per far vedere lo sfondo */
+    border: 1px solid rgba(209, 0, 255, 0.4); /* Bordo Neon Viola */
+    border-radius: 12px;
+    padding: 2.5rem;
+    backdrop-filter: blur(12px); /* L'effetto vetro sfocato */
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.story-card h2 {
+    color: var(--accent-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.story-card p {
+    color: #d8d8e6;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+.story-card p:last-child { margin-bottom: 0; }
+
+/* 4. Griglia affiancata */
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+/* 5. La Timeline a righe orizzontali */
+.timeline { display: flex; flex-direction: column; }
+.timeline-item { 
+    display: flex; 
+    gap: 2rem; 
+    padding: 1.5rem 0; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+}
+.timeline-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.timeline-year { 
+    color: var(--accent-color); 
+    font-weight: 900; 
+    font-size: 1.2rem; 
+    min-width: 60px; 
+}
+
+.timeline-content h3 { color: #fff; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.timeline-content p { color: #aaa; font-size: 0.95rem; }
+
+/* 6. Lo Slider Immagini */
+.slideshow {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(209, 0, 255, 0.3);
+}
+.slideshow img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+
+.slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    padding: 1rem;
+    text-shadow: 0 0 15px rgba(0,0,0,0.9);
+    transition: transform 0.2s, color 0.2s;
+}
+.slide-btn:hover { color: var(--accent-color); transform: translateY(-50%) scale(1.2); }
+.slide-btn--left { left: 0; }
+.slide-btn--right { right: 0; }
+
+/* 7. La Call to Action finale */
+.story-cta { text-align: center; }
+.story-cta h2 { color: #fff; text-shadow: none; margin-bottom: 0.5rem;}
+.story-cta__btn { display: inline-block; margin-top: 1.5rem; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px;}
+
+/* 8. Perfettamente Adattabile ai Cellulari */
+@media (max-width: 768px) {
+    .story-grid { grid-template-columns: 1fr; }
+    .timeline-item { flex-direction: column; gap: 0.5rem; }
+    .slide-btn { font-size: 1.5rem; }
+    .story-card { padding: 1.5rem; }
+    .story-hero h1 { font-size: 2.2rem; }
+}
