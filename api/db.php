@@ -56,19 +56,31 @@ function db(): PDO
 
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
 
-    try {
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]);
-    } catch (PDOException $e) {
-        json_response([
-            'success' => false,
-            'message' => 'Connessione al database non riuscita. Controlla api/db.php e importa api/database.sql.',
-            'detail' => $e->getMessage()
-        ], 500);
+    // Inizializza le password da provare (vuota per te, 'root' per il tuo amico)
+    $passwords_to_try = ['', 'root'];
+    $pdo = null;
+    $last_error = '';
+
+    foreach ($passwords_to_try as $pwd) {
+        try {
+            // Prova a connettersi. Assicurati che DB_HOST e DB_NAME siano definiti in alto!
+            $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, $pwd);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // Se arriva qui senza errori, la connessione è riuscita! Esce dal ciclo.
+            break; 
+        } catch (PDOException $e) {
+            // Salva l'errore ma continua il ciclo per provare l'altra password
+            $last_error = $e->getMessage();
+        }
     }
+
+    // Se dopo averle provate tutte $pdo è ancora null, blocca tutto.
+    if (!$pdo) {
+        die(json_encode(['success' => false, 'message' => 'Errore DB: ' . $last_error]));
+    }
+
+    // Se usi una funzione db() per richiamare la connessione come nel file register.php, 
+    // assicurati che restituisca questa variabile $pdo.
 
     return $pdo;
 }
