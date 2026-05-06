@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area VIP | InfoStudio-54</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="stylesheet" href="../assets/css/profilo.css"> <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <nav class="navbar">
+        <div class="logo-neon-wrapper">
+            <div class="logo-neon" id="mainLogo">
+                <a href="../index.html" style="text-decoration: none; color: inherit;">
+                    <span class="word-info">Info</span><span class="word-studio">Studio</span><span class="hyphen">-</span><span class="number-54">54</span>
+                </a>
+            </div>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="storia.html">Storia</a></li>
+            <li><a href="menu.html">Menu Tavoli</a></li>
+            <li><a href="login.html">Accedi</a></li>
+            <li><a href="prenotazioni.html" class="btn-prenota">Prenota Ora</a></li>
+        </ul>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box vip-dashboard">
+            <h2 class="vip-title">Area VIP</h2>
+            <p class="vip-subtitle">Gestione Account</p>
+
+            <div class="profile-summary" id="profilo-info">
+                </div>
+
+            <div class="profile-actions">
+                <button class="btn-action" id="btn-mostra-tessera">Mostra Tessera Digitale</button>
+                <button class="btn-action btn-outline" id="btn-modifica-dati">Modifica Dati</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tessera-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="digital-card">
+                <div class="card-header">
+                    <span class="card-logo">InfoStudio-54</span>
+                    <span class="card-type">VIP PASS</span>
+                </div>
+                <div class="card-body">
+                    <div class="user-info">
+                        <h3 id="card-name">Caricamento...</h3>
+                        <p id="card-id">ID: #000000</p>
+                    </div>
+                    <div class="qr-code-zone">
+                        <div class="qr-placeholder">
+                            <div class="qr-square"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    Valid for Season 2026
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modifica-modal" class="modal">
+        <div class="modal-content modifica-content">
+            <span class="close-modal close-modifica" id="close-modifica">&times;</span>
+            <h2 class="modifica-title">Aggiorna Dati</h2>
+            
+            <form id="form-modifica">
+                <div class="input-group modifica-group">
+                    <label for="edit-nome" class="modifica-label">Nome</label>
+                    <input type="text" id="edit-nome" class="modifica-input" required>
+                </div>
+                <div class="input-group modifica-group">
+                    <label for="edit-cognome" class="modifica-label">Cognome</label>
+                    <input type="text" id="edit-cognome" class="modifica-input" required>
+                </div>
+                <div class="input-group modifica-group-last">
+                    <label for="edit-telefono" class="modifica-label">Telefono</label>
+                    <input type="tel" id="edit-telefono" class="modifica-input" required>
+                </div>
+                
+                <button type="submit" class="btn-action btn-full">Salva Modifiche</button>
+                <p id="modifica-msg" class="modifica-msg"></p>
+            </form>
+        </div>
+    </div>
+
+<!-- Carichiamo jQuery e le nuove API (Rimosso Supabase) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/profilo.js"></script>
+</body>
+</html>
