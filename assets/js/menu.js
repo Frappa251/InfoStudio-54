@@ -139,6 +139,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtns = document.querySelectorAll('.btn-add');
     addBtns.forEach(btn => {
         btn.addEventListener('click', function() {
+
+           const dropdownBtn = this.closest('.drink-card').querySelector('.drink-options-btn');
+        
+        if (dropdownBtn) {
+            const textSpan = dropdownBtn.querySelector('span:first-child');
+            const text = textSpan ? textSpan.textContent.trim() : '';
+            
+            // Array con tutti i testi di default (non selezionati)
+            const testiVuoti = ['Scegli il Gin', 'Scegli la Vodka', 'Scegli il Rum', 'Scegli la base'];
+            
+            if (testiVuoti.includes(text)) {
+                
+                // RICHIAMA IL MESSAGGIO DEL SITO INVECE DELL'ALERT DEL BROWSER
+                showCustomAlert("Devi prima scegliere la base del drink per selezionarlo.");
+                
+                // Effetto visivo: fa lampeggiare di rosso il pulsante delle opzioni
+                dropdownBtn.style.borderColor = "#ff4444";
+                setTimeout(() => { dropdownBtn.style.borderColor = "rgba(255, 255, 255, 0.1)"; }, 2000);
+                
+                return; // Blocca l'esecuzione: il drink non va nel carrello
+            }
+        }
+
             const card = this.closest('.drink-card');
             const name = card.querySelector('.drink-name').textContent;
             const optionBtn = card.querySelector('.drink-options-btn span:first-child');
@@ -217,4 +240,21 @@ document.addEventListener('DOMContentLoaded', () => {
             modalOverlay.classList.remove('active');
         }
     });
+
+    // Funzione per mostrare il messaggio personalizzato del sito
+function showCustomAlert(message) {
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Fa scendere il messaggio (aggiunge la classe .show)
+    setTimeout(() => { toast.classList.add('show'); }, 10);
+
+    // Dopo 3 secondi lo fa risalire e lo elimina dal codice
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400); // Aspetta che finisca l'animazione
+    }, 3000);
+}
 });

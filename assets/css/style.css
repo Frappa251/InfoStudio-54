@@ -845,3 +845,28 @@ body.page-storia {
     .story-card { padding: 1.5rem; }
     .story-hero h1 { font-size: 2.2rem; }
 }
+
+/* --- MESSAGGIO DI ERRORE PERSONALIZZATO --- */
+.custom-toast {
+    position: fixed;
+    top: -100px; /* Parte nascosto fuori dallo schermo in alto */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(20, 20, 25, 0.95);
+    border: 1px solid #ff0055; /* Bordo rosso neon */
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(255, 0, 85, 0.4);
+    z-index: 10000; /* Lo fa stare sopra a tutto il resto */
+    font-weight: 600;
+    font-size: 1rem;
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animazione fluida con rimbalzo */
+    text-align: center;
+    pointer-events: none; /* Evita che dia fastidio ai click */
+}
+
+/* Questa classe viene aggiunta da JS per farlo scendere */
+.custom-toast.show {
+    top: 40px; 
+}
