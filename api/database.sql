@@ -1,0 +1,44 @@
+CREATE DATABASE IF NOT EXISTS infostudio54
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE infostudio54;
+
+CREATE TABLE IF NOT EXISTS utenti (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(80) NOT NULL,
+  cognome VARCHAR(80) NOT NULL,
+  telefono VARCHAR(30) NOT NULL,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS prenotazioni (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  tavolo_id TINYINT UNSIGNED NOT NULL,
+  data_evento DATE NOT NULL,
+  numero_persone TINYINT UNSIGNED NOT NULL,
+  nome_contatto VARCHAR(160) NOT NULL,
+  email_contatto VARCHAR(190) NOT NULL,
+  telefono_contatto VARCHAR(40) NOT NULL,
+  note TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_prenotazioni_utenti
+    FOREIGN KEY (user_id) REFERENCES utenti(id)
+    ON DELETE CASCADE,
+  CONSTRAINT unq_tavolo_data UNIQUE (tavolo_id, data_evento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ordini_menu (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NULL,
+  numero_tavolo TINYINT UNSIGNED NOT NULL,
+  totale DECIMAL(8,2) NOT NULL,
+  items_json JSON NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_ordini_utenti
+    FOREIGN KEY (user_id) REFERENCES utenti(id)
+    ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

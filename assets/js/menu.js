@@ -1,220 +1,229 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.drink-card');
-    const floatingBar = document.getElementById('floatingBar');
-    const totalDisplay = document.getElementById('cartTotal');
-    const cartHeader = document.getElementById('cartHeader');
-    const cartItemsContainer = document.getElementById('cartItemsList');
-    const btnCheckout = document.getElementById('btnCheckout');
+// assets/js/menu.js
+// Menu dinamico realizzato con jQuery: filtri, carrello, modale e invio ordine via AJAX a PHP.
 
-    const modalOverlay = document.getElementById('tableModal');
-    const modalFormContent = document.getElementById('modalFormContent');
-    const modalSuccessContent = document.getElementById('modalSuccessContent');
-    const tableNumberInput = document.getElementById('tableNumberInput');
-    const btnCancelModal = document.getElementById('btnCancelModal');
-    const btnConfirmModal = document.getElementById('btnConfirmModal');
-    const successTableNumber = document.getElementById('successTableNumber');
+$(document).ready(function () {
+    const $filterBtns = $('.filter-btn');
+    const $cards = $('.drink-card');
+    const $floatingBar = $('#floatingBar');
+    const $totalDisplay = $('#cartTotal');
+    const $cartHeader = $('#cartHeader');
+    const $cartItemsContainer = $('#cartItemsList');
+    const $btnCheckout = $('#btnCheckout');
+
+    const $modalOverlay = $('#tableModal');
+    const $modalFormContent = $('#modalFormContent');
+    const $modalSuccessContent = $('#modalSuccessContent');
+    const $tableNumberInput = $('#tableNumberInput');
+    const $btnCancelModal = $('#btnCancelModal');
+    const $btnConfirmModal = $('#btnConfirmModal');
+    const $successTableNumber = $('#successTableNumber');
 
     let cart = [];
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const filter = btn.dataset.filter;
-            
-            cards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
-                    card.style.display = 'block';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'scale(1)';
-                    }, 50);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 400);
-                }
-            });
-        });
-    });
+    $filterBtns.on('click', function () {
+        const $btn = $(this);
+        const filter = $btn.data('filter');
 
-    const optionsBtns = document.querySelectorAll('.drink-options-btn');
-    optionsBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const panel = btn.nextElementSibling;
-            if(!panel || !panel.classList.contains('options-panel')) return;
-            
-            const isOpen = panel.classList.contains('open');
-            
-            document.querySelectorAll('.options-panel').forEach(p => p.classList.remove('open'));
-            document.querySelectorAll('.toggle-icon').forEach(i => i.textContent = '▼');
-            
-            if (!isOpen) {
-                panel.classList.add('open');
-                btn.querySelector('.toggle-icon').textContent = '▲';
+        $filterBtns.removeClass('active');
+        $btn.addClass('active');
+
+        $cards.each(function () {
+            const $card = $(this);
+            const category = $card.data('category');
+
+            if (filter === 'all' || category === filter) {
+                $card.show();
+                setTimeout(() => {
+                    $card.css({ opacity: '1', transform: 'scale(1)' });
+                }, 50);
+            } else {
+                $card.css({ opacity: '0', transform: 'scale(0.9)' });
+                setTimeout(() => $card.hide(), 400);
             }
         });
     });
 
-    const optionItems = document.querySelectorAll('.option-item');
-    optionItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const parentPanel = this.closest('.options-panel');
-            const itemsInPanel = parentPanel.querySelectorAll('.option-item');
-            
-            itemsInPanel.forEach(i => i.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            const card = this.closest('.drink-card');
-            const basePrice = parseFloat(card.dataset.baseprice);
-            const extraPrice = parseFloat(this.dataset.extra);
-            const newPrice = basePrice + extraPrice;
-            
-            card.dataset.currentprice = newPrice;
-            const finalPriceElement = card.querySelector('.final-price');
-            finalPriceElement.textContent = `€${newPrice.toFixed(2)}`;
+    $('.drink-options-btn').on('click', function () {
+        const $btn = $(this);
+        const $panel = $btn.next('.options-panel');
+        if (!$panel.length) return;
 
-            const btnText = card.querySelector('.drink-options-btn span:first-child');
-            const selectedName = this.querySelector('span:first-child').textContent;
-            const prefix = card.dataset.category === 'gin' ? 'Gin' : 'Vodka';
-            btnText.textContent = `Scegli ${prefix} (${selectedName})`;
-            
-            parentPanel.classList.remove('open');
-            card.querySelector('.toggle-icon').textContent = '▼';
-        });
+        const isOpen = $panel.hasClass('open');
+        $('.options-panel').removeClass('open');
+        $('.toggle-icon').text('▼');
+
+        if (!isOpen) {
+            $panel.addClass('open');
+            $btn.find('.toggle-icon').text('▲');
+        }
+    });
+
+    $('.option-item').on('click', function () {
+        const $item = $(this);
+        const $parentPanel = $item.closest('.options-panel');
+
+        $parentPanel.find('.option-item').removeClass('selected');
+        $item.addClass('selected');
+
+        const $card = $item.closest('.drink-card');
+        const basePrice = parseFloat($card.data('baseprice'));
+        const extraPrice = parseFloat($item.data('extra'));
+        const newPrice = basePrice + extraPrice;
+
+        $card.data('currentprice', newPrice);
+        $card.attr('data-currentprice', newPrice);
+        $card.find('.final-price').text(`€${newPrice.toFixed(2)}`);
+
+        const selectedName = $item.find('span:first').text();
+        const prefix = $card.data('category') === 'gin' ? 'Gin' : 'Vodka';
+        $card.find('.drink-options-btn span:first').text(`Scegli ${prefix} (${selectedName})`);
+
+        $parentPanel.removeClass('open');
+        $card.find('.toggle-icon').text('▼');
     });
 
     function updateCartUI() {
-        cartItemsContainer.innerHTML = '';
+        $cartItemsContainer.empty();
         let total = 0;
-        
+
         if (cart.length === 0) {
-            floatingBar.classList.remove('visible');
-            floatingBar.classList.remove('expanded');
+            $floatingBar.removeClass('visible expanded');
             return;
         }
 
-        floatingBar.classList.add('visible');
+        $floatingBar.addClass('visible');
 
         cart.forEach(item => {
             total += item.price;
-            const itemElement = document.createElement('div');
-            itemElement.className = 'cart-item';
-            itemElement.innerHTML = `
-                <div class="item-details">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-option">${item.option}</span>
+            const $itemElement = $(`
+                <div class="cart-item">
+                    <div class="item-details">
+                        <span class="item-name"></span>
+                        <span class="item-option"></span>
+                    </div>
+                    <div class="item-actions">
+                        <span class="item-price"></span>
+                        <button class="btn-remove" type="button">X</button>
+                    </div>
                 </div>
-                <div class="item-actions">
-                    <span class="item-price">€${item.price.toFixed(2)}</span>
-                    <button class="btn-remove" data-id="${item.id}">X</button>
-                </div>
-            `;
-            cartItemsContainer.appendChild(itemElement);
+            `);
+
+            $itemElement.find('.item-name').text(item.name);
+            $itemElement.find('.item-option').text(item.option);
+            $itemElement.find('.item-price').text(`€${item.price.toFixed(2)}`);
+            $itemElement.find('.btn-remove').data('id', item.id);
+            $cartItemsContainer.append($itemElement);
         });
 
-        totalDisplay.textContent = `€${total.toFixed(2)}`;
-
-        document.querySelectorAll('.btn-remove').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const idToRemove = parseInt(this.dataset.id);
-                cart = cart.filter(item => item.id !== idToRemove);
-                updateCartUI();
-            });
-        });
+        $totalDisplay.text(`€${total.toFixed(2)}`);
     }
 
-    cartHeader.addEventListener('click', (e) => {
-        if (e.target.classList.contains('btn-checkout') || e.target.id === 'btnCheckout') return;
+    $cartItemsContainer.on('click', '.btn-remove', function (e) {
+        e.stopPropagation();
+        const idToRemove = $(this).data('id');
+        cart = cart.filter(item => item.id !== idToRemove);
+        updateCartUI();
+    });
+
+    $cartHeader.on('click', function (e) {
+        if ($(e.target).hasClass('btn-checkout') || e.target.id === 'btnCheckout') return;
         if (cart.length > 0) {
-            floatingBar.classList.toggle('expanded');
+            $floatingBar.toggleClass('expanded');
         }
     });
 
-    const addBtns = document.querySelectorAll('.btn-add');
-    addBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.drink-card');
-            const name = card.querySelector('.drink-name').textContent;
-            const optionBtn = card.querySelector('.drink-options-btn span:first-child');
-            const optionText = optionBtn ? optionBtn.textContent : '';
-            const price = parseFloat(card.dataset.currentprice);
+    $('.btn-add').on('click', function () {
+        const $button = $(this);
+        const $card = $button.closest('.drink-card');
+        const name = $card.find('.drink-name').text();
+        const optionText = $card.find('.drink-options-btn span:first').text() || '';
+        const price = parseFloat($card.data('currentprice'));
 
-            cart.push({
-                id: Date.now() + Math.floor(Math.random() * 1000),
-                name: name,
-                option: optionText !== '-' ? optionText : '',
-                price: price
-            });
-
-            updateCartUI();
-
-            const originalText = this.textContent;
-            this.textContent = 'Aggiunto ✓';
-            this.style.background = '#00ff88';
-            this.style.color = '#0b0b0f';
-            this.style.boxShadow = '0 0 20px #00ff88';
-            
-            setTimeout(() => {
-                this.textContent = originalText;
-                this.style.background = '';
-                this.style.color = '';
-                this.style.boxShadow = '';
-            }, 1500);
+        cart.push({
+            id: Date.now() + Math.floor(Math.random() * 1000),
+            name,
+            option: optionText !== '-' ? optionText : '',
+            price
         });
+
+        updateCartUI();
+
+        const originalText = $button.text();
+        $button
+            .text('Aggiunto ✓')
+            .css({ background: '#00ff88', color: '#0b0b0f', boxShadow: '0 0 20px #00ff88' });
+
+        setTimeout(() => {
+            $button.text(originalText).css({ background: '', color: '', boxShadow: '' });
+        }, 1500);
     });
 
-    btnCheckout.addEventListener('click', (e) => {
+    $btnCheckout.on('click', function (e) {
         e.stopPropagation();
         if (cart.length === 0) return;
-        
-        modalFormContent.style.display = 'block';
-        modalSuccessContent.style.display = 'none';
-        tableNumberInput.value = '';
-        tableNumberInput.placeholder = 'Scegli un tavolo (1-30)';
-        tableNumberInput.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        modalOverlay.classList.add('active');
-        setTimeout(() => tableNumberInput.focus(), 100);
+
+        $modalFormContent.show();
+        $modalSuccessContent.hide();
+        $tableNumberInput
+            .val('')
+            .attr('placeholder', 'Scegli un tavolo (1-30)')
+            .css('border-color', 'rgba(255, 255, 255, 0.2)');
+        $modalOverlay.addClass('active');
+        setTimeout(() => $tableNumberInput.trigger('focus'), 100);
     });
 
-    btnCancelModal.addEventListener('click', () => {
-        modalOverlay.classList.remove('active');
+    $btnCancelModal.on('click', function () {
+        $modalOverlay.removeClass('active');
     });
 
-    btnConfirmModal.addEventListener('click', () => {
-        const numeroTavoloVal = tableNumberInput.value;
-        const numeroTavolo = parseInt(numeroTavoloVal, 10);
-        
-        if (!isNaN(numeroTavolo) && numeroTavolo >= 1 && numeroTavolo <= 30) {
-            modalFormContent.style.display = 'none';
-            successTableNumber.textContent = numeroTavolo;
-            modalSuccessContent.style.display = 'block';
-            
+    $btnConfirmModal.on('click', async function () {
+        const numeroTavolo = parseInt($tableNumberInput.val(), 10);
+
+        if (isNaN(numeroTavolo) || numeroTavolo < 1 || numeroTavolo > 30) {
+            $tableNumberInput
+                .val('')
+                .attr('placeholder', 'Errore: solo tavoli 1-30!')
+                .css('border-color', '#ff4444');
+            setTimeout(() => $tableNumberInput.css('border-color', 'rgba(255, 255, 255, 0.2)'), 1500);
+            return;
+        }
+
+        $btnConfirmModal.prop('disabled', true).text('Invio...');
+
+        try {
+            const response = await InfoStudioApi.request('create_order.php', {
+                method: 'POST',
+                data: {
+                    numero_tavolo: numeroTavolo,
+                    items: cart.map(({ name, option, price }) => ({ name, option, price }))
+                }
+            });
+
+            if (!response.success) {
+                throw { responseJSON: response };
+            }
+
+            $modalFormContent.hide();
+            $successTableNumber.text(numeroTavolo);
+            $modalSuccessContent.show();
+
             cart = [];
             updateCartUI();
-            floatingBar.classList.remove('expanded');
+            $floatingBar.removeClass('expanded');
 
-            setTimeout(() => {
-                modalOverlay.classList.remove('active');
-            }, 2500);
-        } else {
-            tableNumberInput.value = '';
-            tableNumberInput.placeholder = 'Errore: solo tavoli 1-30!';
-            tableNumberInput.style.borderColor = '#ff4444';
-            setTimeout(() => {
-                tableNumberInput.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            }, 1500);
+            setTimeout(() => $modalOverlay.removeClass('active'), 2500);
+        } catch (error) {
+            InfoStudioApi.logError('ordine menu', error);
+            const message = InfoStudioApi.userMessage(error, 'Ordine non inviato. Riprova tra poco.');
+            $tableNumberInput.val('').attr('placeholder', message).css('border-color', '#ff4444');
+        } finally {
+            $btnConfirmModal.prop('disabled', false).text('Conferma Ordine');
         }
     });
 
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay && modalFormContent.style.display === 'block') {
-            modalOverlay.classList.remove('active');
+    $modalOverlay.on('click', function (e) {
+        if (e.target === this && $modalFormContent.is(':visible')) {
+            $modalOverlay.removeClass('active');
         }
     });
 });
