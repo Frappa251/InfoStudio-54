@@ -12,6 +12,7 @@ $(document).ready(function () {
     const $modalFormContent = $('#modalFormContent');
     const $modalSuccessContent = $('#modalSuccessContent');
     const $tableNumberInput = $('#tableNumberInput');
+    const $userIdInput = $('#userIdInput');
     const $btnCancelModal = $('#btnCancelModal');
     const $btnConfirmModal = $('#btnConfirmModal');
     const $successTableNumber = $('#successTableNumber');
@@ -204,6 +205,10 @@ $(document).ready(function () {
             .val('')
             .attr('placeholder', 'Scegli un tavolo (1-30)')
             .css('border-color', 'rgba(255, 255, 255, 0.2)');
+        $userIdInput
+            .val('')
+            .attr('placeholder', 'Es. 00000123')
+            .css('border-color', 'rgba(255, 255, 255, 0.2)');
         $modalOverlay.addClass('active');
         setTimeout(() => $tableNumberInput.trigger('focus'), 100);
     });
@@ -224,12 +229,24 @@ $(document).ready(function () {
             }, 1500);
             return;
         }
+        const userId = $userIdInput.val().trim();
+        if (!userId) {
+            $userIdInput
+                .val('')
+                .attr('placeholder', 'Errore: Inserisci il tuo ID VIP!')
+                .css('border-color', '#ff4444');
+            setTimeout(() => {
+                $userIdInput.css('border-color', 'rgba(255, 255, 255, 0.2)');
+            }, 1500);
+            return;
+        }
         $btnConfirmModal.prop('disabled', true).text('Invio...');
         try {
             const response = await InfoStudioApi.request('create_order.php', {
                 method: 'POST',
                 data: {
                     numero_tavolo: numeroTavolo,
+                    id_utente: userId, // <-- AGGIUNTO QUESTO!
                     items: cart.map(({ name, option, price }) => ({
                         name,
                         option,
