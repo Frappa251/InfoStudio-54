@@ -20,6 +20,20 @@ $(document).ready(function () {
 
     let cart = [];
 
+    function showCustomAlert(message) {
+        const $toast = $('<div class="custom-toast"></div>').text(message);
+        $('body').append($toast);
+
+        setTimeout(() => {
+            $toast.addClass('show');
+        }, 10);
+
+        setTimeout(() => {
+            $toast.removeClass('show');
+            setTimeout(() => $toast.remove(), 400);
+        }, 3000);
+    }
+
     $filterBtns.on('click', function () {
         const $btn = $(this);
         const filter = $btn.data('filter');
@@ -46,9 +60,11 @@ $(document).ready(function () {
     $('.drink-options-btn').on('click', function () {
         const $btn = $(this);
         const $panel = $btn.next('.options-panel');
+
         if (!$panel.length) return;
 
         const isOpen = $panel.hasClass('open');
+
         $('.options-panel').removeClass('open');
         $('.toggle-icon').text('▼');
 
@@ -66,8 +82,8 @@ $(document).ready(function () {
         $item.addClass('selected');
 
         const $card = $item.closest('.drink-card');
-        const basePrice = parseFloat($card.data('baseprice'));
-        const extraPrice = parseFloat($item.data('extra'));
+        const basePrice = parseFloat($card.data('baseprice')) || 0;
+        const extraPrice = parseFloat($item.data('extra')) || 0;
         const newPrice = basePrice + extraPrice;
 
         $card.data('currentprice', newPrice);
@@ -75,8 +91,14 @@ $(document).ready(function () {
         $card.find('.final-price').text(`€${newPrice.toFixed(2)}`);
 
         const selectedName = $item.find('span:first').text();
-        const prefix = $card.data('category') === 'gin' ? 'Gin' : 'Vodka';
-        $card.find('.drink-options-btn span:first').text(`Scegli ${prefix} (${selectedName})`);
+        const category = $card.data('category');
+
+        let prefix = 'base';
+        if (category === 'gin') prefix = 'Gin';
+        if (category === 'vodka') prefix = 'Vodka';
+        if (category === 'rum') prefix = 'Rum';
+
+        $card.find('.drink-options-btn span:first').text(`${prefix}: ${selectedName}`);
 
         $parentPanel.removeClass('open');
         $card.find('.toggle-icon').text('▼');
@@ -84,10 +106,12 @@ $(document).ready(function () {
 
     function updateCartUI() {
         $cartItemsContainer.empty();
+
         let total = 0;
 
         if (cart.length === 0) {
             $floatingBar.removeClass('visible expanded');
+            $totalDisplay.text('€0.00');
             return;
         }
 
@@ -95,6 +119,7 @@ $(document).ready(function () {
 
         cart.forEach(item => {
             total += item.price;
+
             const $itemElement = $(`
                 <div class="cart-item">
                     <div class="item-details">
@@ -112,6 +137,7 @@ $(document).ready(function () {
             $itemElement.find('.item-option').text(item.option);
             $itemElement.find('.item-price').text(`€${item.price.toFixed(2)}`);
             $itemElement.find('.btn-remove').data('id', item.id);
+
             $cartItemsContainer.append($itemElement);
         });
 
@@ -120,89 +146,97 @@ $(document).ready(function () {
 
     $cartItemsContainer.on('click', '.btn-remove', function (e) {
         e.stopPropagation();
+
         const idToRemove = $(this).data('id');
         cart = cart.filter(item => item.id !== idToRemove);
+
         updateCartUI();
     });
 
     $cartHeader.on('click', function (e) {
         if ($(e.target).hasClass('btn-checkout') || e.target.id === 'btnCheckout') return;
+
         if (cart.length > 0) {
             $floatingBar.toggleClass('expanded');
         }
     });
 
-<<<<<<< HEAD
     $('.btn-add').on('click', function () {
         const $button = $(this);
         const $card = $button.closest('.drink-card');
-        const name = $card.find('.drink-name').text();
-        const optionText = $card.find('.drink-options-btn span:first').text() || '';
-        const price = parseFloat($card.data('currentprice'));
-=======
-    const addBtns = document.querySelectorAll('.btn-add');
-    addBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
 
-           const dropdownBtn = this.closest('.drink-card').querySelector('.drink-options-btn');
-        
-        if (dropdownBtn) {
-            const textSpan = dropdownBtn.querySelector('span:first-child');
-            const text = textSpan ? textSpan.textContent.trim() : '';
-            
-            // Array con tutti i testi di default (non selezionati)
-            const testiVuoti = ['Scegli il Gin', 'Scegli la Vodka', 'Scegli il Rum', 'Scegli la base'];
-            
-            if (testiVuoti.includes(text)) {
-                
-                // RICHIAMA IL MESSAGGIO DEL SITO INVECE DELL'ALERT DEL BROWSER
-                showCustomAlert("Devi prima scegliere la base del drink per selezionarlo.");
-                
-                // Effetto visivo: fa lampeggiare di rosso il pulsante delle opzioni
-                dropdownBtn.style.borderColor = "#ff4444";
-                setTimeout(() => { dropdownBtn.style.borderColor = "rgba(255, 255, 255, 0.1)"; }, 2000);
-                
-                return; // Blocca l'esecuzione: il drink non va nel carrello
-            }
+        const $optionsPanel = $card.find('.options-panel');
+        const hasOptions = $optionsPanel.length > 0 && $optionsPanel.find('.option-item').length > 0;
+        const $selectedOption = $optionsPanel.find('.option-item.selected');
+
+        if (hasOptions && $selectedOption.length === 0) {
+            showCustomAlert('Devi prima scegliere la base del drink.');
+
+            const $dropdownBtn = $card.find('.drink-options-btn');
+            $dropdownBtn.css('border-color', '#ff4444');
+
+            setTimeout(() => {
+                $dropdownBtn.css('border-color', 'rgba(255, 255, 255, 0.1)');
+            }, 2000);
+
+            return;
         }
 
-            const card = this.closest('.drink-card');
-            const name = card.querySelector('.drink-name').textContent;
-            const optionBtn = card.querySelector('.drink-options-btn span:first-child');
-            const optionText = optionBtn ? optionBtn.textContent : '';
-            const price = parseFloat(card.dataset.currentprice);
->>>>>>> c96fe088b5a79d279b57afbacce01ce6e79d342b
+        const name = $card.find('.drink-name').text().trim();
+
+        let optionText = '';
+        if ($selectedOption.length > 0) {
+            optionText = $selectedOption.find('span:first').text().trim();
+        }
+
+        const price =
+            parseFloat($card.data('currentprice')) ||
+            parseFloat($card.data('baseprice')) ||
+            0;
 
         cart.push({
             id: Date.now() + Math.floor(Math.random() * 1000),
             name,
-            option: optionText !== '-' ? optionText : '',
+            option: optionText,
             price
         });
 
         updateCartUI();
 
         const originalText = $button.text();
+
         $button
             .text('Aggiunto ✓')
-            .css({ background: '#00ff88', color: '#0b0b0f', boxShadow: '0 0 20px #00ff88' });
+            .css({
+                background: '#00ff88',
+                color: '#0b0b0f',
+                boxShadow: '0 0 20px #00ff88'
+            });
 
         setTimeout(() => {
-            $button.text(originalText).css({ background: '', color: '', boxShadow: '' });
+            $button.text(originalText).css({
+                background: '',
+                color: '',
+                boxShadow: ''
+            });
         }, 1500);
     });
 
     $btnCheckout.on('click', function (e) {
         e.stopPropagation();
+
         if (cart.length === 0) return;
 
         $modalFormContent.show();
         $modalSuccessContent.hide();
+
         $tableNumberInput
             .val('')
             .attr('placeholder', 'Scegli un tavolo (1-30)')
             .css('border-color', 'rgba(255, 255, 255, 0.2)');
+
         $modalOverlay.addClass('active');
+
         setTimeout(() => $tableNumberInput.trigger('focus'), 100);
     });
 
@@ -218,7 +252,11 @@ $(document).ready(function () {
                 .val('')
                 .attr('placeholder', 'Errore: solo tavoli 1-30!')
                 .css('border-color', '#ff4444');
-            setTimeout(() => $tableNumberInput.css('border-color', 'rgba(255, 255, 255, 0.2)'), 1500);
+
+            setTimeout(() => {
+                $tableNumberInput.css('border-color', 'rgba(255, 255, 255, 0.2)');
+            }, 1500);
+
             return;
         }
 
@@ -229,7 +267,11 @@ $(document).ready(function () {
                 method: 'POST',
                 data: {
                     numero_tavolo: numeroTavolo,
-                    items: cart.map(({ name, option, price }) => ({ name, option, price }))
+                    items: cart.map(({ name, option, price }) => ({
+                        name,
+                        option,
+                        price
+                    }))
                 }
             });
 
@@ -245,11 +287,21 @@ $(document).ready(function () {
             updateCartUI();
             $floatingBar.removeClass('expanded');
 
-            setTimeout(() => $modalOverlay.removeClass('active'), 2500);
+            setTimeout(() => {
+                $modalOverlay.removeClass('active');
+            }, 2500);
         } catch (error) {
             InfoStudioApi.logError('ordine menu', error);
-            const message = InfoStudioApi.userMessage(error, 'Ordine non inviato. Riprova tra poco.');
-            $tableNumberInput.val('').attr('placeholder', message).css('border-color', '#ff4444');
+
+            const message = InfoStudioApi.userMessage(
+                error,
+                'Ordine non inviato. Riprova tra poco.'
+            );
+
+            $tableNumberInput
+                .val('')
+                .attr('placeholder', message)
+                .css('border-color', '#ff4444');
         } finally {
             $btnConfirmModal.prop('disabled', false).text('Conferma Ordine');
         }
@@ -260,24 +312,4 @@ $(document).ready(function () {
             $modalOverlay.removeClass('active');
         }
     });
-<<<<<<< HEAD
-=======
-
-    // Funzione per mostrare il messaggio personalizzato del sito
-function showCustomAlert(message) {
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    // Fa scendere il messaggio (aggiunge la classe .show)
-    setTimeout(() => { toast.classList.add('show'); }, 10);
-
-    // Dopo 3 secondi lo fa risalire e lo elimina dal codice
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); // Aspetta che finisca l'animazione
-    }, 3000);
-}
->>>>>>> c96fe088b5a79d279b57afbacce01ce6e79d342b
 });
