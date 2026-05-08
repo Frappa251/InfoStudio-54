@@ -12,11 +12,10 @@ $(document).ready(function () {
     const $modalFormContent = $('#modalFormContent');
     const $modalSuccessContent = $('#modalSuccessContent');
     const $tableNumberInput = $('#tableNumberInput');
-    const $userIdInput = $('#userIdInput');
     const $btnCancelModal = $('#btnCancelModal');
     const $btnConfirmModal = $('#btnConfirmModal');
     const $successTableNumber = $('#successTableNumber');
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     function showCustomAlert(message) {
         const $toast = $('<div class="custom-toast"></div>').text(message);
@@ -122,6 +121,7 @@ $(document).ready(function () {
         e.stopPropagation();
         const idToRemove = $(this).data('id');
         cart = cart.filter(item => item.id !== idToRemove);
+        localStorage.setItem('cart', JSON.stringify(cart));
         updateCartUI();
     });
 
@@ -178,6 +178,7 @@ $(document).ready(function () {
             option: optionText,
             price
         });
+        localStorage.setItem('cart', JSON.stringify(cart));
         updateCartUI();
         const originalText = $button.text();
         $button
@@ -196,57 +197,61 @@ $(document).ready(function () {
         }, 1500);
     });
 
-    $btnCheckout.on('click', function (e) {
+   $btnCheckout.on('click', async function (e) {
         e.stopPropagation();
         if (cart.length === 0) return;
-        $modalFormContent.show();
-        $modalSuccessContent.hide();
-        $tableNumberInput
-            .val('')
-            .attr('placeholder', 'Scegli un tavolo (1-30)')
-            .css('border-color', 'rgba(255, 255, 255, 0.2)');
-        $userIdInput
-            .val('')
-            .attr('placeholder', 'Es. 00000123')
-            .css('border-color', 'rgba(255, 255, 255, 0.2)');
-        $modalOverlay.addClass('active');
-        setTimeout(() => $tableNumberInput.trigger('focus'), 100);
+
+        try {
+            const authData = await InfoStudioApi.getCurrentUser();
+
+            // Controllo Accesso: se non è loggato, mostra l'alert e ferma tutto
+            if (!authData.authenticated) {
+                showCustomAlert("Devi effettuare l'accesso per ordinare.");
+                return; 
+            }
+
+            // Se è loggato, mostra direttamente la scelta del tavolo
+            $modalFormContent.show();
+            $modalSuccessContent.hide();
+            $tableNumberInput.val('').attr('placeholder', 'Scegli un tavolo (1-30)');
+            $modalOverlay.addClass('active');
+            setTimeout(() => $tableNumberInput.trigger('focus'), 100);
+
+        } catch (error) {
+            showCustomAlert("Errore di connessione. Riprova tra poco.");
+        }
     });
 
     $btnCancelModal.on('click', function () {
         $modalOverlay.removeClass('active');
     });
 
-    $btnConfirmModal.on('click', async function () {
+   $btnConfirmModal.on('click', async function () {
         const numeroTavolo = parseInt($tableNumberInput.val(), 10);
+
+        // 1. Controlla che il tavolo sia valido
         if (isNaN(numeroTavolo) || numeroTavolo < 1 || numeroTavolo > 30) {
             $tableNumberInput
                 .val('')
                 .attr('placeholder', 'Errore: solo tavoli 1-30!')
                 .css('border-color', '#ff4444');
+
             setTimeout(() => {
                 $tableNumberInput.css('border-color', 'rgba(255, 255, 255, 0.2)');
             }, 1500);
+
             return;
         }
-        const userId = $userIdInput.val().trim();
-        if (!userId) {
-            $userIdInput
-                .val('')
-                .attr('placeholder', 'Errore: Inserisci il tuo ID VIP!')
-                .css('border-color', '#ff4444');
-            setTimeout(() => {
-                $userIdInput.css('border-color', 'rgba(255, 255, 255, 0.2)');
-            }, 1500);
-            return;
-        }
+
+        // 2. Disabilita il bottone per evitare doppi click
         $btnConfirmModal.prop('disabled', true).text('Invio...');
+
         try {
+            // 3. Invia la richiesta al file PHP
             const response = await InfoStudioApi.request('create_order.php', {
                 method: 'POST',
                 data: {
                     numero_tavolo: numeroTavolo,
-                    id_utente: userId, // <-- AGGIUNTO QUESTO!
                     items: cart.map(({ name, option, price }) => ({
                         name,
                         option,
@@ -254,30 +259,46 @@ $(document).ready(function () {
                     }))
                 }
             });
+
+            // Se PHP dice che c'è un errore, scatena il catch
             if (!response.success) {
                 throw { responseJSON: response };
             }
+
+            // 4. Se va tutto bene, mostra la conferma verde!
             $modalFormContent.hide();
             $successTableNumber.text(numeroTavolo);
             $modalSuccessContent.show();
+
             cart = [];
+            localStorage.removeItem('cart');
             updateCartUI();
             $floatingBar.removeClass('expanded');
+
             setTimeout(() => {
                 $modalOverlay.removeClass('active');
             }, 2500);
+
         } catch (error) {
             InfoStudioApi.logError('ordine menu', error);
+
+            // Cattura il messaggio dal server (es. "Devi effettuare l'accesso")
             const message = InfoStudioApi.userMessage(
                 error,
                 'Ordine non inviato. Riprova tra poco.'
             );
+
+            // Mostra l'errore illuminando di rosso il campo del tavolo
             $tableNumberInput
                 .val('')
                 .attr('placeholder', message)
                 .css('border-color', '#ff4444');
+                
+            setTimeout(() => { $tableNumberInput.css('border-color', 'rgba(255, 255, 255, 0.2)'); }, 3000);
+
         } finally {
-            $btnConfirmModal.prop('disabled', false).text('Conferma Ordine');
+            // Alla fine riabilita sempre il bottone
+            $btnConfirmModal.prop('disabled', false).text('Conferma');
         }
     });
 
@@ -286,4 +307,5 @@ $(document).ready(function () {
             $modalOverlay.removeClass('active');
         }
     });
+    updateCartUI();
 });

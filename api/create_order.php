@@ -7,25 +7,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = read_json_input();
 $user = current_user();
+
+// SICUREZZA BACKEND: Se l'utente non è loggato nel server, blocca l'ordine all'istante
+if (!$user) {
+    json_response(['success' => false, 'message' => 'Devi effettuare l\'accesso per ordinare.'], 401);
+}
+
 $numeroTavolo = (int) ($input['numero_tavolo'] ?? 0);
 $items = $input['items'] ?? [];
 
-// --- INIZIO CONTROLLO ID VIP ---
-$id_utente = $input['id_utente'] ?? null;
-
-if (!$id_utente) {
-    json_response(['success' => false, 'message' => 'Inserisci il tuo ID VIP per ordinare.'], 422);
-}
-
-// Interroghiamo il database usando la funzione db() del tuo amico
-$stmt_check = db()->prepare('SELECT id FROM utenti WHERE id = ?');
-$stmt_check->execute([$id_utente]);
-$vip_esiste = $stmt_check->fetch();
-
-if (!$vip_esiste) {
-    json_response(['success' => false, 'message' => 'ID VIP non trovato. Inserisci un ID valido.'], 404);
-}
-// --- FINE CONTROLLO ID VIP ---
 
 if ($numeroTavolo < 1 || $numeroTavolo > 30) {
     json_response(['success' => false, 'message' => 'Il numero del tavolo deve essere compreso tra 1 e 30.'], 422);
@@ -55,9 +45,10 @@ foreach ($items as $item) {
     $total += $price;
 }
 
+// L'INSERIMENTO ORA È PULITO: usa direttamente $user['id'] perché siamo certi che esista
 $stmt = db()->prepare('INSERT INTO ordini_menu (user_id, numero_tavolo, totale, items_json) VALUES (?, ?, ?, ?)');
 $stmt->execute([
-    $user ? $user['id'] : $id_utente,
+    $user['id'], 
     $numeroTavolo,
     round($total, 2),
     json_encode($cleanItems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
