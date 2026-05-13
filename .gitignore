@@ -5,3 +5,6 @@ config.js
 # Cartelle di sistema (Mac/Windows)
 .DS_Store
 Thumbs.db
+
+.gemini/
+gha-creds-*.json
