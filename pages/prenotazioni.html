@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<!--
+    prenotazioni.html
+    Pagina con il form per prenotare un tavolo per una serata evento.
+    L'utente sceglie data, tipo di tavolo, numero di persone e dati
+    di contatto, poi clicca "Vai al pagamento": il JS manda i dati
+    a api/create_booking.php e, se va a buon fine, reindirizza a
+    Stripe per il pagamento.
+    Logica gestita in assets/js/booking.js.
+-->
 <html lang="it">
 
 <head>
@@ -9,10 +18,13 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/booking.css">
 
+    <!-- jsPDF: libreria per generare il PDF di riepilogo (caricata da CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -21,7 +33,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -31,8 +43,11 @@
         </ul>
     </nav>
 
+
     <main class="booking-page">
         <section class="booking-container">
+
+            <!-- Intestazione della pagina -->
             <div class="booking-header">
                 <h1>Prenota il tuo tavolo</h1>
                 <p>Scegli la data, il tavolo e il numero di persone per vivere la tua notte al massimo.</p>
@@ -44,21 +59,33 @@
                 </div>
             </div>
 
+
+            <!-- ====================================================
+                 FORM DI PRENOTAZIONE
+                 Non ha attributo action: l'invio è gestito interamente
+                 da JavaScript (vedi booking.js, click su #submitBtn).
+                 ==================================================== -->
             <form id="bookingForm" class="booking-form">
+
                 <div class="booking-page__grid">
+
+                    <!-- Nome e cognome -->
                     <div class="booking-page__group">
                         <label for="nome">Nome e cognome</label>
                         <input type="text" id="nome" name="nome" placeholder="Mario Rossi" required>
                     </div>
 
+                    <!-- Email -->
                     <div class="booking-page__group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="mario@email.com" required>
                     </div>
 
+                    <!-- Telefono: prefisso internazionale (select) + numero (input) -->
                     <div class="booking-page__group">
                         <label for="telefono_numero">Telefono</label>
                         <div class="phone-field">
+
                             <select id="telefono_prefisso" name="telefono_prefisso" required>
                                 <option value="+39" selected>🇮🇹 +39</option>
                                 <option value="+33">🇫🇷 +33</option>
@@ -68,22 +95,33 @@
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
 
+                            <!-- inputmode="numeric" fa apparire la tastiera numerica su mobile -->
                             <input type="tel" id="telefono_numero" name="telefono_numero" placeholder="3331234567"
                                 inputmode="numeric" maxlength="10" required>
                         </div>
                     </div>
 
+                    <!-- Data prenotazione (il JS impone min = oggi) -->
                     <div class="booking-page__group">
                         <label for="data_prenotazione">Data prenotazione</label>
                         <input type="date" id="data_prenotazione" name="data_prenotazione" required>
                     </div>
 
+                    <!-- Numero persone -->
                     <div class="booking-page__group">
                         <label for="numero_persone">Numero persone</label>
                         <input type="number" id="numero_persone" name="numero_persone" min="1" max="20"
                             placeholder="Numero persone" required>
                     </div>
 
+                    <!--
+                        Tipo tavolo
+                        Ogni option ha:
+                          - value = id del tavolo (1, 2 o 3)
+                          - data-prezzo = prezzo totale del tavolo
+                          - data-max    = massimo numero di persone permesso
+                        Questi attributi data-* vengono letti dal JS.
+                    -->
                     <div class="booking-page__group">
                         <label for="tipo_tavolo">Tipo tavolo</label>
                         <select id="tipo_tavolo" name="tipo_tavolo" required>
@@ -95,13 +133,22 @@
                     </div>
                 </div>
 
+                <!-- Note libere -->
                 <div class="booking-page__group">
                     <label for="note">Note aggiuntive</label>
                     <textarea id="note" name="note" rows="5"
                         placeholder="Richieste particolari, compleanni, preferenze..."></textarea>
                 </div>
 
+
+                <!-- ================================================
+                     RIEPILOGO PRENOTAZIONE
+                     Le tre celle (tavolo, persone, totale) vengono
+                     aggiornate dinamicamente dal JS quando l'utente
+                     cambia i valori del form.
+                     ================================================ -->
                 <div class="booking-summary" id="bookingSummary">
+
                     <div class="booking-summary__top">
                         <h3>Riepilogo prenotazione</h3>
                         <span class="booking-summary__pill">Preview</span>
@@ -129,8 +176,11 @@
                     </div>
                 </div>
 
+                <!-- Paragrafo dove il JS scrive messaggi di errore/successo -->
                 <p id="formMessage" class="booking-page__message" aria-live="polite"></p>
 
+                <!-- Bottone di invio. È type="button" perché il submit lo
+                     gestiamo a mano dal JS (per evitare il refresh della pagina). -->
                 <button type="button" class="submit-btn" id="submitBtn">
                     Vai al pagamento
                 </button>
@@ -138,12 +188,16 @@
         </section>
     </main>
 
+
+    <!-- FOOTER -->
     <footer class="footer">
-         <div class="footer-bottom">
+        <div class="footer-bottom">
             <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
+
+    <!-- SCRIPT: jQuery + api.js + main.js (navbar) + booking.js -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>

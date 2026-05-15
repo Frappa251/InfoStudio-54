@@ -1,111 +1,206 @@
-// assets/js/profilo.js
-// Profilo utente gestito tramite backend PHP + AJAX/jQuery.
+// =====================================================================
+// profilo.js
+// Gestisce la pagina "Area VIP" del cliente:
+//   - mostra i dati personali letti dal backend
+//   - apre la modale con la tessera digitale
+//   - apre la modale con il form di modifica dati e invia
+//     le modifiche al backend
+// =====================================================================
 
-$(document).ready(async function () {
-    const modalTessera = document.getElementById('tessera-modal');
-    const btnMostraTessera = document.getElementById('btn-mostra-tessera');
+$(document).ready(function () {
 
-    const modalModifica = document.getElementById('modifica-modal');
-    const btnModifica = document.getElementById('btn-modifica-dati');
-    const formModifica = document.getElementById('form-modifica');
+    // -----------------------------------------------------------------
+    // Riferimenti agli elementi della pagina che useremo più volte
+    // -----------------------------------------------------------------
+    var modaleTessera   = document.getElementById('tessera-modal');
+    var bottoneTessera  = document.getElementById('btn-mostra-tessera');
 
-    let utenteCorrente = null;
+    var modaleModifica  = document.getElementById('modifica-modal');
+    var bottoneModifica = document.getElementById('btn-modifica-dati');
+    var formModifica    = document.getElementById('form-modifica');
 
-    if (btnMostraTessera) {
-        btnMostraTessera.addEventListener('click', () => modalTessera.style.display = 'block');
-    }
+    // Qui salviamo i dati dell'utente quando li riceviamo dal backend,
+    // così li possiamo riutilizzare (es. per precompilare il form di modifica).
+    var utenteCorrente = null;
 
-    if (btnModifica) {
-        btnModifica.addEventListener('click', () => {
-            if (utenteCorrente) {
-                document.getElementById('edit-nome').value = utenteCorrente.nome;
-                document.getElementById('edit-cognome').value = utenteCorrente.cognome;
-                document.getElementById('edit-telefono').value = utenteCorrente.telefono || '';
-            }
-            modalModifica.style.display = 'block';
+
+    // -----------------------------------------------------------------
+    // Apertura della modale "Tessera Digitale"
+    // -----------------------------------------------------------------
+    if (bottoneTessera != null) {
+        bottoneTessera.addEventListener('click', function () {
+            modaleTessera.style.display = 'block';
         });
     }
 
-    document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.target.closest('.modal').style.display = 'none';
-        });
-    });
 
-    window.addEventListener('click', (event) => {
-        if (event.target === modalTessera) modalTessera.style.display = 'none';
-        if (event.target === modalModifica) modalModifica.style.display = 'none';
-    });
+    // -----------------------------------------------------------------
+    // Apertura della modale "Modifica Dati"
+    // Quando l'utente la apre, precompiliamo i campi con i suoi dati
+    // attuali, così non deve riscrivere tutto da capo.
+    // -----------------------------------------------------------------
+    if (bottoneModifica != null) {
+        bottoneModifica.addEventListener('click', function () {
 
-    async function caricaDati() {
-        try {
-            const response = await InfoStudioApi.getCurrentUser();
+            if (utenteCorrente != null) {
+                document.getElementById('edit-nome').value     = utenteCorrente.nome;
+                document.getElementById('edit-cognome').value  = utenteCorrente.cognome;
 
-            if (!response.authenticated || !response.user) {
-                window.location.href = 'login.html';
-                return;
+                if (utenteCorrente.telefono != null) {
+                    document.getElementById('edit-telefono').value = utenteCorrente.telefono;
+                } else {
+                    document.getElementById('edit-telefono').value = '';
+                }
             }
 
-            const profilo = response.user;
-            utenteCorrente = profilo;
+            modaleModifica.style.display = 'block';
+        });
+    }
 
-            document.getElementById('profilo-info').innerHTML = `
-                <p><strong>Nome Completo</strong> ${profilo.nome} ${profilo.cognome}</p>
-                <p><strong>Email</strong> ${profilo.email}</p>
-                <p><strong>Telefono</strong> ${profilo.telefono || 'Non specificato'}</p>
-            `;
 
-            document.getElementById('card-name').textContent = `${profilo.nome} ${profilo.cognome}`;
-            document.getElementById('card-id').textContent = `ID: #${String(profilo.id).padStart(8, '0')}`;
-        } catch (error) {
-            InfoStudioApi.logError('caricamento profilo', error);
-            document.getElementById('profilo-info').innerHTML = `<p>${InfoStudioApi.userMessage(error, 'Profilo non disponibile. Riprova tra poco.')}</p>`;
+    // -----------------------------------------------------------------
+    // Chiusura delle modali tramite la "X" in alto a destra
+    // -----------------------------------------------------------------
+    var pulsantiChiusura = document.querySelectorAll('.close-modal');
+    for (var i = 0; i < pulsantiChiusura.length; i++) {
+        pulsantiChiusura[i].addEventListener('click', function (evento) {
+            // closest cerca l'antenato più vicino con classe "modal"
+            var modale = evento.target.closest('.modal');
+            modale.style.display = 'none';
+        });
+    }
+
+
+    // Chiusura delle modali cliccando sullo sfondo nero attorno
+    window.addEventListener('click', function (evento) {
+        if (evento.target == modaleTessera) {
+            modaleTessera.style.display = 'none';
         }
-    }
+        if (evento.target == modaleModifica) {
+            modaleModifica.style.display = 'none';
+        }
+    });
 
-    if (formModifica) {
-        formModifica.addEventListener('submit', async (e) => {
-            e.preventDefault();
 
-            const msgEl = document.getElementById('modifica-msg');
-            msgEl.textContent = 'Salvataggio in corso...';
-            msgEl.style.color = '#FFD700';
+    // -----------------------------------------------------------------
+    // CARICAMENTO DATI: chiamata AJAX a me.php
+    // Se l'utente non è loggato lo mandiamo alla pagina di login.
+    // Altrimenti riempiamo la pagina con i suoi dati.
+    // -----------------------------------------------------------------
+    function caricaDatiUtente() {
 
-            const nuovoNome = document.getElementById('edit-nome').value.trim();
-            const nuovoCognome = document.getElementById('edit-cognome').value.trim();
-            const nuovoTelefono = document.getElementById('edit-telefono').value.trim();
+        $.ajax({
+            url: '../api/me.php',
+            type: 'GET',
+            dataType: 'json',
 
-            try {
-                const response = await InfoStudioApi.request('update_profile.php', {
-                    method: 'POST',
-                    data: {
-                        nome: nuovoNome,
-                        cognome: nuovoCognome,
-                        telefono: nuovoTelefono
-                    }
-                });
+            success: function (risposta) {
 
-                if (!response.success) {
-                    msgEl.textContent = response.message || 'Errore durante il salvataggio.';
-                    msgEl.style.color = '#ff3366';
+                // Utente non loggato: vai alla pagina di login
+                if (risposta.authenticated == false || risposta.user == null) {
+                    window.location.href = 'login.html';
                     return;
                 }
 
-                msgEl.textContent = 'Dati aggiornati con successo!';
-                msgEl.style.color = '#00ff64';
+                var profilo = risposta.user;
 
-                setTimeout(() => {
-                    modalModifica.style.display = 'none';
-                    msgEl.textContent = '';
-                    caricaDati();
-                }, 1200);
-            } catch (error) {
-                InfoStudioApi.logError('aggiornamento profilo', error);
-                msgEl.textContent = InfoStudioApi.userMessage(error, 'Errore durante il salvataggio.');
-                msgEl.style.color = '#ff3366';
+                // Salviamo i dati nella variabile globale per il form di modifica
+                utenteCorrente = profilo;
+
+                // Costruiamo il blocco HTML con le informazioni del profilo
+                var telefonoDaMostrare;
+                if (profilo.telefono != null && profilo.telefono != '') {
+                    telefonoDaMostrare = profilo.telefono;
+                } else {
+                    telefonoDaMostrare = 'Non specificato';
+                }
+
+                var html = '';
+                html = html + '<p><strong>Nome Completo</strong> ' + profilo.nome + ' ' + profilo.cognome + '</p>';
+                html = html + '<p><strong>Email</strong> ' + profilo.email + '</p>';
+                html = html + '<p><strong>Telefono</strong> ' + telefonoDaMostrare + '</p>';
+
+                document.getElementById('profilo-info').innerHTML = html;
+
+                // Aggiorniamo anche la tessera digitale (modale)
+                document.getElementById('card-name').textContent = profilo.nome + ' ' + profilo.cognome;
+
+                // Trasformiamo l'id in una stringa di 8 cifre con gli zeri davanti
+                // (es. id = 42 -> "00000042"). Lo facciamo con un ciclo while.
+                var idStringa = String(profilo.id);
+                while (idStringa.length < 8) {
+                    idStringa = '0' + idStringa;
+                }
+                document.getElementById('card-id').textContent = 'ID: #' + idStringa;
+            },
+
+            error: function (xhr) {
+                InfoStudioApi.logError('caricamento profilo', xhr);
+                var messaggio = InfoStudioApi.userMessage(xhr, 'Profilo non disponibile.');
+                document.getElementById('profilo-info').innerHTML = '<p>' + messaggio + '</p>';
             }
         });
     }
 
-    caricaDati();
+
+    // -----------------------------------------------------------------
+    // GESTIONE FORM DI MODIFICA: invio al backend
+    // -----------------------------------------------------------------
+    if (formModifica != null) {
+
+        formModifica.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            var msgEl = document.getElementById('modifica-msg');
+            msgEl.textContent = 'Salvataggio in corso...';
+            msgEl.style.color = '#FFD700';
+
+            // Leggiamo i nuovi valori inseriti dall'utente
+            var nuovoNome     = document.getElementById('edit-nome').value.trim();
+            var nuovoCognome  = document.getElementById('edit-cognome').value.trim();
+            var nuovoTelefono = document.getElementById('edit-telefono').value.trim();
+
+            $.ajax({
+                url: '../api/update_profile.php',
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    nome:     nuovoNome,
+                    cognome:  nuovoCognome,
+                    telefono: nuovoTelefono
+                }),
+
+                success: function (risposta) {
+
+                    if (risposta.success == false) {
+                        msgEl.textContent = risposta.message;
+                        msgEl.style.color = '#ff3366';
+                        return;
+                    }
+
+                    // Tutto ok: mostriamo il messaggio per un momento, poi
+                    // chiudiamo la modale e ricarichiamo i dati a video.
+                    msgEl.textContent = 'Dati aggiornati con successo!';
+                    msgEl.style.color = '#00ff64';
+
+                    setTimeout(function () {
+                        modaleModifica.style.display = 'none';
+                        msgEl.textContent = '';
+                        caricaDatiUtente();
+                    }, 1200);
+                },
+
+                error: function (xhr) {
+                    InfoStudioApi.logError('aggiornamento profilo', xhr);
+                    msgEl.textContent = InfoStudioApi.userMessage(xhr, 'Errore durante il salvataggio.');
+                    msgEl.style.color = '#ff3366';
+                }
+            });
+        });
+    }
+
+
+    // Avviamo il caricamento dei dati appena la pagina è pronta
+    caricaDatiUtente();
 });

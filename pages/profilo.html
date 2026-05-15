@@ -1,15 +1,29 @@
 <!DOCTYPE html>
+<!--
+    profilo.html
+    Pagina "Area VIP" dell'utente loggato. Mostra i dati personali
+    e permette di:
+      - aprire una modale con la tessera digitale
+      - aprire una modale per modificare nome/cognome/telefono
+    Logica gestita in assets/js/profilo.js.
+-->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Area VIP | InfoStudio-54</title>
+
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/auth.css">
-    <link rel="stylesheet" href="../assets/css/profilo.css"> <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/profilo.css">
+
+    <!-- Font Google "Playfair Display" usato per il titolo della tessera -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-   <nav class="navbar">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
                 <a href="../index.html" style="text-decoration: none; color: inherit;">
@@ -17,7 +31,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -27,13 +41,21 @@
         </ul>
     </nav>
 
+
+    <!-- ============================================================
+         BOX DASHBOARD VIP
+         Il div con id="profilo-info" è vuoto inizialmente: viene
+         riempito da profilo.js dopo aver chiamato api/me.php.
+         ============================================================ -->
     <div class="auth-container">
         <div class="auth-box vip-dashboard">
+
             <h2 class="vip-title">Area VIP</h2>
             <p class="vip-subtitle">Gestione Account</p>
 
             <div class="profile-summary" id="profilo-info">
-                </div>
+                <!-- Contenuto generato dal JavaScript -->
+            </div>
 
             <div class="profile-actions">
                 <button class="btn-action" id="btn-mostra-tessera">Mostra Tessera Digitale</button>
@@ -42,57 +64,87 @@
         </div>
     </div>
 
+
+    <!-- ============================================================
+         MODALE: TESSERA DIGITALE
+         Si apre cliccando "Mostra Tessera Digitale" e mostra un
+         "VIP PASS" con nome utente e id.
+         La modale di default è nascosta (display: none nel CSS) e
+         viene mostrata dal JS impostando style.display = 'block'.
+         ============================================================ -->
     <div id="tessera-modal" class="modal">
         <div class="modal-content">
+
             <span class="close-modal">&times;</span>
+
             <div class="digital-card">
+
                 <div class="card-header">
                     <span class="card-logo">InfoStudio-54</span>
                     <span class="card-type">VIP PASS</span>
                 </div>
+
                 <div class="card-body">
                     <div class="user-info">
                         <h3 id="card-name">Caricamento...</h3>
                         <p id="card-id">ID: #000000</p>
                     </div>
+
+                    <!-- Finto QR code (solo decorativo) -->
                     <div class="qr-code-zone">
                         <div class="qr-placeholder">
                             <div class="qr-square"></div>
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer">
                     Valid for Season 2026
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- ============================================================
+         MODALE: MODIFICA DATI
+         Si apre cliccando "Modifica Dati". Il form invia i nuovi
+         valori a api/update_profile.php tramite AJAX.
+         ============================================================ -->
     <div id="modifica-modal" class="modal">
         <div class="modal-content modifica-content">
+
             <span class="close-modal close-modifica" id="close-modifica">&times;</span>
+
             <h2 class="modifica-title">Aggiorna Dati</h2>
-            
+
             <form id="form-modifica">
+
                 <div class="input-group modifica-group">
                     <label for="edit-nome" class="modifica-label">Nome</label>
                     <input type="text" id="edit-nome" class="modifica-input" required>
                 </div>
+
                 <div class="input-group modifica-group">
                     <label for="edit-cognome" class="modifica-label">Cognome</label>
                     <input type="text" id="edit-cognome" class="modifica-input" required>
                 </div>
+
                 <div class="input-group modifica-group-last">
                     <label for="edit-telefono" class="modifica-label">Telefono</label>
                     <input type="tel" id="edit-telefono" class="modifica-input" required>
                 </div>
-                
+
                 <button type="submit" class="btn-action btn-full">Salva Modifiche</button>
+
+                <!-- Paragrafo dove il JS scrive "Salvataggio...", "OK!" o gli errori -->
                 <p id="modifica-msg" class="modifica-msg"></p>
             </form>
         </div>
     </div>
 
-<!-- Carichiamo jQuery e le nuove API (Rimosso Supabase) -->
+
+    <!-- SCRIPT: jQuery + api.js + main.js (navbar) + profilo.js -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>

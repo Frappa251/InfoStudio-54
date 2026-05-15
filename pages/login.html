@@ -1,13 +1,23 @@
 <!DOCTYPE html>
+<!--
+    login.html
+    Form di accesso al sito. L'utente inserisce email e password,
+    e i dati vengono mandati con AJAX all'endpoint api/login.php
+    (vedi assets/js/auth.js).
+-->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accedi | InfoStudio-54</title>
+
+    <!-- Stile generale + stile specifico per i form di autenticazione -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/auth.css">
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -16,7 +26,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -26,17 +36,26 @@
         </ul>
     </nav>
 
+
+    <!-- ============================================================
+         BOX DI LOGIN
+         Il form ha id="login-form": auth.js lo aggancia all'evento
+         submit, blocca il refresh della pagina e manda i dati a
+         api/login.php con $.ajax.
+         ============================================================ -->
     <div class="auth-container">
         <div class="auth-box">
+
             <h2>Bentornato</h2>
             <p>Accedi al tuo account VIP</p>
 
             <form id="login-form">
+
                 <div class="input-group">
                     <label for="login-email">Email</label>
                     <input type="email" id="login-email" required placeholder="tu@esempio.com">
                 </div>
-                
+
                 <div class="input-group">
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" required placeholder="La tua password">
@@ -44,17 +63,21 @@
 
                 <button type="submit" class="btn-prenota auth-btn">Entra</button>
             </form>
+
             <p class="auth-switch">Nuovo cliente? <a href="registrazione.html">Registrati qui</a></p>
         </div>
     </div>
 
-<footer class="footer">
-         <div class="footer-bottom">
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
             <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
-    <!-- Carichiamo jQuery e le nuove API -->
+
+    <!-- SCRIPT: jQuery + api.js + auth.js -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>

@@ -1,6 +1,20 @@
-/* assets/css/booking.css */
+/* =====================================================================
+   booking.css
+   Stili per la pagina di prenotazione tavolo.
+   Contiene:
+     1) Sfondo + contenitore principale (.booking-page, .booking-container)
+     2) Form, etichette e campi di input
+     3) Box riepilogo (.booking-summary) con prezzo e bottone PDF
+     4) Stati di errore/successo dei campi (.input-error, .input-valid)
+     5) Adattamento mobile
+   Va caricato DOPO style.css per usare le variabili dei colori.
+   ===================================================================== */
 
-/* Sfondo coerente con auth.css */
+
+/* =====================================================================
+   SFONDO E CONTENITORE
+   Sfondo coerente con auth.css (gradiente nero su una foto di club).
+   ===================================================================== */
 .booking-page {
     min-height: 100vh;
     padding: 120px 1rem 60px;

@@ -1,17 +1,38 @@
 <!DOCTYPE html>
+<!--
+    menu.html
+    Pagina con il listino drink/bottiglie. Per ogni articolo c'è una
+    "card" con immagine, nome, descrizione, opzioni (es. tipo di gin)
+    e un bottone "Aggiungi".
+    Gli articoli aggiunti finiscono nella "barra fluttuante" in basso
+    che funge da carrello. Quando l'utente clicca "Richiedi al tavolo",
+    apre una modale per inserire il numero del tavolo e l'ordine viene
+    mandato a api/create_order.php.
+    Logica gestita in assets/js/menu.js.
+-->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Tavoli | InfoStudio-54</title>
+
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/menu.css">
+
+    <!--
+        Usiamo "defer" sugli script: il browser li scarica subito in
+        parallelo ma li esegue solo dopo aver finito di costruire il DOM.
+        Così possiamo metterli nell'<head> senza problemi.
+    -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="../assets/js/api.js" defer></script>
+    <script src="../assets/js/api.js"  defer></script>
     <script src="../assets/js/menu.js" defer></script>
     <script src="../assets/js/main.js" defer></script>
 </head>
+
 <body class="page-menu">
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -20,7 +41,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -30,189 +51,347 @@
         </ul>
     </nav>
 
+
     <div class="menu-container">
+
         <h1 class="menu-title">Drink & Bottles</h1>
-        
+
+
+        <!-- ====================================================
+             FILTRI PER CATEGORIA
+             Cliccando su un bottone, il JS mostra solo le card
+             con data-category corrispondente.
+             ==================================================== -->
         <div class="filters">
-    <button class="filter-btn active" data-filter="all">Tutti</button>
-    <button class="filter-btn" data-filter="gin">Gin Selection</button>
-    <button class="filter-btn" data-filter="vodka">Vodka Selection</button>
-    <button class="filter-btn" data-filter="rum">Rum Selection</button>
-    <button class="filter-btn" data-filter="cocktails">Special Cocktail</button>
-    <button class="filter-btn" data-filter="bottles">Bottiglie</button>
-</div>
-
-       <div class="menu-grid">
-    <div class="drink-card" data-category="gin" data-baseprice="15" data-currentprice="15">
-        <img src="../assets/images/gin-lemon.jpg" alt="Gin Lemon" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Gin Lemon</div><div class="drink-base-price">da €15</div></div>
-        <div class="drink-desc">Gin premium e la frizzantezza del limone per una carica di energia pura.</div>
-        <button class="drink-options-btn"><span>Scegli il Gin</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="5"><span>Hendrick's</span><span>+ €5</span></div>
+            <button class="filter-btn active" data-filter="all">Tutti</button>
+            <button class="filter-btn" data-filter="gin">Gin Selection</button>
+            <button class="filter-btn" data-filter="vodka">Vodka Selection</button>
+            <button class="filter-btn" data-filter="rum">Rum Selection</button>
+            <button class="filter-btn" data-filter="cocktails">Special Cocktail</button>
+            <button class="filter-btn" data-filter="bottles">Bottiglie</button>
         </div>
-        <div class="add-section"><div class="final-price">€15.00</div><button class="btn-add">Aggiungi</button></div>
+
+
+        <!-- ====================================================
+             GRIGLIA DEI DRINK
+             Ogni card ha:
+               - data-category = categoria (per i filtri)
+               - data-baseprice = prezzo base
+               - data-currentprice = prezzo attuale (cambia se si
+                 sceglie una base più costosa)
+             ==================================================== -->
+        <div class="menu-grid">
+
+            <!-- GIN LEMON -->
+            <div class="drink-card" data-category="gin" data-baseprice="15" data-currentprice="15">
+                <img src="../assets/images/gin-lemon.jpg" alt="Gin Lemon" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Gin Lemon</div>
+                    <div class="drink-base-price">da €15</div>
+                </div>
+                <div class="drink-desc">Gin premium e la frizzantezza del limone per una carica di energia pura.</div>
+
+                <!-- Bottone che apre il pannello delle opzioni -->
+                <button class="drink-options-btn">
+                    <span>Scegli il Gin</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <!-- Pannello con le varianti -->
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="5"><span>Hendrick's</span><span>+ €5</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€15.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- GIN TONIC -->
+            <div class="drink-card" data-category="gin" data-baseprice="15" data-currentprice="15">
+                <img src="../assets/images/gin-tonic.jpg" alt="Gin Tonic" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Gin Tonic</div>
+                    <div class="drink-base-price">da €15</div>
+                </div>
+                <div class="drink-desc">Il classico intramontabile con ghiaccio cristallino e lime.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli il Gin</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="3"><span>Hendrick's</span><span>+ €3</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€15.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- VODKA LEMON -->
+            <div class="drink-card" data-category="vodka" data-baseprice="15" data-currentprice="15">
+                <img src="../assets/images/vodka-lemon.jpg" alt="Vodka Lemon" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Vodka Lemon</div>
+                    <div class="drink-base-price">da €15</div>
+                </div>
+                <div class="drink-desc">Fresca ed esplosiva con la purezza della tua vodka preferita.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli la Vodka</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Absolut</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="5"><span>SKYY</span><span>+ €5</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€15.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- DOM PERIGNON (bottiglia: nessuna opzione) -->
+            <div class="drink-card" data-category="bottles" data-baseprice="250" data-currentprice="250">
+                <img src="../assets/images/dom-perignon.jpg" alt="Dom Pérignon" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Dom Pérignon</div>
+                    <div class="drink-base-price">€250</div>
+                </div>
+                <div class="drink-desc">Vintage Champagne. Servizio al tavolo con sparklers.</div>
+
+                <div class="add-section" style="margin-top: 2rem;">
+                    <div class="final-price">€250.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- NEGRONI 54 -->
+            <div class="drink-card" data-category="gin" data-baseprice="16" data-currentprice="16">
+                <img src="../assets/images/negroni-54.jpg" alt="Negroni 54" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Negroni 54</div>
+                    <div class="drink-base-price">da €16</div>
+                </div>
+                <div class="drink-desc">Rivisitazione del Negroni con affumicatura istantanea al tavolo.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli il Gin</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="4"><span>Hendrick's</span><span>+ €4</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€16.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- LONG ISLAND (cocktail senza opzioni)
+                 Il bottone delle opzioni è invisibile (visibility: hidden)
+                 solo per mantenere l'allineamento con le altre card. -->
+            <div class="drink-card" data-category="cocktails" data-baseprice="18" data-currentprice="18">
+                <img src="../assets/images/long-island.jpg" alt="Long Island" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Long Island</div>
+                    <div class="drink-base-price">€18</div>
+                </div>
+                <div class="drink-desc">Vodka, Rum, Gin, Tequila e Triple Sec con una spruzzata di cola.</div>
+
+                <button class="drink-options-btn" style="visibility: hidden;">
+                    <span>-</span>
+                </button>
+
+                <div class="add-section" style="margin-top: 0;">
+                    <div class="final-price">€18.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- MOJITO -->
+            <div class="drink-card" data-category="rum" data-baseprice="14" data-currentprice="14">
+                <img src="../assets/images/mojito.jpg" alt="Mojito" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Mojito</div>
+                    <div class="drink-base-price">da €14</div>
+                </div>
+                <div class="drink-desc">Menta fresca, lime, zucchero di canna e Rum bianco.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli il Rum</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Captain Morgan</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="3"><span>Kraken</span><span>+ €3</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€14.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- CUBA LIBRE -->
+            <div class="drink-card" data-category="rum" data-baseprice="14" data-currentprice="14">
+                <img src="../assets/images/cuba-libre.jpg" alt="Cuba Libre" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Cuba Libre</div>
+                    <div class="drink-base-price">da €14</div>
+                </div>
+                <div class="drink-desc">Rum, cola e lime fresco. Semplice e inconfondibile.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli il Rum</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Captain Morgan</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="5"><span>Kraken</span><span>+ €5</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€14.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- SPRITZ -->
+            <div class="drink-card" data-category="cocktails" data-baseprice="12" data-currentprice="12">
+                <img src="../assets/images/spritz.jpg" alt="Spritz" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Spritz</div>
+                    <div class="drink-base-price">da €12</div>
+                </div>
+                <div class="drink-desc">Prosecco DOCG, soda e la base bitter che preferisci.</div>
+
+                <button class="drink-options-btn">
+                    <span>Scegli la base</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+
+                <div class="options-panel">
+                    <div class="option-item selected" data-extra="0"><span>Aperol</span><span>+ €0</span></div>
+                    <div class="option-item" data-extra="3"><span>Campari</span><span>+ €3</span></div>
+                </div>
+
+                <div class="add-section">
+                    <div class="final-price">€12.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+
+            <!-- JAGERBOMB (senza opzioni) -->
+            <div class="drink-card" data-category="cocktails" data-baseprice="10" data-currentprice="10">
+                <img src="../assets/images/jagerbomb.png" alt="Jägerbomb" class="drink-image">
+                <div class="drink-header">
+                    <div class="drink-name">Jägerbomb</div>
+                    <div class="drink-base-price">da €10</div>
+                </div>
+                <div class="drink-desc">Uno shot ghiacciato di Jägermeister servito a caduta in un bicchiere di Red Bull.</div>
+
+                <div class="add-section">
+                    <div class="final-price">€10.00</div>
+                    <button class="btn-add">Aggiungi</button>
+                </div>
+            </div>
+
+        </div> <!-- /menu-grid -->
+    </div> <!-- /menu-container -->
+
+
+    <!-- Avvertenza legale e copyright -->
+    <div class="legal-warning">
+        <p>* È severamente vietata la somministrazione e la vendita di bevande alcoliche ai minori di 18 anni. Bevi responsabilmente.</p>
+    </div>
+    <div class="rights">
+        <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
     </div>
 
-    <div class="drink-card" data-category="gin" data-baseprice="15" data-currentprice="15">
-        <img src="../assets/images/gin-tonic.jpg" alt="Gin Tonic" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Gin Tonic</div><div class="drink-base-price">da €15</div></div>
-        <div class="drink-desc">Il classico intramontabile con ghiaccio cristallino e lime.</div>
-        <button class="drink-options-btn"><span>Scegli il Gin</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="3"><span>Hendrick's</span><span>+ €3</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€15.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
 
-    <div class="drink-card" data-category="vodka" data-baseprice="15" data-currentprice="15">
-        <img src="../assets/images/vodka-lemon.jpg" alt="Vodka Lemon" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Vodka Lemon</div><div class="drink-base-price">da €15</div></div>
-        <div class="drink-desc">Fresca ed esplosiva con la purezza della tua vodka preferita.</div>
-        <button class="drink-options-btn"><span>Scegli la Vodka</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Absolut</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="5"><span>SKYY</span><span>+ €5</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€15.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-    <div class="drink-card" data-category="bottles" data-baseprice="250" data-currentprice="250">
-        <img src="../assets/images/dom-perignon.jpg" alt="Dom Pérignon" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Dom Pérignon</div><div class="drink-base-price">€250</div></div>
-        <div class="drink-desc">Vintage Champagne. Servizio al tavolo con sparklers.</div>
-        <div class="add-section" style="margin-top: 2rem;"><div class="final-price">€250.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-    <div class="drink-card" data-category="gin" data-baseprice="16" data-currentprice="16">
-        <img src="../assets/images/negroni-54.jpg" alt="Negroni 54" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Negroni 54</div><div class="drink-base-price">da €16</div></div>
-        <div class="drink-desc">Rivisitazione del Negroni con affumicatura istantanea al tavolo.</div>
-        <button class="drink-options-btn"><span>Scegli il Gin</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Bombay</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="4"><span>Hendrick's</span><span>+ €4</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€16.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-   <div class="drink-card" data-category="cocktails" data-baseprice="18" data-currentprice="18">
-        <img src="../assets/images/long-island.jpg" alt="Long Island" class="drink-image">
-        <div class="drink-header">
-            <div class="drink-name">Long Island</div>
-            <div class="drink-base-price">€18</div>
-        </div>
-        <div class="drink-desc">Vodka, Rum, Gin, Tequila e Triple Sec con una spruzzata di cola.</div>
-        
-        <button class="drink-options-btn" style="visibility: hidden;">
-            <span>-</span>
-        </button>
-
-        <div class="add-section" style="margin-top: 0;">
-            <div class="final-price">€18.00</div>
-            <button class="btn-add">Aggiungi</button>
-        </div>
-    </div>
-
-    <div class="drink-card" data-category="rum" data-baseprice="14" data-currentprice="14">
-        <img src="../assets/images/mojito.jpg" alt="Mojito" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Mojito</div><div class="drink-base-price">da €14</div></div>
-        <div class="drink-desc">Menta fresca, lime, zucchero di canna e Rum bianco.</div>
-        <button class="drink-options-btn"><span>Scegli il Rum</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Captain Morgan</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="3"><span>Kraken</span><span>+ €3</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€14.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-    <div class="drink-card" data-category="rum" data-baseprice="14" data-currentprice="14">
-        <img src="../assets/images/cuba-libre.jpg" alt="Cuba Libre" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Cuba Libre</div><div class="drink-base-price">da €14</div></div>
-        <div class="drink-desc">Rum, cola e lime fresco. Semplice e inconfondibile.</div>
-        <button class="drink-options-btn"><span>Scegli il Rum </span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Captain Morgan</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="5"><span>Kraken</span><span>+ €5</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€14.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-
-
-<div class="drink-card" data-category="cocktails" data-baseprice="12" data-currentprice="12">
-       <img src="../assets/images/spritz.jpg" alt="Spritz" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Spritz</div><div class="drink-base-price">da €12</div></div>
-        <div class="drink-desc">Prosecco DOCG, soda e la base bitter che preferisci.</div>
-        <button class="drink-options-btn"><span>Scegli la base</span><span class="toggle-icon">▼</span></button>
-        <div class="options-panel">
-            <div class="option-item selected" data-extra="0"><span>Aperol</span><span>+ €0</span></div>
-            <div class="option-item" data-extra="3"><span>Campari</span><span>+ €3</span></div>
-        </div>
-        <div class="add-section"><div class="final-price">€12.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-    <div class="drink-card" data-category="cocktails" data-baseprice="10" data-currentprice="10">
-        <img src="../assets/images/jagerbomb.png" alt="Jägerbomb" class="drink-image">
-        <div class="drink-header"><div class="drink-name">Jägerbomb</div><div class="drink-base-price">da €10</div></div>
-        <div class="drink-desc">Uno shot ghiacciato di Jägermeister servito a caduta in un bicchiere di Red Bull. </div>
-        <div class="add-section"><div class="final-price">€10.00</div><button class="btn-add">Aggiungi</button></div>
-    </div>
-</div>
-</div> 
-
-        <div class="legal-warning">
-            <p>* È severamente vietata la somministrazione e la vendita di bevande alcoliche ai minori di 18 anni. Bevi responsabilmente.</p>
-        </div>
-        <div class="rights">
-            <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
-        </div>
-
+    <!-- ====================================================
+         CARRELLO FLUTTUANTE (in basso, fisso)
+         Inizialmente è nascosto. Diventa visibile non appena
+         viene aggiunto il primo articolo.
+         ==================================================== -->
     <div class="floating-bar" id="floatingBar">
+
         <div class="cart-header" id="cartHeader">
+
             <div class="cart-info">
+
+                <!-- Icona carrello (SVG inline) -->
                 <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
                 </svg>
+
                 <div class="floating-total">
                     Totale: <span id="cartTotal">€0.00</span>
                     <button class="toggle-cart-btn" aria-label="Espandi carrello">▲</button>
                 </div>
             </div>
+
             <button class="btn-checkout" id="btnCheckout">Richiedi al tavolo</button>
         </div>
-        <div class="cart-items-container" id="cartItemsList">
-        </div>
+
+        <!-- Lista degli articoli aggiunti (riempita da JS) -->
+        <div class="cart-items-container" id="cartItemsList"></div>
     </div>
 
+
+    <!-- ====================================================
+         MODALE PER SCEGLIERE IL NUMERO DEL TAVOLO
+         Si apre cliccando "Richiedi al tavolo" se l'utente è loggato.
+         Contiene due "schermate":
+           - #modalFormContent    -> input numero tavolo
+           - #modalSuccessContent -> messaggio di ordine inviato
+         ==================================================== -->
     <div class="modal-overlay" id="tableModal">
+
+        <!-- Schermata 1: input del numero tavolo -->
         <div class="modal-content" id="modalFormContent">
             <h2 class="modal-title">Numero Tavolo</h2>
-            <input type="number" class="modal-input" id="tableNumberInput" placeholder="Scegli un tavolo (1-30)" min="1" max="30">
+            <input type="number" class="modal-input" id="tableNumberInput"
+                   placeholder="Scegli un tavolo (1-30)" min="1" max="30">
             <div class="modal-buttons">
-                <button class="btn-modal btn-cancel" id="btnCancelModal">Annulla</button>
+                <button class="btn-modal btn-cancel"  id="btnCancelModal">Annulla</button>
                 <button class="btn-modal btn-confirm" id="btnConfirmModal">Conferma</button>
             </div>
         </div>
-        
+
+        <!-- Schermata 2: conferma ordine inviato -->
         <div class="modal-content" id="modalSuccessContent" style="display: none;">
             <div class="success-icon">✓</div>
             <h2 class="modal-title" style="color: #00ff88;">Ordine Inviato!</h2>
-            <p style="color: #aaa; font-size: 1.1rem;">Il nostro staff arriverà a breve al tavolo <span id="successTableNumber" style="color: #fff; font-weight: bold; font-size: 1.3rem;"></span>.</p>
+            <p style="color: #aaa; font-size: 1.1rem;">
+                Il nostro staff arriverà a breve al tavolo
+                <span id="successTableNumber" style="color: #fff; font-weight: bold; font-size: 1.3rem;"></span>.
+            </p>
         </div>
     </div>
 
-    
 </body>
 </html>
