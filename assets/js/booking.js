@@ -30,18 +30,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // -----------------------------------------------------------------
-    // Impediamo di scegliere una data nel passato.
+    // Impediamo di scegliere una data nel passato
     // toISOString() restituisce "YYYY-MM-DDTHH:MM:SS.sssZ",
-    // split('T')[0] prende solo la parte della data.
+    // split('T')[0] prende solo la parte della data
     // -----------------------------------------------------------------
     var oggi = new Date().toISOString().split('T')[0];
     inputData.min = oggi;
 
 
     // -----------------------------------------------------------------
-    // Link di pagamento Stripe per ogni tipo di tavolo.
-    // Sono "link di test" forniti da Stripe per le demo:
-    // l'utente paga in modalità simulata, niente soldi veri.
+    // Link di pagamento Stripe per ogni tipo di tavolo
+    // Sono "link di test" forniti da Stripe per le demo
+    // l'utente paga in modalità simulata
     // -----------------------------------------------------------------
     var linkStripe = {
         1: 'https://buy.stripe.com/test_00w7sM82q5BadxP3vl2Nq01',
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // =================================================================
     // AUTOCOMPILAZIONE DATI UTENTE
     // Se l'utente è loggato, riempiamo automaticamente nome, email
-    // e telefono prendendoli dal suo profilo (chiamata a me.php).
+    // e telefono prendendoli dal suo profilo (chiamata a me.php)
     // =================================================================
     function precompilaDati() {
 
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 inputEmail.value = risposta.user.email;
 
                 // Rendiamo l'email non modificabile: l'utente loggato deve
-                // usare per forza l'email del suo account.
+                // usare per forza l'email del suo account
                 inputEmail.readOnly = true;
                 inputEmail.style.opacity = '0.7';
 
@@ -132,11 +132,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // =================================================================
     // GESTIONE DEL RIEPILOGO
     // Ogni volta che cambia tavolo o numero persone, aggiorniamo
-    // le scritte "Tavolo / Persone / Totale" nel box riepilogo.
+    // le scritte "Tavolo / Persone / Totale" nel box riepilogo
     // =================================================================
 
     // Restituisce un oggetto con i dati del tavolo selezionato,
-    // oppure null se non è stato selezionato nulla.
+    // oppure null se non è stato selezionato nulla
     function leggiDatiTavolo() {
 
         var opzioneSelezionata = selTipoTavolo.options[selTipoTavolo.selectedIndex];
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // =================================================================
     // VALIDAZIONE DEL FORM PRIMA DI INVIARE
     // Controlla tutti i campi e mette le classi CSS giuste per
-    // evidenziare visivamente quelli sbagliati.
+    // evidenziare visivamente quelli sbagliati
     // =================================================================
     function validaForm(dati) {
 
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // =================================================================
     // GENERAZIONE PDF DEL RIEPILOGO
-    // Usiamo la libreria jsPDF (caricata da CDN nell'HTML).
+    // Usiamo la libreria jsPDF (caricata da CDN nell'HTML)
     // =================================================================
     function generaPDF() {
 

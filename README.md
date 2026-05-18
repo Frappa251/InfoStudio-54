@@ -61,7 +61,7 @@ Per non sporcare questo file, abbiamo creato delle guide dedicate. **Consulta i 
 
 ---
 
-## 👥 Sviluppatori (The Crew)
+## 👥 Sviluppatori
 Progetto sviluppato in team lavorando su rami condivisi tramite Git.
 * Francesco Saverio Cioeta 2108245
 * Matteo Priori 2143781

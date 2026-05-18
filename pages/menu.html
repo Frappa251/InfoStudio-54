@@ -3,12 +3,12 @@
     menu.html
     Pagina con il listino drink/bottiglie. Per ogni articolo c'è una
     "card" con immagine, nome, descrizione, opzioni (es. tipo di gin)
-    e un bottone "Aggiungi".
+    e un bottone "Aggiungi"
     Gli articoli aggiunti finiscono nella "barra fluttuante" in basso
     che funge da carrello. Quando l'utente clicca "Richiedi al tavolo",
     apre una modale per inserire il numero del tavolo e l'ordine viene
-    mandato a api/create_order.php.
-    Logica gestita in assets/js/menu.js.
+    mandato a api/create_order.php
+    Logica gestita in assets/js/menu.js
 -->
 <html lang="it">
 <head>
@@ -21,8 +21,8 @@
 
     <!--
         Usiamo "defer" sugli script: il browser li scarica subito in
-        parallelo ma li esegue solo dopo aver finito di costruire il DOM.
-        Così possiamo metterli nell'<head> senza problemi.
+        parallelo ma li esegue solo dopo aver finito di costruire il DOM
+        Così possiamo metterli nell'<head> senza problemi
     -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"  defer></script>
@@ -60,7 +60,7 @@
         <!-- ====================================================
              FILTRI PER CATEGORIA
              Cliccando su un bottone, il JS mostra solo le card
-             con data-category corrispondente.
+             con data-category corrispondente
              ==================================================== -->
         <div class="filters">
             <button class="filter-btn active" data-filter="all">Tutti</button>
@@ -206,7 +206,7 @@
 
             <!-- LONG ISLAND (cocktail senza opzioni)
                  Il bottone delle opzioni è invisibile (visibility: hidden)
-                 solo per mantenere l'allineamento con le altre card. -->
+                 solo per mantenere l'allineamento con le altre card -->
             <div class="drink-card" data-category="cocktails" data-baseprice="18" data-currentprice="18">
                 <img src="../assets/images/long-island.jpg" alt="Long Island" class="drink-image">
                 <div class="drink-header">
@@ -335,7 +335,7 @@
     <!-- ====================================================
          CARRELLO FLUTTUANTE (in basso, fisso)
          Inizialmente è nascosto. Diventa visibile non appena
-         viene aggiunto il primo articolo.
+         viene aggiunto il primo articolo
          ==================================================== -->
     <div class="floating-bar" id="floatingBar">
 
@@ -364,7 +364,7 @@
 
     <!-- ====================================================
          MODALE PER SCEGLIERE IL NUMERO DEL TAVOLO
-         Si apre cliccando "Richiedi al tavolo" se l'utente è loggato.
+         Si apre cliccando "Richiedi al tavolo" se l'utente è loggato
          Contiene due "schermate":
            - #modalFormContent    -> input numero tavolo
            - #modalSuccessContent -> messaggio di ordine inviato

@@ -1,7 +1,7 @@
 <?php
 // =====================================================================
 // db.php
-// File di configurazione condiviso da tutti gli script PHP del backend.
+// File di configurazione condiviso da tutti gli script PHP del backend
 // Si occupa di:
 //   - far partire la sessione PHP
 //   - aprire la connessione al database MySQL tramite PDO
@@ -10,9 +10,9 @@
 // =====================================================================
 
 
-// Facciamo partire la sessione PHP se non è già attiva.
+// Facciamo partire la sessione PHP se non è già attiva
 // La sessione ci serve per ricordare quale utente è loggato
-// (salviamo $_SESSION['user_id'] dopo il login).
+// (salviamo $_SESSION['user_id'] dopo il login)
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -26,8 +26,8 @@ if (session_status() == PHP_SESSION_NONE) {
 // Su Windows (XAMPP): PHP si connette via TCP su 127.0.0.1,
 //   utente root senza password (default XAMPP).
 // Su Linux (Fedora/Ubuntu con MariaDB nativo): MariaDB ascolta su
-//   UNIX socket, quindi serve 'localhost' come host.
-//   Utente root con password 'root'.
+//   UNIX socket, quindi serve 'localhost' come host
+//   Utente root con password 'root'
 // ---------------------------------------------------------------------
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     // Windows — XAMPP: root senza password, connessione TCP
@@ -46,8 +46,8 @@ define('DB_NAME', 'infostudio54');
 
 // =====================================================================
 // FUNZIONE: json_response
-// Invia al client una risposta in formato JSON e termina lo script.
-// È molto comoda perché ogni endpoint PHP risponde sempre in JSON.
+// Invia al client una risposta in formato JSON e termina lo script
+// È molto comoda perché ogni endpoint PHP risponde sempre in JSON
 // =====================================================================
 function json_response($dati, $codiceStato = 200) {
     // Imposta il codice HTTP (200 = OK, 404 = Not Found, 500 = Server Error, ecc.)
@@ -66,9 +66,9 @@ function json_response($dati, $codiceStato = 200) {
 
 // =====================================================================
 // FUNZIONE: read_json_input
-// Legge il corpo della richiesta HTTP (che si aspetta sia in JSON)
-// e lo trasforma in un array associativo PHP.
-// Si usa per ricevere i dati inviati dai form JavaScript con AJAX.
+// Legge il corpo della richiesta HTTP (in JSON)
+// e lo trasforma in un array associativo PHP
+// Si usa per ricevere i dati inviati dai form JavaScript con AJAX
 // =====================================================================
 function read_json_input() {
     // php://input è uno "stream" che contiene il body grezzo della richiesta
@@ -96,7 +96,7 @@ function read_json_input() {
 // Restituisce l'oggetto PDO per parlare con il database.
 // La variabile $pdo è "static": viene creata la prima volta che la
 // funzione viene chiamata e poi riutilizzata nelle chiamate successive,
-// così non apriamo una nuova connessione ad ogni query.
+// così non apriamo una nuova connessione ad ogni query
 // =====================================================================
 function db() {
     static $pdo = null;
@@ -115,11 +115,11 @@ function db() {
 
         // Impostiamo la modalità "Exception": se qualcosa va storto
         // (query sbagliata, connessione persa...) PHP lancia una PDOException
-        // che possiamo intercettare con try/catch.
+        // che possiamo intercettare con try/catch
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Impostiamo il fetch mode di default: i risultati delle query
-        // ci arriveranno come array associativi (es. $row['nome']).
+        // ci arriveranno come array associativi (es. $row['nome'])
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
@@ -137,7 +137,7 @@ function db() {
 // =====================================================================
 // FUNZIONE: current_user
 // Se in sessione c'è un user_id, va a cercare l'utente nel database
-// e restituisce i suoi dati. Altrimenti restituisce null.
+// e restituisce i suoi dati. Altrimenti restituisce null
 // =====================================================================
 function current_user() {
     // Se non c'è nessun id in sessione, l'utente non è loggato
@@ -150,7 +150,7 @@ function current_user() {
 
     // Cerchiamo l'utente nel database usando un prepared statement.
     // Il ? viene sostituito col valore passato a execute(): in questo
-    // modo siamo protetti da SQL Injection.
+    // modo siamo protetti da SQL Injection
     $sql = 'SELECT id, nome, cognome, telefono, email, created_at FROM utenti WHERE id = ? LIMIT 1';
     $stmt = db()->prepare($sql);
     $stmt->execute([$idUtente]);
@@ -168,9 +168,9 @@ function current_user() {
 
 // =====================================================================
 // FUNZIONE: require_user
-// Da usare negli endpoint che richiedono per forza il login.
-// Se l'utente non è loggato risponde con errore 401 e termina lo script.
-// Se invece è loggato restituisce i suoi dati.
+// Da usare negli endpoint che richiedono per forza il login
+// Se l'utente non è loggato risponde con errore 401 e termina lo script
+// Se invece è loggato restituisce i suoi dati
 // =====================================================================
 function require_user() {
     $utente = current_user();
@@ -189,7 +189,7 @@ function require_user() {
 // =====================================================================
 // FUNZIONE: clean_string
 // Piccola funzione che converte il valore in stringa e toglie gli spazi
-// iniziali/finali. La usiamo su tutti gli input ricevuti dai form.
+// iniziali/finali. La usiamo su tutti gli input ricevuti dai form
 // =====================================================================
 function clean_string($valore) {
     return trim((string) $valore);

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <!--
     prenotazioni.html
-    Pagina con il form per prenotare un tavolo per una serata evento.
+    Pagina con il form per prenotare un tavolo per una serata evento
     L'utente sceglie data, tipo di tavolo, numero di persone e dati
     di contatto, poi clicca "Vai al pagamento": il JS manda i dati
     a api/create_booking.php e, se va a buon fine, reindirizza a
-    Stripe per il pagamento.
-    Logica gestita in assets/js/booking.js.
+    Stripe per il pagamento
+    Logica gestita in assets/js/booking.js
 -->
 <html lang="it">
 
@@ -63,7 +63,7 @@
             <!-- ====================================================
                  FORM DI PRENOTAZIONE
                  Non ha attributo action: l'invio è gestito interamente
-                 da JavaScript (vedi booking.js, click su #submitBtn).
+                 da JavaScript (vedi booking.js, click su #submitBtn)
                  ==================================================== -->
             <form id="bookingForm" class="booking-form">
 
@@ -120,7 +120,7 @@
                           - value = id del tavolo (1, 2 o 3)
                           - data-prezzo = prezzo totale del tavolo
                           - data-max    = massimo numero di persone permesso
-                        Questi attributi data-* vengono letti dal JS.
+                        Questi attributi data vengono letti dal JS
                     -->
                     <div class="booking-page__group">
                         <label for="tipo_tavolo">Tipo tavolo</label>
@@ -145,7 +145,7 @@
                      RIEPILOGO PRENOTAZIONE
                      Le tre celle (tavolo, persone, totale) vengono
                      aggiornate dinamicamente dal JS quando l'utente
-                     cambia i valori del form.
+                     cambia i valori del form
                      ================================================ -->
                 <div class="booking-summary" id="bookingSummary">
 
@@ -180,7 +180,7 @@
                 <p id="formMessage" class="booking-page__message" aria-live="polite"></p>
 
                 <!-- Bottone di invio. È type="button" perché il submit lo
-                     gestiamo a mano dal JS (per evitare il refresh della pagina). -->
+                     gestiamo a mano dal JS (per evitare il refresh della pagina) -->
                 <button type="button" class="submit-btn" id="submitBtn">
                     Vai al pagamento
                 </button>

@@ -1,18 +1,18 @@
 /* =====================================================================
    profilo.css
-   Stili per la pagina "Area VIP" del cliente.
+   Stili per la pagina "Area VIP" del cliente
    Contiene:
      1) Dashboard centrale con i dati personali
      2) Modale della tessera digitale (.digital-card)
      3) Modale di modifica dati
      4) Stili delle modali in generale (.modal, .modal-content)
-   Va caricato DOPO style.css e auth.css.
+   Va caricato DOPO style.css e auth.css
    ===================================================================== */
 
 
 /* =====================================================================
    DASHBOARD VIP
-   Box centrale con bordo dorato e sfondo con leggera sfumatura.
+   Box centrale con bordo dorato e sfondo con leggera sfumatura
    ===================================================================== */
 .vip-dashboard {
     max-width: 450px;
@@ -185,7 +185,7 @@
     font-size: 1.9rem; 
     margin-bottom: 0.3rem; 
     color: #ffffff; 
-    font-weight: 900; /* Nome super in grassetto */
+    font-weight: 900; /* Nome in grassetto */
     text-transform: uppercase; 
     line-height: 1.1;
 }
@@ -223,7 +223,7 @@
 }
 
 /* =========================================
-   📱 RESPONSIVE: ADATTAMENTO PER I TELEFONI 
+   RESPONSIVE: ADATTAMENTO PER I TELEFONI 
    ========================================= */
 @media (max-width: 480px) {
     .modal-content {
@@ -232,7 +232,7 @@
 
     .digital-card {
         padding: 1.5rem; /* Margini più piccoli */
-        min-height: 220px; /* Si abbassa un po' */
+        min-height: 220px;
     }
 
     .card-header {

@@ -20,7 +20,7 @@ $(document).ready(function () {
     var formModifica    = document.getElementById('form-modifica');
 
     // Qui salviamo i dati dell'utente quando li riceviamo dal backend,
-    // così li possiamo riutilizzare (es. per precompilare il form di modifica).
+    // così li possiamo riutilizzare
     var utenteCorrente = null;
 
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
     // -----------------------------------------------------------------
     // Apertura della modale "Modifica Dati"
     // Quando l'utente la apre, precompiliamo i campi con i suoi dati
-    // attuali, così non deve riscrivere tutto da capo.
+    // attuali, così non ricompila tutto
     // -----------------------------------------------------------------
     if (bottoneModifica != null) {
         bottoneModifica.addEventListener('click', function () {
@@ -84,8 +84,8 @@ $(document).ready(function () {
 
     // -----------------------------------------------------------------
     // CARICAMENTO DATI: chiamata AJAX a me.php
-    // Se l'utente non è loggato lo mandiamo alla pagina di login.
-    // Altrimenti riempiamo la pagina con i suoi dati.
+    // Se l'utente non è loggato lo mandiamo alla pagina di login
+    // Altrimenti riempiamo la pagina con i suoi dati
     // -----------------------------------------------------------------
     function caricaDatiUtente() {
 
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 document.getElementById('card-name').textContent = profilo.nome + ' ' + profilo.cognome;
 
                 // Trasformiamo l'id in una stringa di 8 cifre con gli zeri davanti
-                // (es. id = 42 -> "00000042"). Lo facciamo con un ciclo while.
+                // (es. id = 42 -> "00000042")
                 var idStringa = String(profilo.id);
                 while (idStringa.length < 8) {
                     idStringa = '0' + idStringa;
@@ -180,7 +180,7 @@ $(document).ready(function () {
                     }
 
                     // Tutto ok: mostriamo il messaggio per un momento, poi
-                    // chiudiamo la modale e ricarichiamo i dati a video.
+                    // chiudiamo la modale e ricarichiamo i dati a video
                     msgEl.textContent = 'Dati aggiornati con successo!';
                     msgEl.style.color = '#00ff64';
 

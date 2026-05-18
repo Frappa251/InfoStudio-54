@@ -2,7 +2,7 @@
 // =====================================================================
 // create_booking.php
 // Riceve i dati di una prenotazione e li salva nella tabella
-// "prenotazioni". L'utente DEVE essere loggato per poter prenotare.
+// "prenotazioni". L'utente DEVE essere loggato per poter prenotare
 // =====================================================================
 
 require_once __DIR__ . '/db.php';
@@ -21,7 +21,7 @@ $utente = require_user();
 $input = read_json_input();
 
 // (int) e clean_string ci servono per essere sicuri di lavorare con tipi
-// "puliti" anche se il client invia valori strani.
+// "puliti" anche se il client invia valori strani
 $tavoloId         = (int) ($input['tavolo_id']         ?? 0);
 $dataEvento       = clean_string($input['data_evento'] ?? '');
 $numeroPersone    = (int) ($input['numero_persone']    ?? 0);
@@ -41,9 +41,9 @@ $emailContatto = strtolower($emailContatto);
 // VALIDAZIONE DEI DATI
 // ---------------------------------------------------------------------
 
-// 1) Il tavolo può essere solo 1 (Standard), 2 (Premium) o 3 (VIP).
-//    Per ogni tipo c'è anche un numero massimo di persone consentito.
-//    Usiamo un array associativo per legare tavolo -> massimo persone.
+// 1) Il tavolo può essere solo 1 (Standard), 2 (Premium) o 3 (VIP)
+//    Per ogni tipo c'è anche un numero massimo di persone consentito
+//    Usiamo un array associativo per legare tavolo -> massimo persone
 $maxPersonePerTavolo = [
     1 => 5,
     2 => 10,
@@ -55,8 +55,8 @@ if (!isset($maxPersonePerTavolo[$tavoloId])) {
 }
 
 
-// 2) La data deve essere in formato YYYY-MM-DD e non può essere nel passato.
-//    strtotime trasforma la stringa in timestamp UNIX così possiamo confrontare.
+// 2) La data deve essere in formato YYYY-MM-DD e non può essere nel passato
+//    strtotime trasforma la stringa in timestamp UNIX così possiamo confrontare
 $timestampData = strtotime($dataEvento);
 $timestampOggi = strtotime(date('Y-m-d'));
 
@@ -77,7 +77,7 @@ if ($numeroPersone < 1 || $numeroPersone > $massimoConsentito) {
 
 
 // 4) Dati di contatto: il nome non deve essere vuoto, l'email deve essere
-//    valida e il telefono non vuoto.
+//    valida e il telefono non vuoto
 if ($nomeContatto == '') {
     json_response(['success' => false, 'message' => 'Dati di contatto non validi.'], 422);
 }
@@ -102,7 +102,7 @@ if ($note == '') {
 // La tabella prenotazioni ha un vincolo UNIQUE su (tavolo_id, data_evento):
 // vuol dire che non si può prenotare lo stesso tavolo nella stessa data
 // due volte. Se ci provassimo il database lancia un errore di duplicato
-// (codice SQLSTATE 23000) che catturiamo nel catch.
+// (codice SQLSTATE 23000) che catturiamo nel catch
 // ---------------------------------------------------------------------
 try {
 

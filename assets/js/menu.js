@@ -2,13 +2,13 @@
 // menu.js
 // Gestisce la pagina del menù drink/bottiglie:
 //   - filtri per categoria (Gin, Vodka, Rum...)
-//   - selezione delle opzioni di un drink (es. tipo di gin)
+//   - selezione delle opzioni di un drink
 //   - aggiunta al carrello
 //   - barra fluttuante con il totale
 //   - modale per scegliere il numero del tavolo
 //   - invio dell'ordine al backend
 // Il carrello viene salvato in localStorage così non si perde quando
-// l'utente ricarica la pagina.
+// l'utente ricarica la pagina
 // =====================================================================
 
 $(document).ready(function () {
@@ -34,9 +34,9 @@ $(document).ready(function () {
 
 
     // -----------------------------------------------------------------
-    // Carichiamo il carrello da localStorage (se esiste).
+    // Carichiamo il carrello da localStorage (se esiste)
     // localStorage memorizza solo stringhe, quindi usiamo JSON.parse
-    // per riconvertirlo in un array.
+    // per riconvertirlo in un array
     // -----------------------------------------------------------------
     var carrello = [];
     var carrelloSalvato = localStorage.getItem('cart');
@@ -49,8 +49,8 @@ $(document).ready(function () {
     // FUNZIONI DI UTILITÀ
     // =================================================================
 
-    // Mostra un piccolo "toast" in basso a destra con un messaggio.
-    // È un'alternativa più carina al banale alert() del browser.
+    // Mostra un piccolo "toast" in basso a destra con un messaggio
+    // È un'alternativa più carina al banale alert() del browser
     function mostraToast(messaggio) {
 
         var toast = $('<div class="custom-toast"></div>').text(messaggio);
@@ -74,7 +74,7 @@ $(document).ready(function () {
     // =================================================================
     // GESTIONE FILTRI PER CATEGORIA
     // Quando l'utente clicca su un bottone "Gin", "Vodka" ecc.,
-    // mostriamo solo i drink di quella categoria.
+    // mostriamo solo i drink di quella categoria
     // =================================================================
     bottoniFiltro.on('click', function () {
 
@@ -109,7 +109,6 @@ $(document).ready(function () {
 
     // =================================================================
     // APERTURA/CHIUSURA DEL PANNELLO OPZIONI DI UN DRINK
-    // (es. "Scegli il Gin" -> Bombay / Hendrick's)
     // =================================================================
     $('.drink-options-btn').on('click', function () {
 
@@ -137,7 +136,7 @@ $(document).ready(function () {
     // =================================================================
     // SELEZIONE DI UNA OPZIONE NEL PANNELLO
     // Quando l'utente clicca su Bombay/Hendrick's/ecc, aggiorniamo
-    // il prezzo finale del drink e il testo del bottone.
+    // il prezzo finale del drink e il testo del bottone
     // =================================================================
     $('.option-item').on('click', function () {
 
@@ -160,7 +159,7 @@ $(document).ready(function () {
 
         var nuovoPrezzo = prezzoBase + prezzoExtra;
 
-        // Aggiorniamo l'attributo data-* e il testo del prezzo
+        // Aggiorniamo l'attributo data e il testo del prezzo
         card.data('currentprice', nuovoPrezzo);
         card.attr('data-currentprice', nuovoPrezzo);
         card.find('.final-price').text(' ' + nuovoPrezzo.toFixed(2));
@@ -184,7 +183,7 @@ $(document).ready(function () {
 
     // =================================================================
     // AGGIORNAMENTO DELLA BARRA CARRELLO IN BASSO
-    // Ricostruisce la lista degli articoli e calcola il totale.
+    // Ricostruisce la lista degli articoli e calcola il totale
     // =================================================================
     function aggiornaUICarrello() {
 
@@ -226,7 +225,7 @@ $(document).ready(function () {
             // Usiamo .text() invece di inserire direttamente i valori
             // nell'HTML: in questo modo siamo protetti contro l'XSS
             // (se per caso un drink avesse nel nome un tag HTML,
-            // verrebbe mostrato come testo e non interpretato).
+            // verrebbe mostrato come testo e non interpretato)
             rigaJq.find('.item-name').text(item.name);
             rigaJq.find('.item-option').text(item.option);
             rigaJq.find('.item-price').text(' ' + item.price.toFixed(2));
@@ -242,8 +241,8 @@ $(document).ready(function () {
     // =================================================================
     // RIMOZIONE DI UN ARTICOLO DAL CARRELLO
     // Usiamo "delegazione" di evento: l'handler è su listaItemsCarrello
-    // ma scatta solo quando si clicca un .btn-remove al suo interno.
-    // Lo facciamo così perché i bottoni vengono creati dinamicamente.
+    // ma scatta solo quando si clicca un .btn-remove al suo interno
+    // Lo facciamo così perché i bottoni vengono creati dinamicamente
     // =================================================================
     listaItemsCarrello.on('click', '.btn-remove', function (evento) {
 
@@ -271,7 +270,7 @@ $(document).ready(function () {
     // =================================================================
     // CLICK SULL'HEADER DEL CARRELLO -> ESPANDE/CHIUDE LA LISTA
     // Però se l'utente clicca il bottone "Richiedi al tavolo" NON
-    // espandiamo, perché lì parte il checkout.
+    // espandiamo, perché lì parte il checkout
     // =================================================================
     headerCarrello.on('click', function (evento) {
 
@@ -294,7 +293,7 @@ $(document).ready(function () {
         var card    = bottone.closest('.drink-card');
 
         // CONTROLLO: se il drink ha le opzioni (es. tipo di gin), l'utente
-        // deve averne scelta una prima di poter aggiungere al carrello.
+        // deve averne scelta una prima di poter aggiungere al carrello
         var dropdown = card.find('.drink-options-btn');
 
         if (dropdown.length > 0) {
@@ -342,9 +341,9 @@ $(document).ready(function () {
             prezzo = 0;
         }
 
-        // Aggiungiamo l'articolo al carrello.
+        // Aggiungiamo l'articolo al carrello
         // Per l'id usiamo timestamp + numero casuale così è praticamente
-        // impossibile avere due articoli con lo stesso id.
+        // impossibile avere due articoli con lo stesso id
         var nuovoId = Date.now() + Math.floor(Math.random() * 1000);
 
         carrello.push({
@@ -357,7 +356,7 @@ $(document).ready(function () {
         localStorage.setItem('cart', JSON.stringify(carrello));
         aggiornaUICarrello();
 
-        // Feedback visivo: il bottone diventa verde per 1.5 secondi
+        // Il bottone diventa verde per 1.5 secondi
         var testoOriginale = bottone.text();
         bottone.text('Aggiunto ✓');
         bottone.css({
@@ -379,8 +378,8 @@ $(document).ready(function () {
 
     // =================================================================
     // CLICK SU "Richiedi al tavolo"
-    // Apre la modale dove l'utente scriverà il numero del suo tavolo.
-    // Però prima dobbiamo controllare che sia loggato!
+    // Apre la modale dove l'utente scriverà il numero del suo tavolo
+    // Però prima dobbiamo controllare che sia loggato
     // =================================================================
     bottoneCheckout.on('click', function (evento) {
 
@@ -432,7 +431,7 @@ $(document).ready(function () {
 
     // =================================================================
     // CLICK SU "Conferma" DELLA MODALE
-    // Manda l'ordine al backend.
+    // Manda l'ordine al backend
     // =================================================================
     bottoneConferma.on('click', function () {
 
@@ -456,7 +455,7 @@ $(document).ready(function () {
         bottoneConferma.prop('disabled', true);
         bottoneConferma.text('Invio...');
 
-        // Prepariamo la lista degli articoli da inviare al backend.
+        // Prepariamo la lista degli articoli da inviare al backend
         // Mandiamo solo i campi necessari (name, option, price): l'id locale
         // non serve al server.
         var itemsDaInviare = [];
@@ -481,7 +480,7 @@ $(document).ready(function () {
             success: function (risposta) {
 
                 if (risposta.success == false) {
-                    // Errore "logico" dal backend (es. carrello vuoto)
+                    // Errore "logico" dal backend
                     inputNumeroTavolo.val('');
                     inputNumeroTavolo.attr('placeholder', risposta.message);
                     inputNumeroTavolo.css('border-color', '#ff4444');
@@ -493,7 +492,7 @@ $(document).ready(function () {
                     return;
                 }
 
-                // Ordine inviato con successo!
+                // Ordine inviato con successo
                 contenutoFormModale.hide();
                 spanTavoloSuccesso.text(numeroTavolo);
                 contenutoSuccessoModale.show();
@@ -524,8 +523,8 @@ $(document).ready(function () {
                 }, 3000);
             },
 
-            // complete viene chiamata sempre, sia in caso di success che di error.
-            // La usiamo per riabilitare il bottone "Conferma".
+            // complete viene chiamata sempre, sia in caso di success che di error
+            // La usiamo per riabilitare il bottone "Conferma"
             complete: function () {
                 bottoneConferma.prop('disabled', false);
                 bottoneConferma.text('Conferma');

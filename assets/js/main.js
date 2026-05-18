@@ -1,6 +1,6 @@
 // =====================================================================
 // main.js
-// Script "comune" caricato da quasi tutte le pagine.
+// Script "comune" caricato da quasi tutte le pagine
 // Si occupa di:
 //   1) chiedere al backend chi è l'utente loggato e, se c'è qualcuno,
 //      modificare la navbar (mostra il nome, aggiunge il pulsante Esci)
@@ -9,7 +9,7 @@
 
 
 // Aspettiamo che il DOM sia pronto, così tutti gli elementi della pagina
-// (navbar, logo, ecc.) esistono e possiamo cercarli con jQuery.
+// (navbar, logo, ecc.) esistono e possiamo cercarli con jQuery
 $(document).ready(function () {
 
     // -----------------------------------------------------------------
@@ -37,8 +37,8 @@ $(document).ready(function () {
             // Cerchiamo tutti i link della navbar
             var linkNavbar = document.querySelectorAll('.nav-links a');
 
-            // Capiamo se siamo nella root o in una sottocartella /pages/.
-            // Da questo dipende il percorso del link al profilo.
+            // Capiamo se siamo nella root o in una sottocartella /pages/
+            // Da questo dipende il percorso del link al profilo
             var siamoInPages = window.location.pathname.indexOf('/pages/') != -1;
             var percorsoProfilo;
             if (siamoInPages) {
@@ -59,7 +59,7 @@ $(document).ready(function () {
             }
 
             // Aggiungiamo il pulsante "Esci" alla fine della lista
-            // (se non c'è già stato aggiunto in una chiamata precedente).
+            // se non è già stato aggiunto in una chiamata precedente
             var listaNav = document.querySelector('.nav-links');
             var pulsanteEsciEsistente = document.getElementById('logout-btn');
 
@@ -71,7 +71,7 @@ $(document).ready(function () {
                 listaNav.appendChild(nuovoLi);
 
                 // Quando l'utente clicca su "Esci", chiamiamo logout.php
-                // e poi ricarichiamo la pagina per aggiornare la navbar.
+                // e poi ricarichiamo la pagina per aggiornare la navbar
                 document.getElementById('logout-btn').addEventListener('click', function (evento) {
                     evento.preventDefault();
 
@@ -83,8 +83,7 @@ $(document).ready(function () {
             }
         })
         .fail(function (errore) {
-            // Se il backend non è raggiungibile, non blocchiamo la pagina:
-            // semplicemente la navbar resta com'è (con il link "Accedi").
+            // Se il backend non è raggiungibile, non blocchiamo la pagina
             console.warn('Backend PHP non raggiungibile. La pagina funziona comunque.');
         });
 
@@ -94,7 +93,7 @@ $(document).ready(function () {
     // Ogni tot millisecondi prendiamo una parte casuale del logo
     // (es. "Info", "Studio", "-", "54") e le aggiungiamo la classe
     // CSS "flicker" per un piccolo lasso di tempo, così la lettera
-    // tremola come se fosse un'insegna al neon vera.
+    // tremola come se fosse un'insegna al neon vera
     // -----------------------------------------------------------------
     var pezziLogo = document.querySelectorAll('.logo-neon span');
 
@@ -104,16 +103,16 @@ $(document).ready(function () {
     }
 
     // Funzione ricorsiva: sceglie uno span casuale, lo fa lampeggiare
-    // e poi richiama se stessa dopo un tempo casuale.
+    // e poi richiama se stessa dopo un tempo casuale
     function lampeggiaCasuale() {
 
-        // Math.random() restituisce un numero tra 0 e 1.
+        // Math.random() restituisce un numero tra 0 e 1
         // Lo moltiplichiamo per la lunghezza dell'array e arrotondiamo
-        // in giù con floor per avere un indice valido.
+        // in giù con floor per avere un indice valido
         var indice = Math.floor(Math.random() * pezziLogo.length);
         var pezzo = pezziLogo[indice];
 
-        // Aggiungiamo la classe "flicker" (lo stile è nel CSS)
+        // Aggiungiamo la classe "flicker"
         pezzo.classList.add('flicker');
 
         // Dopo un tempo casuale (20-150ms) togliamo la classe

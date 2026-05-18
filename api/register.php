@@ -2,21 +2,21 @@
 // =====================================================================
 // register.php
 // Riceve i dati di registrazione dal form (in formato JSON) e li salva
-// nella tabella "utenti". Restituisce sempre una risposta in JSON.
+// nella tabella "utenti". Restituisce sempre una risposta in JSON
 // =====================================================================
 
 // Includiamo il file di configurazione che contiene la connessione PDO
-// e qualche funzione di utilità (json_response, db, clean_string ecc.)
+// e altre funzione di utilità (json_response, db, clean_string ecc.)
 require_once __DIR__ . '/db.php';
 
-// Controlliamo che la richiesta sia stata inviata col metodo POST.
-// In caso contrario rispondiamo con un errore 405 (Method Not Allowed).
+// Controlliamo che la richiesta sia stata inviata col metodo POST
+// In caso contrario rispondiamo con un errore 405 (Method Not Allowed)
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     json_response(['success' => false, 'message' => 'Metodo non consentito.'], 405);
 }
 
-// Leggiamo il corpo JSON della richiesta e prendiamo i singoli campi.
-// L'operatore ?? assegna una stringa vuota se il campo non è stato inviato.
+// Leggiamo il corpo JSON della richiesta e prendiamo i singoli campi
+// L'operatore ?? assegna una stringa vuota se il campo non è stato inviato
 $input = read_json_input();
 
 $nome     = clean_string($input['nome']     ?? '');
@@ -25,11 +25,10 @@ $telefono = clean_string($input['telefono'] ?? '');
 $email    = clean_string($input['email']    ?? '');
 $password = $input['password'] ?? '';
 
-// Mettiamo l'email tutta in minuscolo per evitare duplicati come
-// "MARIO@MAIL.IT" e "mario@mail.it" considerati account diversi.
+// Mettiamo l'email tutta in minuscolo per evitare duplicati
 $email = strtolower($email);
 
-// Togliamo eventuali spazi nel numero di telefono ("333 123 4567" -> "3331234567")
+// Togliamo eventuali spazi nel numero di telefono
 $telefono = str_replace(' ', '', $telefono);
 
 
@@ -37,7 +36,7 @@ $telefono = str_replace(' ', '', $telefono);
 // VALIDAZIONE LATO SERVER
 // Anche se il form HTML controlla già i campi, dobbiamo SEMPRE
 // ricontrollare lato server: un utente malintenzionato potrebbe
-// aggirare i controlli del browser.
+// aggirare i controlli del browser
 // ---------------------------------------------------------------------
 
 // 1) Tutti i campi devono essere stati compilati
@@ -66,12 +65,11 @@ if (strlen($telefono) < 8) {
 // SALVATAGGIO NEL DATABASE
 // Usiamo i Prepared Statement di PDO per evitare SQL Injection:
 // i valori inseriti dall'utente NON vengono concatenati nella query
-// ma passati separatamente tramite execute().
+// ma passati separatamente tramite execute()
 // ---------------------------------------------------------------------
 try {
 
-    // password_hash() trasforma la password in chiaro in un hash sicuro.
-    // Nel database NON salviamo mai la password in chiaro!
+    // password_hash() trasforma la password in chiaro in un hash sicuro
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepariamo la query con i punti interrogativi al posto dei valori
@@ -82,11 +80,11 @@ try {
     $stmt->execute([$nome, $cognome, $telefono, $email, $passwordHash]);
 
     // Recuperiamo l'id appena generato dal DB e lo salviamo in sessione
-    // così l'utente risulta già "loggato" dopo la registrazione.
+    // così l'utente risulta già "loggato" dopo la registrazione
     $nuovoId = (int) db()->lastInsertId();
     $_SESSION['user_id'] = $nuovoId;
 
-    // Rispondiamo al client con i dati appena salvati (senza la password!)
+    // Rispondiamo al client con i dati appena salvati
     json_response([
         'success' => true,
         'message' => 'Registrazione completata.',

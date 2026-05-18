@@ -1,14 +1,14 @@
 -- =====================================================================
 -- database.sql
--- Script di creazione del database "infostudio54" e delle sue tabelle.
+-- Script di creazione del database "infostudio54" e delle sue tabelle
 -- Da eseguire una sola volta, ad esempio dalla console di phpMyAdmin
 -- (XAMPP) oppure col comando:
 --     mysql -u root -p < database.sql
 -- =====================================================================
 
 
--- Creiamo il database se non esiste già.
--- Usiamo utf8mb4 per supportare bene caratteri accentati ed emoji.
+-- Creiamo il database se non esiste già
+-- Usiamo utf8mb4 per supportare bene caratteri accentati ed emoji
 CREATE DATABASE IF NOT EXISTS infostudio54
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
@@ -19,7 +19,7 @@ USE infostudio54;
 
 -- ---------------------------------------------------------------------
 -- TABELLA: utenti
--- Contiene gli account registrati sul sito.
+-- Contiene gli account registrati sul sito
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS utenti (
     id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -27,8 +27,7 @@ CREATE TABLE IF NOT EXISTS utenti (
     cognome         VARCHAR(80)  NOT NULL,
     telefono        VARCHAR(30)  NOT NULL,
     email           VARCHAR(190) NOT NULL UNIQUE,
-    -- NB: nel database NON salviamo mai la password in chiaro!
-    --     Salviamo solo l'hash generato in PHP con password_hash().
+    -- Nel DB non va salvata la password in chiaro ma l'hash generato in PHP tramite password_hash()
     password_hash   VARCHAR(255) NOT NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -36,7 +35,7 @@ CREATE TABLE IF NOT EXISTS utenti (
 
 -- ---------------------------------------------------------------------
 -- TABELLA: prenotazioni
--- Contiene le prenotazioni dei tavoli per le serate evento.
+-- Contiene le prenotazioni dei tavoli per le serate evento
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS prenotazioni (
     id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -52,21 +51,21 @@ CREATE TABLE IF NOT EXISTS prenotazioni (
 
     -- Chiave esterna verso la tabella utenti:
     -- se un utente viene eliminato, vengono cancellate anche
-    -- le sue prenotazioni (ON DELETE CASCADE).
+    -- le sue prenotazioni (ON DELETE CASCADE)
     CONSTRAINT fk_prenotazioni_utenti
         FOREIGN KEY (user_id) REFERENCES utenti(id)
         ON DELETE CASCADE,
 
     -- Vincolo di unicità:
     -- non si può prenotare lo stesso tavolo nella stessa data
-    -- (questo evita di vendere due volte lo stesso posto).
+    -- (questo evita di vendere due volte lo stesso posto)
     CONSTRAINT unq_tavolo_data UNIQUE (tavolo_id, data_evento)
 );
 
 
 -- ---------------------------------------------------------------------
 -- TABELLA: ordini_menu
--- Contiene gli ordini di drink/bottiglie fatti al tavolo.
+-- Contiene gli ordini di drink/bottiglie fatti al tavolo
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS ordini_menu (
     id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -74,13 +73,12 @@ CREATE TABLE IF NOT EXISTS ordini_menu (
     numero_tavolo   TINYINT UNSIGNED NOT NULL,
     totale          DECIMAL(8,2) NOT NULL,
     -- items_json contiene la lista degli articoli ordinati in formato JSON,
-    -- es: [{"name":"Mojito","option":"Bacardi","price":10.0}, ...]
     items_json      JSON NOT NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Chiave esterna verso utenti.
     -- ON DELETE SET NULL: se l'utente viene cancellato, l'ordine resta
-    -- (utile per le statistiche) ma con user_id = NULL.
+    -- (utile per le statistiche) ma con user_id = NULL
     CONSTRAINT fk_ordini_utenti
         FOREIGN KEY (user_id) REFERENCES utenti(id)
         ON DELETE SET NULL

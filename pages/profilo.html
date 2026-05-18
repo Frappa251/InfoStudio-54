@@ -5,7 +5,7 @@
     e permette di:
       - aprire una modale con la tessera digitale
       - aprire una modale per modificare nome/cognome/telefono
-    Logica gestita in assets/js/profilo.js.
+    Logica gestita in assets/js/profilo.js
 -->
 <html lang="it">
 <head>
@@ -45,7 +45,7 @@
     <!-- ============================================================
          BOX DASHBOARD VIP
          Il div con id="profilo-info" è vuoto inizialmente: viene
-         riempito da profilo.js dopo aver chiamato api/me.php.
+         riempito da profilo.js dopo aver chiamato api/me.php
          ============================================================ -->
     <div class="auth-container">
         <div class="auth-box vip-dashboard">
@@ -68,9 +68,9 @@
     <!-- ============================================================
          MODALE: TESSERA DIGITALE
          Si apre cliccando "Mostra Tessera Digitale" e mostra un
-         "VIP PASS" con nome utente e id.
+         "VIP PASS" con nome utente e id
          La modale di default è nascosta (display: none nel CSS) e
-         viene mostrata dal JS impostando style.display = 'block'.
+         viene mostrata dal JS impostando style.display = 'block'
          ============================================================ -->
     <div id="tessera-modal" class="modal">
         <div class="modal-content">
@@ -109,7 +109,7 @@
     <!-- ============================================================
          MODALE: MODIFICA DATI
          Si apre cliccando "Modifica Dati". Il form invia i nuovi
-         valori a api/update_profile.php tramite AJAX.
+         valori a api/update_profile.php tramite AJAX
          ============================================================ -->
     <div id="modifica-modal" class="modal">
         <div class="modal-content modifica-content">

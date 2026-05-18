@@ -210,9 +210,9 @@
 
     <!-- ====================================================
          SCRIPT DELLO SLIDESHOW
-         È scritto inline qui perché serve solo a questa pagina.
+         È scritto inline qui perché serve solo a questa pagina
          Idea: tenere un indice "slideCorrente" e mostrare ogni
-         volta l'immagine corrispondente nell'array "slide".
+         volta l'immagine corrispondente nell'array "slide"
          ==================================================== -->
     <script>
 
@@ -241,7 +241,7 @@
         // Pre-caricamento delle immagini
         // Creiamo un oggetto Image per ogni foto, in modo che
         // il browser le scarichi subito. Quando poi le mostriamo
-        // saranno già pronte e non vedremo lo "scatto" del download.
+        // saranno già pronte e non vedremo lo "scatto" del download
         // ----------------------------------------------------
         for (var i = 0; i < slide.length; i++) {
             var img = new Image();
@@ -252,7 +252,7 @@
         // ----------------------------------------------------
         // mostraSlide(indice)
         // Mostra la foto a un dato indice. Se l'indice è fuori
-        // dai limiti dell'array, "gira" all'inizio o alla fine.
+        // dai limiti dell'array, "gira" all'inizio o alla fine
         // ----------------------------------------------------
         function mostraSlide(indice) {
 
@@ -265,7 +265,7 @@
             }
 
             // Piccolo effetto fade: portiamo a 0 l'opacità,
-            // dopo 200ms cambiamo immagine e rialziamo l'opacità.
+            // dopo 200ms cambiamo immagine e rialziamo l'opacità
             immagine.style.opacity = 0;
 
             setTimeout(function () {
@@ -285,7 +285,7 @@
         // ----------------------------------------------------
         // Eventi sui bottoni di avanti/indietro
         // Quando l'utente clicca azzeriamo il timer automatico,
-        // così non si trova la foto che cambia subito dopo.
+        // così non si trova la foto che cambia subito dopo
         // ----------------------------------------------------
         bottonePrecedente.addEventListener('click', function () {
             mostraSlide(slideCorrente - 1);
@@ -300,8 +300,8 @@
 
         // ----------------------------------------------------
         // Timer automatico (autoplay)
-        // setInterval ripete una funzione ogni N millisecondi.
-        // 3500 ms = 3.5 secondi.
+        // setInterval ripete una funzione ogni N millisecondi
+        // 3500 ms = 3.5 secondi
         // ----------------------------------------------------
         function avviaTimer() {
             timerSlide = setInterval(slideSuccessiva, 3500);

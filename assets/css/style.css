@@ -1,6 +1,6 @@
 /* =====================================================================
    style.css
-   Foglio di stile principale del sito InfoStudio-54.
+   Foglio di stile principale del sito InfoStudio-54
    Caricato in TUTTE le pagine. Contiene:
      1) Variabili globali (palette colori)
      2) Reset CSS e stili di base
@@ -16,8 +16,8 @@
 /* =====================================================================
    1) VARIABILI GLOBALI
    Definiamo i colori principali una volta sola dentro :root: in questo
-   modo possiamo usarli ovunque con var(--nome) e cambiarli in un colpo
-   solo se decidiamo di cambiare la palette.
+   modo possiamo usarli ovunque con var(--nome) e cambiarli
+   solo se decidiamo di cambiare la palette
    ===================================================================== */
 :root {
     --bg-color:     #0b0b0f;            /* Nero profondo dello sfondo */
@@ -31,8 +31,8 @@
 /* =====================================================================
    2) RESET BASE
    Il "reset" annulla i margini/padding di default che i browser danno
-   ai vari elementi. Così partiamo tutti dallo stesso punto.
-   box-sizing: border-box -> padding e border sono inclusi nella width.
+   ai vari elementi
+   box-sizing: border-box -> padding e border sono inclusi nella width
    ===================================================================== */
 * {
     margin: 0;
@@ -55,9 +55,9 @@ html {
 
 /* =====================================================================
    3) NAVBAR + LOGO NEON
-   La navbar è "fixed": resta in alto anche scrollando.
+   La navbar è "fixed": resta in alto anche scrollando
    Il logo è composto da più <span> per applicare effetti diversi
-   a ogni parte ("Info", "Studio", "-", "54").
+   a ogni parte ("Info", "Studio", "-", "54")
    ===================================================================== */
 .navbar {
     display: flex;
@@ -181,7 +181,7 @@ html {
 
 /* =====================================================================
    4) SEZIONE HERO (homepage)
-   Video di sfondo a tutto schermo + overlay scuro + testo centrale.
+   Video di sfondo a tutto schermo + overlay scuro + testo centrale
    ===================================================================== */
 .hero {
     height: 100vh;             /* Tutta l'altezza dello schermo */
@@ -257,7 +257,7 @@ html {
 /* =====================================================================
    SEZIONE EVENTI (homepage)
    Le card sono dentro un flex container con flex-wrap, così su schermi
-   piccoli vanno a capo automaticamente.
+   piccoli vanno a capo automaticamente
    ===================================================================== */
 .events-section {
     padding: 120px 5% 80px;
@@ -487,7 +487,7 @@ html {
 /* =====================================================================
    6) PAGINA STORIA
    Stile "glassmorphism": le card sono semi-trasparenti con un effetto
-   di sfocatura sullo sfondo (backdrop-filter: blur).
+   di sfocatura sullo sfondo (backdrop-filter: blur)
    ===================================================================== */
 
 /* Sfondo dedicato della pagina storia */
@@ -663,9 +663,9 @@ body.page-storia {
 /* =====================================================================
    7) TOAST DI MESSAGGIO
    Piccola "card" che spunta in alto al centro per mostrare un messaggio
-   all'utente (es. "Devi prima scegliere la base del drink").
+   all'utente (es. "Devi prima scegliere la base del drink")
    Inizialmente è fuori schermo (top: -100px); il JS gli aggiunge la
-   classe .show che la fa "scendere" a top: 40px grazie alla transition.
+   classe .show che la fa "scendere" a top: 40px grazie alla transition
    ===================================================================== */
 .custom-toast {
     position: fixed;
@@ -695,7 +695,7 @@ body.page-storia {
    8) RESPONSIVE DESIGN
    Regole che si attivano solo sotto una certa larghezza dello schermo
    (tipicamente smartphone e tablet). Vengono dopo le regole base così
-   le "sovrascrivono" quando il media query è vero.
+   le "sovrascrivono" quando il media query è vero
    ===================================================================== */
 
 @media (max-width: 900px) {

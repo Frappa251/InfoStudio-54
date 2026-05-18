@@ -2,8 +2,8 @@
 // =====================================================================
 // create_order.php
 // Riceve un ordine al tavolo (lista di drink/bottiglie + numero tavolo)
-// e lo salva nella tabella "ordini_menu".
-// L'utente deve essere loggato per poter ordinare.
+// e lo salva nella tabella "ordini_menu"
+// L'utente deve essere loggato per poter ordinare
 // =====================================================================
 
 require_once __DIR__ . '/db.php';
@@ -21,7 +21,7 @@ $input = read_json_input();
 // CONTROLLO LOGIN
 // Anche se il frontend controlla il login prima di mostrare il pulsante,
 // dobbiamo sempre ricontrollare lato server: senza questa riga, un
-// malintenzionato potrebbe inviare ordini senza essere autenticato.
+// malintenzionato potrebbe inviare ordini senza essere autenticato
 $utente = current_user();
 if ($utente == null) {
     json_response([
@@ -40,7 +40,7 @@ $items        = $input['items'] ?? [];
 // VALIDAZIONE
 // ---------------------------------------------------------------------
 
-// Il numero del tavolo deve essere tra 1 e 30 (i tavoli fisici del locale)
+// Il numero del tavolo deve essere tra 1 e 30
 if ($numeroTavolo < 1 || $numeroTavolo > 30) {
     json_response([
         'success' => false,
@@ -60,7 +60,7 @@ if (!is_array($items) || count($items) == 0) {
 //   - controlliamo che abbia un nome e un prezzo valido
 //   - lo aggiungiamo all'array "pulito" che salveremo nel DB
 //   - aggiorniamo il totale
-// In questo modo non ci fidiamo di nessun dato passato dal client.
+// In questo modo non ci fidiamo di nessun dato passato dal client
 // ---------------------------------------------------------------------
 $itemsPuliti = [];
 $totale = 0;
@@ -76,7 +76,7 @@ foreach ($items as $item) {
         json_response(['success' => false, 'message' => 'Dati del carrello non validi.'], 422);
     }
 
-    // round(..., 2) arrotonda il prezzo a due cifre decimali (es. 12.5 -> 12.50)
+    // round(..., 2) arrotonda il prezzo a due cifre decimali
     $prezzoArrotondato = round($prezzo, 2);
 
     // Aggiungiamo l'item all'array pulito
@@ -97,7 +97,7 @@ $totale = round($totale, 2);
 // ---------------------------------------------------------------------
 // SALVATAGGIO NEL DATABASE
 // La colonna items_json è di tipo JSON nel DB: ci salviamo dentro
-// la lista completa degli articoli ordinati, così è semplice rileggerla.
+// la lista completa degli articoli ordinati, così è semplice rileggerla
 // ---------------------------------------------------------------------
 $sql = 'INSERT INTO ordini_menu (user_id, numero_tavolo, totale, items_json) VALUES (?, ?, ?, ?)';
 $stmt = db()->prepare($sql);
