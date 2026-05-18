@@ -21,12 +21,27 @@ if (session_status() == PHP_SESSION_NONE) {
 // ---------------------------------------------------------------------
 // PARAMETRI DI CONNESSIONE AL DATABASE
 // Usiamo le costanti (define) così non possono essere cambiate per
-// errore dal codice. I valori di default sono quelli di XAMPP.
+// errore dal codice.
+//
+// Su Windows (XAMPP): PHP si connette via TCP su 127.0.0.1,
+//   utente root senza password (default XAMPP).
+// Su Linux (Fedora/Ubuntu con MariaDB nativo): MariaDB ascolta su
+//   UNIX socket, quindi serve 'localhost' come host.
+//   Utente root con password 'root'.
 // ---------------------------------------------------------------------
-define('DB_HOST', '127.0.0.1');
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    // Windows — XAMPP: root senza password, connessione TCP
+    define('DB_HOST', '127.0.0.1');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+} else {
+    // Linux — MariaDB nativo: root con password, connessione via socket
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', 'root');
+}
+
 define('DB_NAME', 'infostudio54');
-define('DB_USER', 'root');
-define('DB_PASS', '');
 
 
 // =====================================================================
