@@ -1,15 +1,39 @@
-/* assets/css/style.css */
+/* =====================================================================
+   style.css
+   Foglio di stile principale del sito InfoStudio-54.
+   Caricato in TUTTE le pagine. Contiene:
+     1) Variabili globali (palette colori)
+     2) Reset CSS e stili di base
+     3) Navbar e logo "neon"
+     4) Hero (homepage) e sezione eventi
+     5) Footer
+     6) Pagina Storia (timeline + slideshow + glassmorphism)
+     7) Toast di messaggi
+     8) Regole responsive per smartphone/tablet
+   ===================================================================== */
 
-/* --- VARIABILI GLOBALI (Colori e Stili) --- */
+
+/* =====================================================================
+   1) VARIABILI GLOBALI
+   Definiamo i colori principali una volta sola dentro :root: in questo
+   modo possiamo usarli ovunque con var(--nome) e cambiarli in un colpo
+   solo se decidiamo di cambiare la palette.
+   ===================================================================== */
 :root {
-    --bg-color: #0b0b0f; /* Sfondo scuro profondo */
-    --text-main: #f0f0f0;
-    --accent-color: #d100ff; /* Viola neon discoteca */
-    --accent-hover: #ff00ea; /* Fucsia al passaggio del mouse */
-    --nav-bg: rgba(11, 11, 15, 0.95); /* Sfondo navbar semitrasparente */
+    --bg-color:     #0b0b0f;            /* Nero profondo dello sfondo */
+    --text-main:    #f0f0f0;            /* Colore principale del testo */
+    --accent-color: #d100ff;            /* Viola neon (colore brand) */
+    --accent-hover: #ff00ea;            /* Fucsia per gli hover */
+    --nav-bg: rgba(11, 11, 15, 0.95);   /* Sfondo navbar semitrasparente */
 }
 
-/* --- RESET BASE --- */
+
+/* =====================================================================
+   2) RESET BASE
+   Il "reset" annulla i margini/padding di default che i browser danno
+   ai vari elementi. Così partiamo tutti dallo stesso punto.
+   box-sizing: border-box -> padding e border sono inclusi nella width.
+   ===================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -18,31 +42,23 @@
 }
 
 body {
-    background-color: #0b0b0f; 
+    background-color: #0b0b0f;
     color: #fff;
     font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
-/* Rendiamo le card semi-trasparenti per far vedere lo sfondo */
-.drink-card {
-    background: rgba(20, 20, 25, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 20px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+/* Scorrimento fluido quando si clicca un link tipo "#eventi" */
+html {
+    scroll-behavior: smooth;
 }
 
-.drink-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent-color);
-    background: rgba(20, 20, 25, 0.75);
-}
 
-/* --- NAVBAR --- */
+/* =====================================================================
+   3) NAVBAR + LOGO NEON
+   La navbar è "fixed": resta in alto anche scrollando.
+   Il logo è composto da più <span> per applicare effetti diversi
+   a ogni parte ("Info", "Studio", "-", "54").
+   ===================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -52,36 +68,26 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    box-sizing: border-box;
-    z-index: 1000;
+    z-index: 1000; /* Sopra a tutto il resto */
     background: rgba(11, 11, 15, 0.3);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--accent-color);
-    letter-spacing: 2px;
-    text-transform: uppercase;
 }
 
 .logo-neon-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Rimosso il padding eccessivo per snellire la navbar */
 }
 
 .logo-neon {
-    font-family: 'Monoton', cursive, sans-serif; 
-    font-size: 1.4rem; /* Ridotto da 2.5rem per renderlo proporzionato */
+    font-family: 'Monoton', cursive, sans-serif;
+    font-size: 1.4rem;
     color: #fff;
     text-transform: uppercase;
 }
 
+/* Ogni parte del logo ha colore + alone (text-shadow) diverso */
 .word-info {
     color: #fff;
     text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color);
@@ -95,31 +101,49 @@ body {
 
 .hyphen {
     color: #fff;
-    margin-left: 6px; /* Leggermente ridotto */
+    margin-left: 6px;
     text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent-color);
 }
 
 .number-54 {
     color: #fff;
-    font-size: 1.6rem; /* Ridotto drasticamente da 4rem */
+    font-size: 1.6rem;
     margin-left: 6px;
     text-shadow: 0 0 5px #fff, 0 0 20px #ff00ea, 0 0 60px #ff00ea;
 }
 
-/* Velocità dell'animazione aumentata (da 0.15s a 0.08s) */
+/* Link del logo: stessa estetica di .logo-neon */
+.logo-neon a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px var(--accent-color),
+        0 0 40px var(--accent-color);
+    transition: text-shadow 0.3s ease;
+}
+
+/* Classe applicata/rimossa dal JS (main.js) per simulare un'insegna
+   al neon che lampeggia in modo casuale. */
+.logo-neon span.flicker {
+    opacity: 0.6;
+    text-shadow: none;
+}
+
 .flicker {
     animation: neon-flicker 0.08s infinite alternate;
 }
 
 @keyframes neon-flicker {
-    0% { opacity: 1; }
+    0%   { opacity: 1; }
     100% { opacity: 0.8; text-shadow: none; }
 }
-@media (max-width: 768px) {
-    .logo-neon { font-size: 2rem; }
-    .number-54 { font-size: 2.5rem; }
-}
 
+
+/* Link della navbar (Home, Storia, Menu...) */
 .nav-links {
     list-style: none;
     display: flex;
@@ -138,7 +162,8 @@ body {
     color: var(--accent-color);
 }
 
-/* Bottone Speciale Prenota */
+
+/* Bottone "Prenota Ora" che si distingue dagli altri link */
 .btn-prenota {
     background-color: var(--accent-color);
     padding: 0.6rem 1.2rem;
@@ -150,12 +175,16 @@ body {
 
 .btn-prenota:hover {
     background-color: var(--accent-hover);
-    transform: scale(1.05); /* Piccolo effetto ingrandimento */
+    transform: scale(1.05);
 }
 
 
+/* =====================================================================
+   4) SEZIONE HERO (homepage)
+   Video di sfondo a tutto schermo + overlay scuro + testo centrale.
+   ===================================================================== */
 .hero {
-    height: 100vh;
+    height: 100vh;             /* Tutta l'altezza dello schermo */
     width: 100%;
     display: flex;
     align-items: center;
@@ -163,8 +192,6 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
-    margin: 0;      /* Assicura che non ci sia spazio vuoto sopra il video */
-    padding: 0;     /* Rimuove qualsiasi "spinta" verso il basso */
 }
 
 .hero-video {
@@ -173,8 +200,6 @@ body {
     left: 50%;
     min-width: 100%;
     min-height: 100%;
-    width: auto;
-    height: auto;
     z-index: -2;
     transform: translateX(-50%) translateY(-50%);
     object-fit: cover;
@@ -186,7 +211,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(11, 11, 15, 0.6); /* Effetto scurito per risaltare il testo */
+    background-color: rgba(11, 11, 15, 0.6); /* Vela nera per leggere il testo */
     z-index: -1;
 }
 
@@ -209,7 +234,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Bottone stile moderno */
 .btn-prenota-hero {
     display: inline-block;
     background-color: var(--accent-color);
@@ -229,103 +253,14 @@ body {
     box-shadow: 0 0 25px var(--accent-hover);
 }
 
-/* --- FOOTER AVANZATO --- */
-.footer {
-    background-color: var(--bg-color);
-    padding: 4rem 5% 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
 
-/* --- LAYOUT SLOGAN CON LINEE --- */
-.footer-slogan-container {
-    margin-bottom: 5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem; /* Distanza tra le due righe dello slogan */
-}
-
-.slogan-row {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.slogan-row h2 {
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--accent-color);
-    text-transform: uppercase;
-    text-shadow: 0 0 15px var(--accent-color);
-    margin: 0;
-    white-space: nowrap;
-}
-
-.slogan-line {
-    flex-grow: 1; /* Fa espandere la linea per riempire tutto lo spazio vuoto */
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-.left-align h2 {
-    margin-right: 30px; /* Spazio tra testo e linea a destra */
-}
-
-.right-align h2 {
-    margin-left: 30px; /* Spazio tra testo e linea a sinistra */
-}
-
-/* --- LAYOUT DELLE 3 COLONNE IN BASSO --- */
-.footer-main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Centra gli elementi verticalmente */
-    gap: 2rem;
-    margin-bottom: 3rem;
-    flex-wrap: wrap; /* Per l'adattamento sui telefoni */
-}
-
-/* 1. Stile Colonna Logo */
-.footer-logo-col {
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* Ingrandiamo il logo per il footer usando la classe aggiuntiva */
-.large-footer-logo .logo-neon {
-    font-size: 2.2rem;
-}
-.large-footer-logo .number-54 {
-    font-size: 3rem;
-}
-
-/* 2. Stile Colonna Testi Centrali */
-.footer-info {
-    flex: 1.5; /* Prende leggermente più spazio */
-    display: flex;
-    gap: 2rem;
-    min-width: 300px;
-}
-
-/* 3. Stile Colonna Mappa */
-.footer-map {
-    flex: 1;
-    min-width: 250px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(209, 0, 255, 0.3);
-    box-shadow: 0 0 15px rgba(209, 0, 255, 0.1);
-}
-
-/* --- SCORRIMENTO FLUIDO --- */
-html {
-    scroll-behavior: smooth; /* Fa scorrere la pagina dolcemente quando si clicca "Vai agli eventi" */
-}
-
-/* --- SEZIONE EVENTI --- */
+/* =====================================================================
+   SEZIONE EVENTI (homepage)
+   Le card sono dentro un flex container con flex-wrap, così su schermi
+   piccoli vanno a capo automaticamente.
+   ===================================================================== */
 .events-section {
-    padding: 120px 5% 80px; /* Spazio extra in alto per non far coprire il titolo dalla navbar fissa */
+    padding: 120px 5% 80px;
     background-color: var(--bg-color);
     text-align: center;
 }
@@ -341,17 +276,16 @@ html {
 
 .events-container {
     display: flex;
-    justify-content: center; /* Centra le card nello schermo */
-    align-items: stretch; /* Fa in modo che le card siano alte uguali */
-    gap: 40px; /* Crea uno spazio vuoto tra una locandina e l'altra */
-    flex-wrap: wrap; /* Fondamentale: se lo schermo è piccolo (telefono), le manda a capo automaticamente! */
+    justify-content: center;
+    align-items: stretch;
+    gap: 40px;
+    flex-wrap: wrap;
     width: 100%;
 }
 
 .event-card {
     width: 100%;
-    max-width: 400px; /* Ridotto leggermente per farle stare comode su PC */
-    /* Assicurati di rimuovere 'margin: 0 auto;' se lo avevi messo in precedenza */
+    max-width: 400px;
     background: rgba(20, 20, 25, 0.6);
     border: 1px solid rgba(209, 0, 255, 0.3);
     border-radius: 20px;
@@ -368,7 +302,7 @@ html {
 .event-poster {
     width: 100%;
     aspect-ratio: 2/3;
-    object-fit:cover;
+    object-fit: cover;
     object-position: top center;
     display: block;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -385,7 +319,6 @@ html {
 .event-details h3 {
     font-size: 1.8rem;
     color: #fff;
-    margin: 0;
 }
 
 .event-date {
@@ -395,19 +328,79 @@ html {
     margin: 0 0 15px 0;
 }
 
-/* Adattamento per Tablet e Smartphone */
-@media (max-width: 900px) {
-    .slogan-row h2 {
-        font-size: 2rem;
-    }
-    .footer-logo-col {
-        justify-content: center; /* Centra il logo su mobile */
-        margin-bottom: 2rem;
-    }
-    .footer-info {
-        flex-direction: column;
-        text-align: center;
-    }
+
+/* =====================================================================
+   5) FOOTER
+   Layout:
+     - Slogan "THE POWER TO CONNECT" in due righe con linee orizzontali
+     - Tre colonne: logo, info contatti, mappa Google
+     - Riga finale col copyright
+   ===================================================================== */
+.footer {
+    background-color: var(--bg-color);
+    padding: 4rem 5% 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Slogan: due righe sfasate, ognuna con titolo + linea che riempie lo spazio */
+.footer-slogan-container {
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.slogan-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.slogan-row h2 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    text-shadow: 0 0 15px var(--accent-color);
+    white-space: nowrap;
+}
+
+.slogan-line {
+    flex-grow: 1; /* La linea si "allarga" a riempire lo spazio rimasto */
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.left-align h2  { margin-right: 30px; }
+.right-align h2 { margin-left: 30px; }
+
+
+/* Layout colonne footer */
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.footer-logo-col {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Logo più grande nella versione footer */
+.large-footer-logo .logo-neon { font-size: 2.2rem; }
+.large-footer-logo .number-54 { font-size: 3rem; }
+
+.footer-info {
+    flex: 1.5;
+    display: flex;
+    gap: 2rem;
+    min-width: 300px;
 }
 
 .footer-col { flex: 1; }
@@ -420,14 +413,26 @@ html {
     letter-spacing: 1px;
 }
 
-.footer-col p { color: #aaa; line-height: 1.6; margin-bottom: 0.5rem; }
+.footer-col p {
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
 
-.footer-link { color: var(--accent-color); text-decoration: none; transition: 0.3s; }
-.footer-link:hover { color: #fff; text-shadow: 0 0 10px var(--accent-hover); }
+.footer-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
 
-/* Stile Mappa */
+.footer-link:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--accent-hover);
+}
+
 .footer-map {
     flex: 1;
+    min-width: 250px;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(209, 0, 255, 0.3);
@@ -442,11 +447,24 @@ html {
     font-size: 0.8rem;
 }
 
-@media (max-width: 900px) {
-    .footer-main { flex-direction: column; }
-    .slogan-left, .slogan-right { font-size: 2rem; }
+
+/* =====================================================================
+   Immagini delle "drink card" (regole condivise con menu.css)
+   ===================================================================== */
+.drink-card {
+    background: rgba(20, 20, 25, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
+.drink-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    background: rgba(20, 20, 25, 0.75);
+}
 
 .drink-image {
     width: 100%;
@@ -464,86 +482,28 @@ html {
     box-shadow: 0 10px 25px rgba(209, 0, 255, 0.25);
     border-color: rgba(209, 0, 255, 0.3);
 }
-/* --- ADATTAMENTO MOBILE BARRA DI NAVIGAZIONE --- */
-@media (max-width: 768px) {
-    
-    
-    .logo-neon {
-        font-size: 0.9rem !important;
-    }
-    
-    .number-54 {
-        font-size: 1.1rem !important;
-        margin-left: 3px !important;
-    }
-    
-    .word-studio {
-        margin-left: 3px !important;
-    }
-    nav, .navbar { 
-        display: flex;
-        flex-direction: column; 
-        align-items: center;
-        padding: 15px 10px;
-        gap: 15px;
-        height: auto; 
-    }
 
-    .nav-links, .navbar ul { 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap; 
-        gap: 15px;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-    }
 
-    /* Rimpiccioliamo leggermente i testi dei link */
-    .nav-links a, .navbar ul a {
-        font-size: 0.85rem;
-    }
+/* =====================================================================
+   6) PAGINA STORIA
+   Stile "glassmorphism": le card sono semi-trasparenti con un effetto
+   di sfocatura sullo sfondo (backdrop-filter: blur).
+   ===================================================================== */
 
-    /* Rimpiccioliamo il bottone "Prenota Ora" nella navbar */
-    .navbar .btn-prenota, .navbar button, .nav-links .btn-prenota {
-        font-size: 0.8rem;
-        padding: 8px 16px;
-    }
+/* Sfondo dedicato della pagina storia */
+body.page-storia {
+    background: linear-gradient(rgba(11, 11, 15, 0.85), rgba(11, 11, 15, 0.95)),
+                url('../images/serata_disco.jpg') center/cover fixed no-repeat;
+    color: var(--text-main);
 }
 
-/* =========================================
-   EFFETTO LOGO NEON 
-   ========================================= */
-.logo-neon a {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 
-        0 0 5px #fff, 
-        0 0 10px #fff, 
-        0 0 20px var(--accent-color), 
-        0 0 40px var(--accent-color);
-    transition: text-shadow 0.3s ease;
-}
-
-/* Questa classe viene aggiunta e tolta dal main.js per fare l'effetto sfarfallio! */
-.logo-neon span.flicker {
-    opacity: 0.6;
-    text-shadow: none;
-}
-
-/* =========================================
-   PAGINA STORIA (Design Originale)
-   ========================================= */
 .story-page {
-    padding: 140px 5% 60px; /* Spazio per la navbar */
-    max-width: 1100px;
-    margin: 0 auto; /* Centra la pagina */
+    padding: 140px 5% 60px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-/* Header della Storia */
+/* Header iniziale della pagina */
 .story-hero {
     text-align: center;
     margin-bottom: 4rem;
@@ -555,6 +515,7 @@ html {
     letter-spacing: 3px;
     font-weight: 900;
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .story-hero h1 {
@@ -567,202 +528,21 @@ html {
 
 .story-subtitle {
     color: #aaa;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     max-width: 700px;
     margin: 0 auto;
-}
-
-/* Le "Card" scure per contenere il testo */
-.story-section {
-    margin-bottom: 3rem;
-}
-
-.story-card {
-    background: rgba(15, 15, 20, 0.6); /* Sfondo scuro semitrasparente */
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 3rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-}
-
-.story-card h2 {
-    color: var(--accent-color);
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.story-card p {
-    color: #d8d8e6;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
-}
-
-/* Griglia per affiancare due card */
-.story-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-/* =========================================
-   LA TIMELINE (Linea del Tempo)
-   ========================================= */
-.timeline {
-    border-left: 2px solid var(--accent-color);
-    padding-left: 2rem;
-    margin-left: 1rem;
-    margin-top: 2rem;
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 2.5rem;
-}
-
-/* Il pallino viola */
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -2.65rem;
-    top: 0;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: var(--bg-color);
-    border: 2px solid var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color);
-}
-
-.timeline-year {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
-
-.timeline-content h3 {
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-}
-
-.timeline-content p {
-    margin-bottom: 0;
-    font-size: 1rem;
-}
-
-/* =========================================
-   LO SLIDESHOW FOTOGRAFICO
-   ========================================= */
-.slideshow {
-    position: relative;
-    width: 100%;
-    max-width: 800px;
-    margin: 2rem auto 0;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(209, 0, 255, 0.3);
-    box-shadow: 0 0 20px rgba(209, 0, 255, 0.2);
-}
-
-.slideshow img { 
-    width: 100%; 
-    height: 450px; 
-    object-fit: cover; 
-    display: block; 
-    transition: opacity 0.2s ease-in-out; /* <- AGGIUNGI QUESTA RIGA */
-}
-
-/* Bottoni per cambiare foto */
-.slide-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    padding: 1rem;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: background 0.3s;
-}
-
-.slide-btn:hover {
-    background: var(--accent-color);
-}
-
-.slide-btn--left { left: 0; border-radius: 0 8px 8px 0; }
-.slide-btn--right { right: 0; border-radius: 8px 0 0 8px; }
-
-/* =========================================
-   RESPONSIVE (Per i cellulari)
-   ========================================= */
-@media (max-width: 768px) {
-    .story-page { padding: 120px 1.5rem 60px; }
-    .story-hero h1 { font-size: 2.5rem; }
-    .story-grid { grid-template-columns: 1fr; } /* Mette le card una sotto l'altra */
-    .story-card { padding: 1.5rem; }
-    .slideshow img { height: 300px; }
-}
-
-/* =========================================
-   PAGINA STORIA (Stile Glassmorphism Premium)
-   ========================================= */
-
-/* 1. Sfondo a tutto schermo fisso */
-body.page-storia {
-    /* Cambia il nome dell'immagine qui sotto se vuoi uno sfondo diverso */
-    background: linear-gradient(rgba(11, 11, 15, 0.85), rgba(11, 11, 15, 0.95)), 
-                url('../images/serata_disco.jpg') center/cover fixed no-repeat;
-    color: var(--text-main);
-}
-
-.story-page {
-    padding: 140px 5% 60px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* 2. Titoli Principali */
-.story-hero { text-align: center; margin-bottom: 4rem; }
-.story-eyebrow { 
-    color: var(--accent-color); 
-    text-transform: uppercase; 
-    letter-spacing: 3px; 
-    font-weight: 900; 
-    margin-bottom: 0.5rem; 
-    font-size: 0.9rem;
-}
-.story-hero h1 { 
-    font-size: 3.5rem; 
-    color: #fff; 
-    text-transform: uppercase; 
-    margin-bottom: 1rem; 
-    text-shadow: 0 0 15px var(--accent-color); 
-}
-.story-subtitle { 
-    color: #aaa; 
-    font-size: 1.1rem; 
-    max-width: 700px; 
-    margin: 0 auto; 
     line-height: 1.6;
 }
 
-/* 3. Le "Carte di Vetro" (Glassmorphism) */
+/* Card "di vetro" con bordo viola */
 .story-section { margin-bottom: 2rem; }
 
 .story-card {
-    background: rgba(15, 15, 20, 0.4); /* Più trasparente per far vedere lo sfondo */
-    border: 1px solid rgba(209, 0, 255, 0.4); /* Bordo Neon Viola */
+    background: rgba(15, 15, 20, 0.4);
+    border: 1px solid rgba(209, 0, 255, 0.4);
     border-radius: 12px;
     padding: 2.5rem;
-    backdrop-filter: blur(12px); /* L'effetto vetro sfocato */
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -780,32 +560,55 @@ body.page-storia {
     margin-bottom: 1rem;
     font-size: 1rem;
 }
+
 .story-card p:last-child { margin-bottom: 0; }
 
-/* 4. Griglia affiancata */
-.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-
-/* 5. La Timeline a righe orizzontali */
-.timeline { display: flex; flex-direction: column; }
-.timeline-item { 
-    display: flex; 
-    gap: 2rem; 
-    padding: 1.5rem 0; 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-}
-.timeline-item:last-child { border-bottom: none; padding-bottom: 0; }
-
-.timeline-year { 
-    color: var(--accent-color); 
-    font-weight: 900; 
-    font-size: 1.2rem; 
-    min-width: 60px; 
+/* Due card affiancate (su mobile vanno a capo) */
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
 }
 
-.timeline-content h3 { color: #fff; font-size: 1.1rem; margin-bottom: 0.5rem; }
-.timeline-content p { color: #aaa; font-size: 0.95rem; }
 
-/* 6. Lo Slider Immagini */
+/* Timeline: lista di eventi con anno + descrizione */
+.timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timeline-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.timeline-year {
+    color: var(--accent-color);
+    font-weight: 900;
+    font-size: 1.2rem;
+    min-width: 60px;
+}
+
+.timeline-content h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+
+/* Slideshow fotografico */
 .slideshow {
     position: relative;
     border-radius: 12px;
@@ -813,7 +616,14 @@ body.page-storia {
     margin-top: 1.5rem;
     border: 1px solid rgba(209, 0, 255, 0.3);
 }
-.slideshow img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+
+.slideshow img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.2s ease-in-out; /* Effetto fade gestito da storia.html */
+}
 
 .slide-btn {
     position: absolute;
@@ -825,48 +635,111 @@ body.page-storia {
     font-size: 2.5rem;
     cursor: pointer;
     padding: 1rem;
-    text-shadow: 0 0 15px rgba(0,0,0,0.9);
+    text-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
     transition: transform 0.2s, color 0.2s;
 }
-.slide-btn:hover { color: var(--accent-color); transform: translateY(-50%) scale(1.2); }
-.slide-btn--left { left: 0; }
-.slide-btn--right { right: 0; }
 
-/* 7. La Call to Action finale */
-.story-cta { text-align: center; }
-.story-cta h2 { color: #fff; text-shadow: none; margin-bottom: 0.5rem;}
-.story-cta__btn { display: inline-block; margin-top: 1.5rem; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px;}
-
-/* 8. Perfettamente Adattabile ai Cellulari */
-@media (max-width: 768px) {
-    .story-grid { grid-template-columns: 1fr; }
-    .timeline-item { flex-direction: column; gap: 0.5rem; }
-    .slide-btn { font-size: 1.5rem; }
-    .story-card { padding: 1.5rem; }
-    .story-hero h1 { font-size: 2.2rem; }
+.slide-btn:hover {
+    color: var(--accent-color);
+    transform: translateY(-50%) scale(1.2);
 }
 
-/* --- MESSAGGIO DI ERRORE PERSONALIZZATO --- */
+.slide-btn--left  { left: 0; }
+.slide-btn--right { right: 0; }
+
+
+/* Call to action finale */
+.story-cta { text-align: center; }
+.story-cta h2 { color: #fff; text-shadow: none; margin-bottom: 0.5rem; }
+.story-cta__btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+
+/* =====================================================================
+   7) TOAST DI MESSAGGIO
+   Piccola "card" che spunta in alto al centro per mostrare un messaggio
+   all'utente (es. "Devi prima scegliere la base del drink").
+   Inizialmente è fuori schermo (top: -100px); il JS gli aggiunge la
+   classe .show che la fa "scendere" a top: 40px grazie alla transition.
+   ===================================================================== */
 .custom-toast {
     position: fixed;
-    top: -100px; /* Parte nascosto fuori dallo schermo in alto */
+    top: -100px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(20, 20, 25, 0.95);
-    border: 1px solid #ff0055; /* Bordo rosso neon */
+    border: 1px solid #ff0055;
     color: #fff;
     padding: 15px 30px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(255, 0, 85, 0.4);
-    z-index: 10000; /* Lo fa stare sopra a tutto il resto */
+    z-index: 10000;
     font-weight: 600;
     font-size: 1rem;
-    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animazione fluida con rimbalzo */
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     text-align: center;
-    pointer-events: none; /* Evita che dia fastidio ai click */
+    pointer-events: none;
 }
 
-/* Questa classe viene aggiunta da JS per farlo scendere */
 .custom-toast.show {
-    top: 40px; 
+    top: 40px;
+}
+
+
+/* =====================================================================
+   8) RESPONSIVE DESIGN
+   Regole che si attivano solo sotto una certa larghezza dello schermo
+   (tipicamente smartphone e tablet). Vengono dopo le regole base così
+   le "sovrascrivono" quando il media query è vero.
+   ===================================================================== */
+
+@media (max-width: 900px) {
+    .slogan-row h2     { font-size: 2rem; }
+    .footer-logo-col   { justify-content: center; margin-bottom: 2rem; }
+    .footer-info       { flex-direction: column; text-align: center; }
+    .footer-main       { flex-direction: column; }
+}
+
+@media (max-width: 768px) {
+    /* Navbar -> incolonna logo e link su mobile */
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 10px;
+        gap: 15px;
+        height: auto;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .nav-links a { font-size: 0.85rem; }
+
+    .navbar .btn-prenota {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+    }
+
+    /* Logo più piccolo su mobile */
+    .logo-neon  { font-size: 0.9rem !important; }
+    .number-54  { font-size: 1.1rem !important; margin-left: 3px !important; }
+    .word-studio { margin-left: 3px !important; }
+
+    /* Pagina storia su mobile */
+    .story-page         { padding: 120px 1.5rem 60px; }
+    .story-hero h1      { font-size: 2.2rem; }
+    .story-grid         { grid-template-columns: 1fr; } /* Card una sotto l'altra */
+    .story-card         { padding: 1.5rem; }
+    .timeline-item      { flex-direction: column; gap: 0.5rem; }
+    .slide-btn          { font-size: 1.5rem; }
+    .slideshow img      { height: 300px; }
 }

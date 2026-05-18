@@ -1,6 +1,19 @@
-/* assets/css/profilo.css */
+/* =====================================================================
+   profilo.css
+   Stili per la pagina "Area VIP" del cliente.
+   Contiene:
+     1) Dashboard centrale con i dati personali
+     2) Modale della tessera digitale (.digital-card)
+     3) Modale di modifica dati
+     4) Stili delle modali in generale (.modal, .modal-content)
+   Va caricato DOPO style.css e auth.css.
+   ===================================================================== */
 
-/* Stile della Dashboard Centrale */
+
+/* =====================================================================
+   DASHBOARD VIP
+   Box centrale con bordo dorato e sfondo con leggera sfumatura.
+   ===================================================================== */
 .vip-dashboard {
     max-width: 450px;
     background: linear-gradient(135deg, rgba(25, 25, 30, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%);

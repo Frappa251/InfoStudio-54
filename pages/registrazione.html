@@ -1,13 +1,21 @@
 <!DOCTYPE html>
+<!--
+    registrazione.html
+    Form per creare un nuovo account. I dati vengono mandati con AJAX
+    all'endpoint api/register.php (vedi assets/js/auth.js).
+-->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrati | InfoStudio-54</title>
+
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/auth.css">
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -16,7 +24,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -26,12 +34,22 @@
         </ul>
     </nav>
 
+
+    <!-- ============================================================
+         FORM DI REGISTRAZIONE
+         id="register-form" -> agganciato dal JS in auth.js.
+         L'attributo "required" sui campi è una prima validazione fatta
+         direttamente dal browser; la vera validazione la fa il PHP.
+         ============================================================ -->
     <div class="auth-container">
         <div class="auth-box">
+
             <h2>Unisciti alla Notte</h2>
             <p>Crea il tuo account VIP</p>
 
             <form id="register-form">
+
+                <!-- Nome e Cognome sulla stessa riga (gestito dal CSS) -->
                 <div class="input-row">
                     <div class="input-group">
                         <label for="nome">Nome</label>
@@ -53,7 +71,7 @@
                     <label for="email">Email</label>
                     <input type="email" id="email" required placeholder="tu@esempio.com">
                 </div>
-                
+
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" required placeholder="Minimo 6 caratteri">
@@ -61,17 +79,21 @@
 
                 <button type="submit" class="btn-prenota auth-btn">Registrati</button>
             </form>
+
             <p class="auth-switch">Hai già un account? <a href="login.html">Accedi qui</a></p>
         </div>
     </div>
 
-<footer class="footer">
-         <div class="footer-bottom">
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
             <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
-    <!-- Carichiamo jQuery e le nuove API -->
+
+    <!-- SCRIPT: jQuery + api.js + auth.js -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>

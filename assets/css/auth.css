@@ -1,5 +1,21 @@
-/* assets/css/auth.css - VERSIONE VIP */
+/* =====================================================================
+   auth.css
+   Stili per le pagine "Accedi", "Registrati" e "Conferma prenotazione".
+   Contiene:
+     1) Il contenitore centrale (.auth-container) con sfondo scuro
+     2) Il "box" del form con effetto glassmorphism (.auth-box)
+     3) Stili dei campi input e dei messaggi di errore/successo
+     4) Adattamento per smartphone (media query in fondo)
+   Va caricato DOPO style.css per poter sfruttare le variabili
+   --accent-color, --accent-hover ecc.
+   ===================================================================== */
 
+
+/* =====================================================================
+   CONTENITORE PRINCIPALE
+   Occupa tutta l'altezza dello schermo (100vh) e centra il box
+   verticalmente e orizzontalmente con flex.
+   ===================================================================== */
 .auth-container {
     min-height: 100vh;
     display: flex;

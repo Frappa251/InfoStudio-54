@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+<!--
+    storia.html
+    Pagina "Chi siamo": racconta la storia del locale, le tappe
+    principali e mostra una piccola galleria di foto con uno
+    slideshow automatico.
+    Lo slideshow è scritto in JavaScript inline in fondo alla pagina
+    perché è una funzionalità usata solo qui.
+-->
 <html lang="it">
 
 <head>
@@ -7,10 +15,11 @@
     <title>Storia | InfoStudio-54</title>
 
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/form.css">
 </head>
 
 <body class="page-storia">
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -19,7 +28,7 @@
                 </a>
             </div>
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="storia.html">Storia</a></li>
@@ -29,7 +38,10 @@
         </ul>
     </nav>
 
+
     <main class="story-page">
+
+        <!-- Sezione "hero" con titolo e sottotitolo -->
         <section class="story-hero">
             <div class="story-hero__content">
                 <p class="story-eyebrow">La nostra identità</p>
@@ -41,6 +53,8 @@
             </div>
         </section>
 
+
+        <!-- Sezione: dove tutto è iniziato -->
         <section class="story-section">
             <div class="story-card">
                 <div class="story-text">
@@ -60,8 +74,11 @@
             </div>
         </section>
 
+
+        <!-- Sezione: evoluzione (due card affiancate) -->
         <section class="story-section story-section--alt">
             <div class="story-grid">
+
                 <div class="story-card">
                     <h2>Un’esperienza in continua evoluzione</h2>
                     <p>
@@ -90,11 +107,14 @@
             </div>
         </section>
 
+
+        <!-- Sezione: linea temporale con le tappe principali -->
         <section class="story-section">
             <div class="story-card">
                 <h2>Le tappe principali</h2>
 
                 <div class="timeline">
+
                     <div class="timeline-item">
                         <span class="timeline-year">2023</span>
                         <div class="timeline-content">
@@ -107,8 +127,7 @@
                         <span class="timeline-year">2024</span>
                         <div class="timeline-content">
                             <h3>Prime serate evento</h3>
-                            <p>Le prime collaborazioni artistiche e musicali iniziano a definire il carattere del
-                                locale.</p>
+                            <p>Le prime collaborazioni artistiche e musicali iniziano a definire il carattere del locale.</p>
                         </div>
                     </div>
 
@@ -124,14 +143,21 @@
                         <span class="timeline-year">Oggi</span>
                         <div class="timeline-content">
                             <h3>Una notte da vivere</h3>
-                            <p>InfoStudio-54 continua a evolversi, con l’obiettivo di offrire serate sempre più
-                                memorabili.</p>
+                            <p>InfoStudio-54 continua a evolversi, con l’obiettivo di offrire serate sempre più memorabili.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+
+        <!-- ====================================================
+             SEZIONE: SLIDESHOW DELLE FOTO
+             Mostra una foto alla volta con i bottoni "<" e ">"
+             per cambiarla manualmente. Cambia anche automaticamente
+             ogni 3.5 secondi.
+             Lo script JS che la gestisce è in fondo alla pagina.
+             ==================================================== -->
         <section class="story-section">
             <div class="story-card">
                 <h2>Le nostre serate</h2>
@@ -139,15 +165,13 @@
                     Alcuni momenti delle nostre notti: musica, energia e atmosfera.
                 </p>
 
-                <!-- SLIDESHOW ORIGINALE CON BOTTONI -->
                 <div class="slideshow">
                     <button class="slide-btn slide-btn--left" type="button" aria-label="Foto precedente">
                         &#10094;
                     </button>
 
-                    <!-- L'immagine di partenza ora punta ai file locali -->
-                    <img id="slide-image" src="../assets/images/serata_disco.jpg"
-                        alt="Serata discoteca">
+                    <!-- L'immagine cambia src da JavaScript -->
+                    <img id="slide-image" src="../assets/images/serata_disco.jpg" alt="Serata discoteca">
 
                     <button class="slide-btn slide-btn--right" type="button" aria-label="Foto successiva">
                         &#10095;
@@ -156,6 +180,8 @@
             </div>
         </section>
 
+
+        <!-- Call to action finale -->
         <section class="story-section">
             <div class="story-cta">
                 <h2>Entra nella nostra storia</h2>
@@ -167,90 +193,129 @@
         </section>
     </main>
 
+
+    <!-- FOOTER -->
     <footer class="footer">
-         <div class="footer-bottom">
+        <div class="footer-bottom">
             <p>© 2026 InfoStudio-54. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
-    <!-- Aggiungo i file necessari per Auth e MainJS che erano assenti -->
+
+    <!-- SCRIPT comuni: jQuery + api.js + main.js (navbar) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
 
+
+    <!-- ====================================================
+         SCRIPT DELLO SLIDESHOW
+         È scritto inline qui perché serve solo a questa pagina.
+         Idea: tenere un indice "slideCorrente" e mostrare ogni
+         volta l'immagine corrispondente nell'array "slide".
+         ==================================================== -->
     <script>
-        // L'array con i tuoi percorsi locali
-        const slides = [
-            { src: "../assets/images/serata_disco.jpg", alt: "Serata discoteca" },
-            { src: "../assets/images/dj_set.jpg", alt: "DJ set" },
-            { src: "../assets/images/dancefloor.jpg", alt: "Club nightlife" },
-            { src: "../assets/images/eventi.jpg", alt: "Eventi" },
-            { src: "../assets/images/crowd.jpg", alt: "Crowd discoteca luci" }
+
+        // Lista delle foto (src e testo alternativo per l'accessibilità)
+        var slide = [
+            { src: '../assets/images/serata_disco.jpg', alt: 'Serata discoteca' },
+            { src: '../assets/images/dj_set.jpg',       alt: 'DJ set' },
+            { src: '../assets/images/dancefloor.jpg',   alt: 'Club nightlife' },
+            { src: '../assets/images/eventi.jpg',       alt: 'Eventi' },
+            { src: '../assets/images/crowd.jpg',        alt: 'Crowd discoteca luci' }
         ];
 
-        let currentSlide = 0;
-        let slideTimer;
+        // Indice dell'immagine attualmente mostrata
+        var slideCorrente = 0;
 
-        const slideImage = document.getElementById("slide-image");
-        const previousButton = document.querySelector(".slide-btn--left");
-        const nextButton = document.querySelector(".slide-btn--right");
+        // Variabile usata da setInterval per partire e fermarsi
+        var timerSlide;
 
-        // 1. Pre-caricamento per evitare scatti o ritardi
-        slides.forEach(slide => {
-            const img = new Image();
-            img.src = slide.src;
-        });
+        // Riferimenti agli elementi del DOM che ci servono
+        var immagine        = document.getElementById('slide-image');
+        var bottonePrecedente = document.querySelector('.slide-btn--left');
+        var bottoneSuccessivo = document.querySelector('.slide-btn--right');
 
-        // 2. Funzione principale per mostrare la slide
-        function showSlide(index) {
-            if (index < 0) {
-                currentSlide = slides.length - 1;
-            } else if (index >= slides.length) {
-                currentSlide = 0;
+
+        // ----------------------------------------------------
+        // Pre-caricamento delle immagini
+        // Creiamo un oggetto Image per ogni foto, in modo che
+        // il browser le scarichi subito. Quando poi le mostriamo
+        // saranno già pronte e non vedremo lo "scatto" del download.
+        // ----------------------------------------------------
+        for (var i = 0; i < slide.length; i++) {
+            var img = new Image();
+            img.src = slide[i].src;
+        }
+
+
+        // ----------------------------------------------------
+        // mostraSlide(indice)
+        // Mostra la foto a un dato indice. Se l'indice è fuori
+        // dai limiti dell'array, "gira" all'inizio o alla fine.
+        // ----------------------------------------------------
+        function mostraSlide(indice) {
+
+            if (indice < 0) {
+                slideCorrente = slide.length - 1;
+            } else if (indice >= slide.length) {
+                slideCorrente = 0;
             } else {
-                currentSlide = index;
+                slideCorrente = indice;
             }
 
-            // Effetto fade-out invisibile (nasconde l'immagine)
-            slideImage.style.opacity = 0;
-            
-            // Aspetta 200 millisecondi, cambia la foto e fa il fade-in
-            setTimeout(() => {
-                slideImage.src = slides[currentSlide].src;
-                slideImage.alt = slides[currentSlide].alt;
-                slideImage.style.opacity = 1;
+            // Piccolo effetto fade: portiamo a 0 l'opacità,
+            // dopo 200ms cambiamo immagine e rialziamo l'opacità.
+            immagine.style.opacity = 0;
+
+            setTimeout(function () {
+                immagine.src = slide[slideCorrente].src;
+                immagine.alt = slide[slideCorrente].alt;
+                immagine.style.opacity = 1;
             }, 200);
         }
 
-        // 3. Funzione per passare alla successiva
-        function nextSlide() {
-            showSlide(currentSlide + 1);
+
+        // Scorciatoia per andare avanti di uno
+        function slideSuccessiva() {
+            mostraSlide(slideCorrente + 1);
         }
 
-        // 4. Gestione bottoni manuali
-        previousButton.addEventListener("click", function () {
-            showSlide(currentSlide - 1);
-            resetTimer(); // Se l'utente clicca, azzeriamo il timer automatico
+
+        // ----------------------------------------------------
+        // Eventi sui bottoni di avanti/indietro
+        // Quando l'utente clicca azzeriamo il timer automatico,
+        // così non si trova la foto che cambia subito dopo.
+        // ----------------------------------------------------
+        bottonePrecedente.addEventListener('click', function () {
+            mostraSlide(slideCorrente - 1);
+            riavviaTimer();
         });
 
-        nextButton.addEventListener("click", function () {
-            nextSlide();
-            resetTimer();
+        bottoneSuccessivo.addEventListener('click', function () {
+            slideSuccessiva();
+            riavviaTimer();
         });
 
-        // 5. Autoplay (Cambia foto ogni 3.5 secondi)
-        function startTimer() {
-            slideTimer = setInterval(nextSlide, 3500);
+
+        // ----------------------------------------------------
+        // Timer automatico (autoplay)
+        // setInterval ripete una funzione ogni N millisecondi.
+        // 3500 ms = 3.5 secondi.
+        // ----------------------------------------------------
+        function avviaTimer() {
+            timerSlide = setInterval(slideSuccessiva, 3500);
         }
 
-        function resetTimer() {
-            clearInterval(slideTimer);
-            startTimer();
+        function riavviaTimer() {
+            clearInterval(timerSlide);
+            avviaTimer();
         }
 
-        // Avvia il timer appena si carica la pagina
-        startTimer();
+        // Facciamo partire l'autoplay appena la pagina è caricata
+        avviaTimer();
     </script>
+
 </body>
 
 </html>

@@ -1,14 +1,30 @@
 <!DOCTYPE html>
+<!--
+    index.html
+    Pagina principale (home) del sito InfoStudio-54.
+    Contiene:
+      - una navbar comune a tutte le pagine
+      - una sezione "hero" con video di sfondo
+      - una sezione con le locandine degli eventi
+      - un footer con info, contatti, mappa e orari
+-->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InfoStudio-54 | La Tua Notte</title>
-    
+
+    <!-- Foglio di stile principale (variabili colori, navbar, footer, ecc.) -->
     <link rel="stylesheet" href="assets/css/style.css">
-    
 </head>
 <body>
+
+    <!-- ============================================================
+         NAVBAR
+         Barra di navigazione presente in tutte le pagine del sito.
+         Il logo è composto da più <span> per poter applicare colori
+         e animazioni diverse a ogni parte ("Info", "Studio", "-", "54").
+         ============================================================ -->
     <nav class="navbar">
         <div class="logo-neon-wrapper">
             <div class="logo-neon" id="mainLogo">
@@ -27,75 +43,101 @@
         </ul>
     </nav>
 
+
+    <!-- ============================================================
+         HERO
+         Sezione iniziale con video di sfondo a tutto schermo,
+         titolo e pulsante che porta alla lista eventi.
+         ============================================================ -->
     <header class="hero">
-    <video autoplay loop muted playsinline class="hero-video">
-        <source src="assets/images/gallery/aftermovie.mp4" type="video/mp4">
-    </video>
-    
-    <div class="hero-overlay"></div>
 
-   <div class="hero-content">
-        <h1>Vivi la Notte.</h1>
-        <p>Il club più esclusivo della città. Preparati a ballare fino all'alba.</p>
-        <a href="#eventi" class="btn-prenota-hero">Vai agli eventi</a>
-    </div>
-</header>
-<section id="eventi" class="events-section">
-    <h2 class="section-title">Prossimi Eventi</h2>
-    
-    <div class="events-container">
-        
-        <div class="event-card">
-            <img src="assets/images/locandina-spiderman.png" alt="Locandina Spiderman" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Venerdì 5 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
-            </div>
+        <!-- Video di sfondo in loop, senza audio (muted) e con autoplay -->
+        <video autoplay loop muted playsinline class="hero-video">
+            <source src="assets/images/gallery/aftermovie.mp4" type="video/mp4">
+        </video>
+
+        <!-- Overlay scuro per rendere leggibile il testo sul video -->
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <h1>Vivi la Notte.</h1>
+            <p>Il club più esclusivo della città. Preparati a ballare fino all'alba.</p>
+            <a href="#eventi" class="btn-prenota-hero">Vai agli eventi</a>
         </div>
+    </header>
 
-        <div class="event-card">
-            <img src="assets/images/locandina-peppedj.png" alt="Locandina PeppeDJ" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Sabato 6 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+
+    <!-- ============================================================
+         SEZIONE EVENTI
+         Mostra le locandine dei prossimi eventi.
+         Ogni evento ha un'immagine, una data e un pulsante per
+         andare alla pagina di prenotazione.
+         ============================================================ -->
+    <section id="eventi" class="events-section">
+        <h2 class="section-title">Prossimi Eventi</h2>
+
+        <div class="events-container">
+
+            <!-- Singola card evento -->
+            <div class="event-card">
+                <img src="assets/images/locandina-spiderman.png" alt="Locandina Spiderman" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Venerdì 5 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
             </div>
-        </div>
 
-        <div class="event-card">
-            <img src="assets/images/locandina-dipre.png" alt="Locandina Diprè" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Venerdì 12 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+            <div class="event-card">
+                <img src="assets/images/locandina-peppedj.png" alt="Locandina PeppeDJ" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Sabato 6 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
             </div>
-        </div>
 
-        <div class="event-card">
-            <img src="assets/images/locandina-brasiliano.png" alt="Locandina Brasiliano" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Sabato 13 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+            <div class="event-card">
+                <img src="assets/images/locandina-dipre.png" alt="Locandina Diprè" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Venerdì 12 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
             </div>
-        </div>
 
-        <div class="event-card">
-            <img src="assets/images/locandina-ciccio.png" alt="Locandina Ciccio" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Venerdì 19 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+            <div class="event-card">
+                <img src="assets/images/locandina-brasiliano.png" alt="Locandina Brasiliano" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Sabato 13 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
             </div>
-        </div>
-         <div class="event-card">
-            <img src="assets/images/Locandina-Capitano.png" alt="Locandina Capitano - InfoStudio-54" class="event-poster">
-            <div class="event-details">
-                <p class="event-date">Sabato 20 Giugno 2026</p>
-                <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+
+            <div class="event-card">
+                <img src="assets/images/locandina-ciccio.png" alt="Locandina Ciccio" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Venerdì 19 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
             </div>
+
+            <div class="event-card">
+                <img src="assets/images/Locandina-Capitano.png" alt="Locandina Capitano" class="event-poster">
+                <div class="event-details">
+                    <p class="event-date">Sabato 20 Giugno 2026</p>
+                    <a href="pages/prenotazioni.html" class="btn-prenota">Prenota il tuo tavolo</a>
+                </div>
+            </div>
+
         </div>
+    </section>
 
 
-    </div> </section>
+    <!-- ============================================================
+         FOOTER
+         Contiene slogan grafico, info del locale, orari e mappa.
+         ============================================================ -->
+    <footer class="footer">
 
-   <footer class="footer">
+        <!-- Slogan "THE POWER TO CONNECT" in due righe sfasate -->
         <div class="footer-slogan-container">
             <div class="slogan-row left-align">
                 <h2>THE POWER</h2>
@@ -108,7 +150,8 @@
         </div>
 
         <div class="footer-main">
-            
+
+            <!-- Logo grande in basso -->
             <div class="footer-logo-col">
                 <div class="logo-neon-wrapper large-footer-logo">
                     <div class="logo-neon">
@@ -117,12 +160,13 @@
                 </div>
             </div>
 
+            <!-- Info di contatto e orari -->
             <div class="footer-info">
                 <div class="footer-col">
                     <h4>Info e Prenotazioni</h4>
                     <p>Viale dello Scalo S. Lorenzo, 82,<br>00159 Roma RM</p>
-                    <p>Tel: <a href="tel:+390612345678" class="footer-link">+39 06 962 0042</a></p>
-                    <p>Cell: <a href="tel:+393339876543" class="footer-link">+39 347 3779 163</a></p>
+                    <p>Tel: <a href="tel:+390696200042" class="footer-link">+39 06 962 0042</a></p>
+                    <p>Cell: <a href="tel:+393473779163" class="footer-link">+39 347 3779 163</a></p>
                 </div>
 
                 <div class="footer-col">
@@ -133,14 +177,15 @@
                 </div>
             </div>
 
+            <!-- Mappa Google Maps embeddata tramite iframe -->
             <div class="footer-map">
-                <iframe 
-                    src="https://maps.google.com/maps?q=Viale+dello+Scalo+S.+Lorenzo,+82,+00159+Roma+RM&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                    width="100%" 
-                    height="200" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
+                <iframe
+                    src="https://maps.google.com/maps?q=Viale+dello+Scalo+S.+Lorenzo,+82,+00159+Roma+RM&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    width="100%"
+                    height="200"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
@@ -151,8 +196,15 @@
         </div>
     </footer>
 
+
+    <!-- ============================================================
+         SCRIPT
+         jQuery viene caricato da CDN (Google) e poi i nostri script:
+         - api.js  -> wrapper AJAX condiviso da tutte le pagine
+         - main.js -> logica navbar (Accedi/Esci) e animazione logo
+         ============================================================ -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="assets/js/api.js"></script>
-    <script src="assets/js/main.js"></script> 
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

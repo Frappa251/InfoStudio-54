@@ -1,3 +1,22 @@
+/* =====================================================================
+   menu.css
+   Stili per la pagina del menù drink/bottiglie.
+   Contiene:
+     1) Sfondo + contenitore della pagina
+     2) Filtri di categoria in alto
+     3) Card dei singoli drink (immagine, nome, prezzo, opzioni)
+     4) Pannello opzioni che si apre/chiude
+     5) Barra carrello fluttuante in basso
+     6) Modale per scegliere il numero del tavolo
+   Va caricato DOPO style.css.
+   ===================================================================== */
+
+
+/* =====================================================================
+   SFONDO PAGINA MENU
+   Foto del locale come sfondo, fissato in modo da non scorrere.
+   Sopra mettiamo un gradiente nero semi-trasparente per leggibilità.
+   ===================================================================== */
 body.page-menu {
     background-image: linear-gradient(rgba(11, 11, 15, 0.8), rgba(11, 11, 15, 0.8)), url('../images/menu-bg.jpg');
     background-size: cover;

@@ -1,336 +1,479 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const bookingForm = document.getElementById("bookingForm");
-    const tipoTavolo = document.getElementById("tipo_tavolo");
-    const numeroPersone = document.getElementById("numero_persone");
-    const dataPrenotazione = document.getElementById("data_prenotazione");
+// =====================================================================
+// booking.js
+// Gestisce la pagina di prenotazione del tavolo:
+//   - precompila nome/email se l'utente è già loggato
+//   - aggiorna il riepilogo in tempo reale (tavolo, persone, prezzo)
+//   - valida i campi del form
+//   - genera un PDF con il riepilogo
+//   - manda la prenotazione al backend e poi reindirizza a Stripe
+// =====================================================================
 
-    const telefonoPrefisso = document.getElementById("telefono_prefisso");
-    const telefonoNumero = document.getElementById("telefono_numero");
+document.addEventListener('DOMContentLoaded', function () {
 
-    const submitBtn = document.getElementById("submitBtn");
-    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+    // -----------------------------------------------------------------
+    // Riferimenti ai campi del form e agli elementi del riepilogo
+    // -----------------------------------------------------------------
+    var formPrenotazione   = document.getElementById('bookingForm');
+    var selTipoTavolo      = document.getElementById('tipo_tavolo');
+    var inputNumeroPersone = document.getElementById('numero_persone');
+    var inputData          = document.getElementById('data_prenotazione');
+    var selPrefisso        = document.getElementById('telefono_prefisso');
+    var inputTelefono      = document.getElementById('telefono_numero');
 
-    const summaryTable = document.getElementById("summaryTable");
-    const summaryPeople = document.getElementById("summaryPeople");
-    const summaryPrice = document.getElementById("summaryPrice");
-    const formMessage = document.getElementById("formMessage");
+    var bottoneInvia       = document.getElementById('submitBtn');
+    var bottonePdf         = document.getElementById('downloadPdfBtn');
 
-    const today = new Date().toISOString().split("T")[0];
-    // --- AUTOCOMPILAZIONE DATI UTENTE TRAMITE PHP + AJAX ---
-    async function precompilaDati() {
-        try {
-            const response = await InfoStudioApi.getCurrentUser();
+    var spanTavolo  = document.getElementById('summaryTable');
+    var spanPersone = document.getElementById('summaryPeople');
+    var spanPrezzo  = document.getElementById('summaryPrice');
+    var pMessaggio  = document.getElementById('formMessage');
 
-            if (response.authenticated && response.user) {
-                const emailInput = document.getElementById('email');
-                emailInput.value = response.user.email;
-                emailInput.readOnly = true;
-                emailInput.style.opacity = '0.7';
 
-                document.getElementById('nome').value = `${response.user.nome} ${response.user.cognome}`;
-                if (response.user.telefono) {
-                    document.getElementById('telefono_numero').value = response.user.telefono.replace(/\D/g, '').slice(0, 10);
-                }
-            }
-        } catch (error) {
-            InfoStudioApi.logError('autocompilazione prenotazione', error);
-        }
-    }
-    precompilaDati();
+    // -----------------------------------------------------------------
+    // Impediamo di scegliere una data nel passato.
+    // toISOString() restituisce "YYYY-MM-DDTHH:MM:SS.sssZ",
+    // split('T')[0] prende solo la parte della data.
+    // -----------------------------------------------------------------
+    var oggi = new Date().toISOString().split('T')[0];
+    inputData.min = oggi;
 
-    dataPrenotazione.min = today;
 
-    const telefonoRegex = /^\d{10}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    const STRIPE_LINKS = {
-        1: "https://buy.stripe.com/test_00w7sM82q5BadxP3vl2Nq01",
-        2: "https://buy.stripe.com/test_bJebJ2fuSfbK51j2rh2Nq02",
-        3: "https://buy.stripe.com/test_4gMaEYfuS9Rq65n2rh2Nq03"
+    // -----------------------------------------------------------------
+    // Link di pagamento Stripe per ogni tipo di tavolo.
+    // Sono "link di test" forniti da Stripe per le demo:
+    // l'utente paga in modalità simulata, niente soldi veri.
+    // -----------------------------------------------------------------
+    var linkStripe = {
+        1: 'https://buy.stripe.com/test_00w7sM82q5BadxP3vl2Nq01',
+        2: 'https://buy.stripe.com/test_bJebJ2fuSfbK51j2rh2Nq02',
+        3: 'https://buy.stripe.com/test_4gMaEYfuS9Rq65n2rh2Nq03'
     };
 
-    function setMessage(message, type = "") {
-        formMessage.textContent = message;
-        formMessage.className = "booking-page__message";
-        if (type) {
-            formMessage.classList.add(type);
+
+    // =================================================================
+    // AUTOCOMPILAZIONE DATI UTENTE
+    // Se l'utente è loggato, riempiamo automaticamente nome, email
+    // e telefono prendendoli dal suo profilo (chiamata a me.php).
+    // =================================================================
+    function precompilaDati() {
+
+        $.ajax({
+            url: '../api/me.php',
+            type: 'GET',
+            dataType: 'json',
+
+            success: function (risposta) {
+
+                if (risposta.authenticated == false || risposta.user == null) {
+                    return;
+                }
+
+                var inputEmail = document.getElementById('email');
+                inputEmail.value = risposta.user.email;
+
+                // Rendiamo l'email non modificabile: l'utente loggato deve
+                // usare per forza l'email del suo account.
+                inputEmail.readOnly = true;
+                inputEmail.style.opacity = '0.7';
+
+                // Mettiamo nome e cognome insieme nel campo "Nome e cognome"
+                document.getElementById('nome').value = risposta.user.nome + ' ' + risposta.user.cognome;
+
+                // Telefono: prendiamo solo le cifre, max 10
+                if (risposta.user.telefono != null) {
+                    var soloCifre = risposta.user.telefono.replace(/[^0-9]/g, '');
+                    if (soloCifre.length > 10) {
+                        soloCifre = soloCifre.substring(0, 10);
+                    }
+                    inputTelefono.value = soloCifre;
+                }
+            },
+
+            error: function (xhr) {
+                InfoStudioApi.logError('autocompilazione prenotazione', xhr);
+            }
+        });
+    }
+
+    precompilaDati();
+
+
+    // =================================================================
+    // FUNZIONI DI UTILITÀ PER LA VALIDAZIONE
+    // =================================================================
+
+    // Imposta il messaggio sotto al form (positivo, negativo o neutro)
+    function mostraMessaggio(testo, tipo) {
+        pMessaggio.textContent = testo;
+        pMessaggio.className = 'booking-page__message';
+
+        if (tipo != null && tipo != '') {
+            pMessaggio.classList.add(tipo);
         }
     }
 
-    function resetFieldState(field) {
-        field.classList.remove("input-error", "input-valid");
+    // Toglie le classi di errore/valido da un campo
+    function resetCampo(campo) {
+        campo.classList.remove('input-error');
+        campo.classList.remove('input-valid');
     }
 
-    function setFieldError(field) {
-        field.classList.remove("input-valid");
-        field.classList.add("input-error");
+    function segnalaErrore(campo) {
+        campo.classList.remove('input-valid');
+        campo.classList.add('input-error');
     }
 
-    function setFieldValid(field) {
-        field.classList.remove("input-error");
-        field.classList.add("input-valid");
+    function segnalaOk(campo) {
+        campo.classList.remove('input-error');
+        campo.classList.add('input-valid');
     }
 
-    function sanitizePhoneInput() {
-        telefonoNumero.value = telefonoNumero.value.replace(/\D/g, "").slice(0, 10);
-    }
 
-    function getSelectedBookingData() {
-        const selectedOption = tipoTavolo.options[tipoTavolo.selectedIndex];
-        const people = parseInt(numeroPersone.value, 10) || 0;
+    // =================================================================
+    // GESTIONE DEL RIEPILOGO
+    // Ogni volta che cambia tavolo o numero persone, aggiorniamo
+    // le scritte "Tavolo / Persone / Totale" nel box riepilogo.
+    // =================================================================
 
-        if (!selectedOption || !selectedOption.value) {
+    // Restituisce un oggetto con i dati del tavolo selezionato,
+    // oppure null se non è stato selezionato nulla.
+    function leggiDatiTavolo() {
+
+        var opzioneSelezionata = selTipoTavolo.options[selTipoTavolo.selectedIndex];
+        var numeroPersone      = parseInt(inputNumeroPersone.value, 10);
+
+        if (isNaN(numeroPersone)) {
+            numeroPersone = 0;
+        }
+
+        // Se non è stata scelta alcuna opzione valida, restituiamo null
+        if (opzioneSelezionata == null || opzioneSelezionata.value == '') {
             return null;
         }
 
-        const prezzo = parseFloat(selectedOption.dataset.prezzo);
-        const nomeTavolo = selectedOption.textContent.split(" - ")[0];
-        const prezzoPerPersona = people > 0 ? (prezzo / people).toFixed(2) : null;
+        var prezzoTotale = parseFloat(opzioneSelezionata.dataset.prezzo);
+
+        // Il testo è del tipo "Standard - €100 - max 4 persone"
+        // Ci serve solo "Standard": tagliamo al primo " - "
+        var nomeTavolo = opzioneSelezionata.textContent.split(' - ')[0];
+
+        // Prezzo per persona (se sono state inserite delle persone)
+        var prezzoPerPersona = null;
+        if (numeroPersone > 0) {
+            prezzoPerPersona = (prezzoTotale / numeroPersone).toFixed(2);
+        }
 
         return {
-            nomeTavolo,
-            people,
-            prezzo,
-            prezzoPerPersona
+            nomeTavolo:       nomeTavolo,
+            numeroPersone:    numeroPersone,
+            prezzoTotale:     prezzoTotale,
+            prezzoPerPersona: prezzoPerPersona
         };
     }
 
-    function updateSummary() {
-        const bookingData = getSelectedBookingData();
+    function aggiornaRiepilogo() {
 
-        if (!bookingData) {
-            summaryTable.textContent = "-";
-            summaryPeople.textContent = "-";
-            summaryPrice.textContent = "-";
+        var dati = leggiDatiTavolo();
+
+        if (dati == null) {
+            spanTavolo.textContent  = '-';
+            spanPersone.textContent = '-';
+            spanPrezzo.textContent  = '-';
             return;
         }
 
-        summaryTable.textContent = bookingData.nomeTavolo;
-        summaryPeople.textContent = bookingData.people || "-";
-        summaryPrice.textContent = bookingData.people > 0
-            ? `€${bookingData.prezzo} (€${bookingData.prezzoPerPersona}/persona)`
-            : `€${bookingData.prezzo}`;
+        spanTavolo.textContent = dati.nomeTavolo;
+
+        if (dati.numeroPersone > 0) {
+            spanPersone.textContent = dati.numeroPersone;
+            spanPrezzo.textContent  = '€' + dati.prezzoTotale + ' (€' + dati.prezzoPerPersona + '/persona)';
+        } else {
+            spanPersone.textContent = '-';
+            spanPrezzo.textContent  = '€' + dati.prezzoTotale;
+        }
     }
 
-    function validateFormFields({ nome, email, prefisso, telefono, data, persone, tavoloOption }) {
-        let isValid = true;
 
-        const nomeField = document.getElementById("nome");
-        const emailField = document.getElementById("email");
-        const prefissoField = telefonoPrefisso;
-        const telefonoField = telefonoNumero;
-        const dataField = dataPrenotazione;
-        const personeField = numeroPersone;
-        const tavoloField = tipoTavolo;
+    // =================================================================
+    // VALIDAZIONE DEL FORM PRIMA DI INVIARE
+    // Controlla tutti i campi e mette le classi CSS giuste per
+    // evidenziare visivamente quelli sbagliati.
+    // =================================================================
+    function validaForm(dati) {
 
-        [
-            nomeField,
-            emailField,
-            prefissoField,
-            telefonoField,
-            dataField,
-            personeField,
-            tavoloField
-        ].forEach(resetFieldState);
+        var tuttoOk = true;
 
-        if (!nome || nome.length < 3) {
-            setFieldError(nomeField);
-            isValid = false;
+        var campoNome     = document.getElementById('nome');
+        var campoEmail    = document.getElementById('email');
+        var campoPrefisso = selPrefisso;
+        var campoTelefono = inputTelefono;
+        var campoData     = inputData;
+        var campoPersone  = inputNumeroPersone;
+        var campoTavolo   = selTipoTavolo;
+
+        // Resettiamo lo stato visivo di tutti i campi
+        resetCampo(campoNome);
+        resetCampo(campoEmail);
+        resetCampo(campoPrefisso);
+        resetCampo(campoTelefono);
+        resetCampo(campoData);
+        resetCampo(campoPersone);
+        resetCampo(campoTavolo);
+
+        // Nome: almeno 3 caratteri
+        if (dati.nome.length < 3) {
+            segnalaErrore(campoNome);
+            tuttoOk = false;
         } else {
-            setFieldValid(nomeField);
+            segnalaOk(campoNome);
         }
 
-        if (!emailRegex.test(email)) {
-            setFieldError(emailField);
-            isValid = false;
+        // Email: deve passare una regex semplice (qualcosa@qualcosa.qualcosa)
+        var regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regexEmail.test(dati.email)) {
+            segnalaErrore(campoEmail);
+            tuttoOk = false;
         } else {
-            setFieldValid(emailField);
+            segnalaOk(campoEmail);
         }
 
-        if (!prefisso) {
-            setFieldError(prefissoField);
-            isValid = false;
+        // Prefisso telefonico
+        if (dati.prefisso == '') {
+            segnalaErrore(campoPrefisso);
+            tuttoOk = false;
         } else {
-            setFieldValid(prefissoField);
+            segnalaOk(campoPrefisso);
         }
 
-        if (!telefonoRegex.test(telefono)) {
-            setFieldError(telefonoField);
-            isValid = false;
+        // Telefono: deve essere esattamente 10 cifre
+        var regexTelefono = /^[0-9]{10}$/;
+        if (!regexTelefono.test(dati.telefono)) {
+            segnalaErrore(campoTelefono);
+            tuttoOk = false;
         } else {
-            setFieldValid(telefonoField);
+            segnalaOk(campoTelefono);
         }
 
-        if (!data) {
-            setFieldError(dataField);
-            isValid = false;
+        // Data
+        if (dati.data == '') {
+            segnalaErrore(campoData);
+            tuttoOk = false;
         } else {
-            setFieldValid(dataField);
+            segnalaOk(campoData);
         }
 
-        if (!persone || persone < 1) {
-            setFieldError(personeField);
-            isValid = false;
+        // Numero persone
+        if (dati.persone < 1) {
+            segnalaErrore(campoPersone);
+            tuttoOk = false;
         } else {
-            setFieldValid(personeField);
+            segnalaOk(campoPersone);
         }
 
-        if (!tavoloOption || !tavoloOption.value) {
-            setFieldError(tavoloField);
-            isValid = false;
+        // Tavolo
+        if (dati.opzioneTavolo == null || dati.opzioneTavolo.value == '') {
+            segnalaErrore(campoTavolo);
+            tuttoOk = false;
         } else {
-            setFieldValid(tavoloField);
+            segnalaOk(campoTavolo);
         }
 
-        return isValid;
+        return tuttoOk;
     }
 
-    function downloadPDF() {
-        const nome = document.getElementById("nome").value.trim() || "-";
-        const email = document.getElementById("email").value.trim() || "-";
-        const telefonoCompleto = `${telefonoPrefisso.value} ${telefonoNumero.value || "-"}`;
-        const data = dataPrenotazione.value || "-";
-        const note = document.getElementById("note").value.trim() || "-";
-        const bookingData = getSelectedBookingData();
 
-        if (!bookingData) {
-            setMessage("Seleziona almeno un tavolo prima di scaricare il PDF.", "error");
+    // =================================================================
+    // GENERAZIONE PDF DEL RIEPILOGO
+    // Usiamo la libreria jsPDF (caricata da CDN nell'HTML).
+    // =================================================================
+    function generaPDF() {
+
+        var nome     = document.getElementById('nome').value.trim();
+        var email    = document.getElementById('email').value.trim();
+        var telefono = selPrefisso.value + ' ' + inputTelefono.value;
+        var data     = inputData.value;
+        var note     = document.getElementById('note').value.trim();
+
+        if (nome == '')  { nome  = '-'; }
+        if (email == '') { email = '-'; }
+        if (data == '')  { data  = '-'; }
+        if (note == '')  { note  = '-'; }
+
+        var datiTavolo = leggiDatiTavolo();
+
+        if (datiTavolo == null) {
+            mostraMessaggio('Seleziona almeno un tavolo prima di scaricare il PDF.', 'error');
             return;
         }
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        // Creiamo il documento PDF usando la libreria jsPDF
+        var jsPDF = window.jspdf.jsPDF;
+        var doc = new jsPDF();
 
-        doc.setFont("helvetica", "bold");
+        // Intestazione
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(22);
-        doc.text("InfoStudio-54", 20, 20);
+        doc.text('InfoStudio-54', 20, 20);
 
         doc.setFontSize(16);
-        doc.text("Riepilogo prenotazione", 20, 35);
+        doc.text('Riepilogo prenotazione', 20, 35);
 
-        doc.setFont("helvetica", "normal");
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
 
-        let y = 55;
-        const rows = [
-            `Nome: ${nome}`,
-            `Email: ${email}`,
-            `Telefono: ${telefonoCompleto}`,
-            `Data prenotazione: ${data}`,
-            `Tavolo: ${bookingData.nomeTavolo}`,
-            `Numero persone: ${bookingData.people}`,
-            `Prezzo totale: €${bookingData.prezzo}`,
-            `Prezzo per persona: €${bookingData.prezzoPerPersona || "-"}`,
-            `Note: ${note}`
+        // Riempiamo il PDF riga per riga
+        var righe = [
+            'Nome: ' + nome,
+            'Email: ' + email,
+            'Telefono: ' + telefono,
+            'Data prenotazione: ' + data,
+            'Tavolo: ' + datiTavolo.nomeTavolo,
+            'Numero persone: ' + datiTavolo.numeroPersone,
+            'Prezzo totale: €' + datiTavolo.prezzoTotale,
+            'Note: ' + note
         ];
 
-        rows.forEach((row) => {
-            doc.text(row, 20, y);
-            y += 10;
-        });
+        var y = 55;
+        for (var i = 0; i < righe.length; i++) {
+            doc.text(righe[i], 20, y);
+            y = y + 10;
+        }
 
-        doc.save("riepilogo-prenotazione.pdf");
+        doc.save('riepilogo-prenotazione.pdf');
     }
 
-    telefonoNumero.addEventListener("input", sanitizePhoneInput);
-    tipoTavolo.addEventListener("change", updateSummary);
-    numeroPersone.addEventListener("input", updateSummary);
 
-    telefonoNumero.addEventListener("blur", () => {
-        if (!telefonoNumero.value) {
-            resetFieldState(telefonoNumero);
+    // =================================================================
+    // EVENT LISTENER
+    // =================================================================
+
+    // Quando l'utente cambia tavolo o numero persone, aggiorniamo il riepilogo
+    selTipoTavolo.addEventListener('change', aggiornaRiepilogo);
+    inputNumeroPersone.addEventListener('input', aggiornaRiepilogo);
+
+    // Quando scrive nel telefono teniamo solo cifre e max 10 caratteri
+    inputTelefono.addEventListener('input', function () {
+        var soloCifre = inputTelefono.value.replace(/[^0-9]/g, '');
+        if (soloCifre.length > 10) {
+            soloCifre = soloCifre.substring(0, 10);
+        }
+        inputTelefono.value = soloCifre;
+    });
+
+    // Quando l'utente esce dal campo telefono, mostriamo verde o rosso
+    inputTelefono.addEventListener('blur', function () {
+
+        if (inputTelefono.value == '') {
+            resetCampo(inputTelefono);
             return;
         }
 
-        if (telefonoRegex.test(telefonoNumero.value)) {
-            setFieldValid(telefonoNumero);
+        var regexTelefono = /^[0-9]{10}$/;
+        if (regexTelefono.test(inputTelefono.value)) {
+            segnalaOk(inputTelefono);
         } else {
-            setFieldError(telefonoNumero);
+            segnalaErrore(inputTelefono);
         }
     });
 
-    downloadPdfBtn.addEventListener("click", downloadPDF);
+    // Bottone "Scarica PDF"
+    bottonePdf.addEventListener('click', generaPDF);
 
-    submitBtn.addEventListener("click", async () => {
-        setMessage("");
 
-        const nome = document.getElementById("nome").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const prefisso = telefonoPrefisso.value;
-        const telefono = telefonoNumero.value.trim();
-        const data = dataPrenotazione.value;
-        const persone = parseInt(numeroPersone.value, 10);
-        const tavoloOption = tipoTavolo.options[tipoTavolo.selectedIndex];
+    // =================================================================
+    // CLICK SUL BOTTONE "VAI AL PAGAMENTO"
+    // 1) Validiamo i campi
+    // 2) Mandiamo la prenotazione al backend (create_booking.php)
+    // 3) Se il backend salva tutto, reindirizziamo al link Stripe
+    // =================================================================
+    bottoneInvia.addEventListener('click', function () {
 
-        const isValid = validateFormFields({
-            nome,
-            email,
-            prefisso,
-            telefono,
-            data,
-            persone,
-            tavoloOption
-        });
+        mostraMessaggio('', '');
 
-        if (!isValid) {
-            setMessage("Compila correttamente tutti i campi prima di procedere.", "error");
+        // Leggiamo tutti i valori del form
+        var datiForm = {
+            nome:          document.getElementById('nome').value.trim(),
+            email:         document.getElementById('email').value.trim(),
+            prefisso:      selPrefisso.value,
+            telefono:      inputTelefono.value.trim(),
+            data:          inputData.value,
+            persone:       parseInt(inputNumeroPersone.value, 10),
+            opzioneTavolo: selTipoTavolo.options[selTipoTavolo.selectedIndex]
+        };
+
+        if (isNaN(datiForm.persone)) {
+            datiForm.persone = 0;
+        }
+
+        // Validazione
+        var formValido = validaForm(datiForm);
+        if (formValido == false) {
+            mostraMessaggio('Compila correttamente tutti i campi prima di procedere.', 'error');
             return;
         }
 
-        const maxPersone = parseInt(tavoloOption.dataset.max, 10);
-
-        if (persone > maxPersone) {
-            setFieldError(numeroPersone);
-            setMessage(`Questo tavolo accetta al massimo ${maxPersone} persone.`, "error");
+        // Controlliamo che il numero di persone non superi il massimo del tavolo
+        var maxPersone = parseInt(datiForm.opzioneTavolo.dataset.max, 10);
+        if (datiForm.persone > maxPersone) {
+            segnalaErrore(inputNumeroPersone);
+            mostraMessaggio('Questo tavolo accetta al massimo ' + maxPersone + ' persone.', 'error');
             return;
         }
 
-        const tavoloId = parseInt(tavoloOption.value, 10);
-        const noteText = document.getElementById("note").value.trim();
-        const telefonoCompleto = `${prefisso} ${telefono}`;
+        var idTavolo = parseInt(datiForm.opzioneTavolo.value, 10);
+        var note     = document.getElementById('note').value.trim();
+        var telefonoCompleto = datiForm.prefisso + ' ' + datiForm.telefono;
 
-        setMessage("Verifico la disponibilità del tavolo...", "");
+        mostraMessaggio('Verifico la disponibilità del tavolo...', '');
 
-        let bookingResponse;
-        try {
-            bookingResponse = await InfoStudioApi.request('create_booking.php', {
-                method: 'POST',
-                data: {
-                    tavolo_id: tavoloId,
-                    data_evento: data,
-                    numero_persone: persone,
-                    nome_contatto: nome,
-                    email_contatto: email,
-                    telefono_contatto: telefonoCompleto,
-                    note: noteText
+        // Chiamata AJAX al backend
+        $.ajax({
+            url: '../api/create_booking.php',
+            type: 'POST',
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                tavolo_id:         idTavolo,
+                data_evento:       datiForm.data,
+                numero_persone:    datiForm.persone,
+                nome_contatto:     datiForm.nome,
+                email_contatto:    datiForm.email,
+                telefono_contatto: telefonoCompleto,
+                note:              note
+            }),
+
+            success: function (risposta) {
+
+                if (risposta.success == false) {
+                    mostraMessaggio(risposta.message, 'error');
+                    return;
                 }
-            });
-        } catch (error) {
-            InfoStudioApi.logError('creazione prenotazione', error);
-            const message = InfoStudioApi.userMessage(error, "Per effettuare una prenotazione è necessario fare il login.");
-            setMessage(message, "error");
-            return;
-        }
 
-        if (!bookingResponse.success) {
-            setMessage(bookingResponse.message || "Impossibile salvare la prenotazione.", "error");
-            return;
-        }
+                // Prenotazione salvata: andiamo al link Stripe del tavolo scelto
+                var url = linkStripe[idTavolo];
 
-        const stripeUrl = STRIPE_LINKS[tavoloId];
+                if (url == null) {
+                    mostraMessaggio('Link di pagamento non configurato per questo tavolo.', 'error');
+                    return;
+                }
 
-        if (!stripeUrl) {
-            setMessage("Link di pagamento non configurato per questo tavolo.", "error");
-            return;
-        }
+                mostraMessaggio('Prenotazione confermata! Reindirizzamento al pagamento...', 'success');
 
-        setMessage("Prenotazione confermata! Reindirizzamento al pagamento...", "success");
-        
-        // Aspettiamo un secondo per far leggere il messaggio e poi andiamo su Stripe
-        setTimeout(() => {
-            window.location.href = stripeUrl;
-        }, 1500);
+                // Aspettiamo 1.5 secondi per far leggere il messaggio, poi cambiamo pagina
+                setTimeout(function () {
+                    window.location.href = url;
+                }, 1500);
+            },
+
+            error: function (xhr) {
+                InfoStudioApi.logError('creazione prenotazione', xhr);
+                var messaggio = InfoStudioApi.userMessage(xhr, 'Per effettuare una prenotazione è necessario fare il login.');
+                mostraMessaggio(messaggio, 'error');
+            }
+        });
     });
 
-    updateSummary();
+
+    // All'avvio mostriamo subito il riepilogo (sarà "-" finché l'utente non sceglie)
+    aggiornaRiepilogo();
 });
