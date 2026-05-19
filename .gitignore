@@ -5,10 +5,3 @@ config.js
 # Cartelle di sistema (Mac/Windows)
 .DS_Store
 Thumbs.db
-
-# Cartelle di Gemini CLI
-.gemini/
-gha-creds-*.json
-.github/
-.github/commands
-.github/workflows
