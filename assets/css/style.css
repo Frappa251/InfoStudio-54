@@ -705,7 +705,7 @@ body.page-storia {
     .footer-main       { flex-direction: column; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 950px) {
     /* Navbar -> incolonna logo e link su mobile */
     .navbar {
         flex-direction: column;

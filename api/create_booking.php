@@ -45,9 +45,9 @@ $emailContatto = strtolower($emailContatto);
 //    Per ogni tipo c'è anche un numero massimo di persone consentito
 //    Usiamo un array associativo per legare tavolo -> massimo persone
 $maxPersonePerTavolo = [
-    1 => 5,
-    2 => 10,
-    3 => 20
+    1 => 4,
+    2 => 8,
+    3 => 12
 ];
 
 if (!isset($maxPersonePerTavolo[$tavoloId])) {
